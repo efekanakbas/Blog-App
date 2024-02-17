@@ -22,6 +22,7 @@ import Input from "./Input";
 import { useFormik } from "formik";
 import PlaceIcon from '@mui/icons-material/Place';
 import toast from "react-hot-toast";
+import { useGeneral } from "@/contexts/GeneralContext";
 
 interface ModalProps {
   modalOpen: boolean;
@@ -39,6 +40,7 @@ interface ModalProps {
 
 const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2, pos3, setPos1, setPos2, setPos3, inputShow, setInputShow }) => {
   //! States
+  const {avatar} = useGeneral()
   const [imagesPool, setImagesPool] = useState<File[]>([]);
   const [hashtagPool, setHashtagPool] = useState<string[]>([])
   const [mentionPool, setMentionPool] = useState<string[]>([])
@@ -196,7 +198,7 @@ const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2,
           <figure>
             <Avatar
               sx={{ transform: "scale(1.4)" }}
-              src="images/avatars/6.png"
+              src={avatar}
             />
           </figure>
           <Box className='flex flex-col'>

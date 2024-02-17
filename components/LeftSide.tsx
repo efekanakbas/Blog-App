@@ -1,7 +1,9 @@
+'use client'
 import React, { useState, useEffect } from 'react';
 import Card from './Card';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Avatar, Box, Typography } from '@mui/material';
+import { useGeneral } from '@/contexts/GeneralContext';
 
 interface LeftSideProps {
   // Define props here
@@ -9,7 +11,7 @@ interface LeftSideProps {
 
 const LeftSide: React.FC<LeftSideProps> = () => {
   //! States
-      
+      const {avatar} = useGeneral()
   //!
   //todo Functions
       
@@ -27,7 +29,7 @@ const LeftSide: React.FC<LeftSideProps> = () => {
 
         <Box sx={{display:"flex", gap:"8px"}} >
         <figure className='flex items-center' >
-      <Avatar  style={{ width: '50px', height: '50px' }}  alt="Avatar" src='images/avatars/6.png' />
+      <Avatar  style={{ width: '50px', height: '50px' }}  alt="Avatar" src={avatar} />
       </figure>
 
       <Box sx={{display:"flex", flexDirection:"column", justifyContent:"center"}} >

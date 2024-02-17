@@ -26,6 +26,7 @@ import Card from "./Card";
 import SearchIcon from '@mui/icons-material/Search';
 import Image from "next/image";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useGeneral } from "@/contexts/GeneralContext";
 
 const pages = [
   { icon: HomeIcon, title: "Homepage", link:"/" },
@@ -40,7 +41,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = () => {
   //! States
-
+  const {avatar} = useGeneral()
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -262,7 +263,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             <Box className='flex items-center gap-3'>
             <Tooltip TransitionComponent={Zoom} title="Open settings">
               <Box className="flex items-center cursor-pointer gap-2" onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User Avatar" src="images/avatars/6.png" />
+                <Avatar alt="User Avatar" src={avatar} />
                 <Typography color='black'>
                 Efekan Akbaş
               </Typography>

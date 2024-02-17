@@ -17,6 +17,7 @@ import { useFormik } from "formik";
 import Input from "./Input";
 import FeedModal from './feedModal/FeedModal';
 import PlusOneIcon from '@mui/icons-material/PlusOne';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 interface FeedsProps {
@@ -29,13 +30,13 @@ interface FeedsProps {
 
 const Feed: React.FC<FeedsProps> = ({feed}) => {
   //! States
+    const [onLoad, setOnLoad] = useState(false)
     const [isLiked, setIsLiked] = useState(feed.feed.liked)
     const [play] = useSound(likeSound)
     const [play2] = useSound(unlikeSound)
     const [commentShow, setCommentShow] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
     const [selectedIndex, setSelectedIndex] = useState(0)
-    const [open, setOpen] = useState(false)
 
     const {handleChange, handleReset, handleSubmit, values} = useFormik({
       initialValues: {
@@ -58,13 +59,11 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
     }
   //todo
   //? useEffect
-    useEffect(() => {
-      setOpen(true)
-    }, [])
+
   //?
   //* consoleLogs
     // console.log("selectedIndex", selectedIndex)
-    console.log("OPEN", open)
+    // console.log("OPEN", open)
   //*
 
  
@@ -114,17 +113,22 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
             }} sx={{fontSize:"150px", cursor:'pointer'}} />
             </span>}
           <Image
+            onLoad={() => setOnLoad(true)}
             onClick={() => {
               setModalOpen(true);
               setSelectedIndex(i)
             }}
-            // style={{opacity: open ? '90%' : '30%'}}
             className="cursor-pointer rounded-2xl"
             alt="Image"
             fill
             objectFit="cover"
             src={item}
           />
+          {
+            !onLoad && <Box sx={{position:"relative", width:"100%", height:"100%", backgroundColor:"#eeeeee", borderRadius:"16px", display:"flex", justifyContent:'center', alignItems:'center'}}>
+             <CircularProgress sx={{zIndex:'10'}} />
+            </Box>
+          }
         </figure>
       ))}
     </Box>

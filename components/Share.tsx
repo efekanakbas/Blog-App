@@ -10,6 +10,7 @@ import TagIcon from '@mui/icons-material/Tag';
 import Man4Icon from '@mui/icons-material/Man4';
 import ShareModal from './ShareModal';
 import PlaceIcon from '@mui/icons-material/Place';
+import { useGeneral } from '@/contexts/GeneralContext';
 
 interface ShareProps {
   
@@ -17,6 +18,7 @@ interface ShareProps {
 
 const Share: React.FC<ShareProps> = () => {
   //! States
+      const {avatar} = useGeneral()
       const {values, handleChange, handleReset, handleSubmit} = useFormik({
         initialValues: {
           shareValue: ""
@@ -49,7 +51,7 @@ const Share: React.FC<ShareProps> = () => {
     <Card>
       <Box className='flex gap-4'>
         <figure>
-            <Avatar src='images/avatars/6.png' />
+            <Avatar src={avatar} />
         </figure>
         <form className='w-full' onSubmit={handleSubmit} >
         <Input sx={null} size='small' autoFocus = {false}  paddingLeft={false} className='w-full' name='shareValue' type='text' value={values.shareValue} handleChange={handleChange}placeholder='Share something...'/>

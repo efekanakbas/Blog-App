@@ -3,7 +3,9 @@ import React, { useState, useEffect } from "react";
 import { Avatar, Box, Typography } from "@mui/material";
 import Input from "../Input";
 import { useFormik } from "formik";
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useGeneral } from "@/contexts/GeneralContext";
 
 interface MainProps {
   messages: AxiosResponse<any, any> | undefined;
@@ -11,16 +13,30 @@ interface MainProps {
 
 const Main: React.FC<MainProps> = ({ messages }) => {
   //! States
-  const { values, handleChange, handleReset, handleSubmit } = useFormik({
+  const {avatar} = useGeneral()
+  const queryClient = useQueryClient()
+  const { values, handleChange, handleReset, handleSubmit,  } = useFormik({
     initialValues: {
       inputValue: "",
     },
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      mutate({me:true, message:values.inputValue})
       handleReset(values);
     },
   });
 
+  const { data, mutate, isPending } = useMutation({
+    mutationKey: ['messages'],
+    mutationFn: (messages: any) => {
+      return axios.post("https://65cbe2afefec34d9ed883ace.mockapi.io/messages", { messages })
+        .then(response => response.data);
+    },
+    onSuccess: () => {
+      console.log("invalidateQueries called");
+      queryClient.invalidateQueries({ queryKey: ['messages'] });
+    },
+  });
+  const {değer} = useGeneral()
   //!
   //todo Functions
 
@@ -30,8 +46,10 @@ const Main: React.FC<MainProps> = ({ messages }) => {
   //?
   //* consoleLogs
   // console.log("messages", messages);
+  // if(data) {console.log("data", data)}
+  console.log("değer", değer)
   //*
-
+// 
   return (
     <Box
       className="w-[73%] h-full p-4 pt-0  bg-white "
@@ -48,12 +66,12 @@ const Main: React.FC<MainProps> = ({ messages }) => {
             messages?.map((item, i, array) => (
               <Box
                 className={`flex px-8 relative ${
-                  item.me ? " justify-end" : "justify-start "
+                  item.messages.me ? " justify-end" : "justify-start "
                 }`}
                 key={i}
               >
                 <figure className="absolute -left-4 top-2">
-                  {!item.me && array[i + 1]?.me !== item.me && (
+                  {!item.messages.me && array[i + 1]?.messages.me !== item.messages.me && (
                     <Avatar src="images/avatars/6.png" />
                   )}
                 </figure>
@@ -62,17 +80,17 @@ const Main: React.FC<MainProps> = ({ messages }) => {
                   style={{
                     //@ts-ignore
                     borderTopLeftRadius:
-                      !item.me && array[i + 1]?.me !== item.me && "3px",
+                      !item.messages.me && array[i + 1]?.messages.me !== item.messages.me && "3px",
                     borderTopRightRadius:
-                      item.me && array[i + 1]?.me !== item.me && "3px",
+                      item.messages.me && array[i + 1]?.messages.me !== item.messages.me && "3px",
                   }}
                   className={`flex p-4 rounded-2xl flex-col max-w-[75%] ${
-                    item.me
+                    item.messages.me
                       ? "bg-blue-600 text-white flex-row-reverse "
                       : "bg-white "
                   }`}
                 >
-                  {item.message}
+                  {item.messages.message}
                 </Typography>
               </Box>
             ))
@@ -80,9 +98,9 @@ const Main: React.FC<MainProps> = ({ messages }) => {
 
           <hr className="my-4" />
           <Box className="flex items-center flex-col">
-  <Avatar src="images/avatars/6.png" sx={{ width: '100px', height: '100px' }} />
-  <Typography className="mt-2 font-bold">Mustafa Turan</Typography>
-  <Typography className="text-[12px] text-gray-400">Developer Manager</Typography>
+  <Avatar src={avatar} sx={{ width: '100px', height: '100px' }} />
+  <Typography sx={{marginTop:"8px", fontWeight:"bold"}} >Mustafa Turan</Typography>
+  <Typography sx={{fontSize:'12px'}} className=" text-gray-400">Developer Manager</Typography>
 </Box>
         </Box>
         <Box  className="bg-white absolute bottom-0 w-[97%] h-[80px] mb-4 rounded-2xl">
