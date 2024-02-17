@@ -11,9 +11,10 @@ interface InputProps {
     paddingLeft: boolean
     autoFocus: boolean
     size: 'small' | 'medium'
+    sx: any
 }
 
-const Input: React.FC<InputProps> = ({value, handleChange, name, type, placeholder,className, paddingLeft, autoFocus, size}) => {
+const Input: React.FC<InputProps> = ({value, handleChange, name, type, placeholder,className, paddingLeft, autoFocus, size, sx}) => {
   //! States
       
   //!
@@ -38,7 +39,7 @@ const Input: React.FC<InputProps> = ({value, handleChange, name, type, placehold
               }}
               autoFocus = {autoFocus}
               placeholder={placeholder}
-              sx={{ padding:"" }}
+              sx={sx}
               name={name}
               type={type}
               value={value}

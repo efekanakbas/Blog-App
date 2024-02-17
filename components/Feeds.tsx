@@ -28,7 +28,7 @@ const Feeds: React.FC = () => {
       
   //?
   //* consoleLogs
-     console.log("data", data)
+    //  console.log("data", data)
   //*
 
   if (isLoading) return <h1>Loading</h1>

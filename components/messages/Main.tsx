@@ -29,7 +29,7 @@ const Main: React.FC<MainProps> = ({ messages }) => {
 
   //?
   //* consoleLogs
-  console.log("messages", messages);
+  // console.log("messages", messages);
   //*
 
   return (
@@ -85,11 +85,12 @@ const Main: React.FC<MainProps> = ({ messages }) => {
   <Typography className="text-[12px] text-gray-400">Developer Manager</Typography>
 </Box>
         </Box>
-        <Box className="bg-white absolute bottom-0 w-[97%] h-[80px] mb-4 rounded-2xl">
+        <Box  className="bg-white absolute bottom-0 w-[97%] h-[80px] mb-4 rounded-2xl">
           <form onSubmit={handleSubmit}>
             <Input
+              sx = {{'width': '100%', 'padding' : '0 80px', 'marginTop': '12px'}}
               size="medium"
-              className="w-full px-20 mt-3"
+              className=""
               paddingLeft={false}
               autoFocus={false}
               value={values.inputValue}

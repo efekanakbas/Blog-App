@@ -15,10 +15,13 @@ import likeSound from '../public/audios/likeSound.wav'
 import unlikeSound from '../public/audios/unlikeSound.wav'
 import { useFormik } from "formik";
 import Input from "./Input";
-import FeedModal from './FeedModal';
+import FeedModal from './feedModal/FeedModal';
+import PlusOneIcon from '@mui/icons-material/PlusOne';
 
 
-
+interface FeedsProps {
+  feed: any
+}
 
 
 
@@ -31,6 +34,8 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
     const [play2] = useSound(unlikeSound)
     const [commentShow, setCommentShow] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
+    const [selectedIndex, setSelectedIndex] = useState(0)
+    const [open, setOpen] = useState(false)
 
     const {handleChange, handleReset, handleSubmit, values} = useFormik({
       initialValues: {
@@ -42,7 +47,6 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
       },
     });
 
-    
   //!
   //todo Functions
     const likeHandler = () => {
@@ -54,10 +58,13 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
     }
   //todo
   //? useEffect
-
+    useEffect(() => {
+      setOpen(true)
+    }, [])
   //?
   //* consoleLogs
-  
+    // console.log("selectedIndex", selectedIndex)
+    console.log("OPEN", open)
   //*
 
  
@@ -77,16 +84,58 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
           </Box>
 
           <Typography >{feed.feed.text}</Typography>
+         
           {
-            feed.feed.image && <figure className="my-4 relative w-full  h-96 " >
-              <Image onClick={() => {setModalOpen(true)}}  className="object-cover cursor-pointer" alt="Image" fill src={feed.feed.image} />
-          </figure>
-          }
+  //@ts-ignore
+  feed.feed.image?.length > 0 && (
+    <Box
+      style={{
+        display: "grid",
+        //@ts-ignore
+        gridTemplateColumns: feed.feed.image.length === 4 ? "repeat(2, 1fr)" : "repeat(2, 1fr)",
+        gap: "12px",
+        marginTop:"16px"
+      }}
+    >
+      {/*@ts-ignore*/}
+      {feed.feed.image.map((item, i, arr) => (
+        <figure
+          key={i}
+          className={`relative w-full ${arr.length <= 2 ? 'h-[480px]' : 'h-[240px]'}`}
+          style={{
+            gridColumn: arr.length === 3 && i === 2 ? "1 / span 2" : arr.length === 1 && i === 0 ? "1 / span 2" : undefined, display: arr.length === 5 && i === 4 ? 'none' : "", position:'relative'
+          }}
+        >
+          {arr.length === 5 && i === 3 && 
+            <span  className="absolute z-20 flex text-white justify-center items-center  w-full h-full bg-gray-900 opacity-60 rounded-2xl">
+              <PlusOneIcon onClick={() => {
+              setModalOpen(true);
+              setSelectedIndex(3)
+            }} sx={{fontSize:"150px", cursor:'pointer'}} />
+            </span>}
+          <Image
+            onClick={() => {
+              setModalOpen(true);
+              setSelectedIndex(i)
+            }}
+            // style={{opacity: open ? '90%' : '30%'}}
+            className="cursor-pointer rounded-2xl"
+            alt="Image"
+            fill
+            objectFit="cover"
+            src={item}
+          />
+        </figure>
+      ))}
+    </Box>
+  )
+}
+
 
           <Box className='flex gap-8 mt-6' >
             <Box  className='flex gap-1'>
               <figure className='cursor-pointer -translate-y-[2px] ' onClick={likeHandler} >
-              {isLiked ? <FavoriteIcon onClick={play2}  /> : <FavoriteBorderIcon onClick={play} />}
+              {isLiked ? <FavoriteIcon sx={{color:"#CE3240"}} onClick={play2}  /> : <FavoriteBorderIcon sx={{color:"#CE3240"}} onClick={play} />}
               </figure>
             
             <Typography className='cursor-pointer'>
@@ -105,7 +154,7 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
                 Comments
               </Typography>
               {
-                feed.feed.comments.map((comment, i) => (
+                feed.feed.comments.map((comment : any, i: number) => (
                   <Box className='flex mt-6 gap-3 px-2' key={i}>
                      <figure>
                      <Avatar src= {comment.user.avatar} />
@@ -139,12 +188,12 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
                   </figure>
 
                   <form className="w-full" onSubmit={handleSubmit}>
-                    <Input size="small" autoFocus = {false}  paddingLeft = {false} className='w-full' name="commentValue" type='text' placeholder="Messages..." value={values.commentValue} handleChange={handleChange}  />
+                    <Input sx={null} size="small" autoFocus = {false}  paddingLeft = {false} className='w-full' name="commentValue" type='text' placeholder="Messages..." value={values.commentValue} handleChange={handleChange}  />
                   </form>
                 </Box>
             </Box>
           }
-           <FeedModal modalOpen = {modalOpen} setModalOpen = {setModalOpen} />
+           <FeedModal modalOpen = {modalOpen} setModalOpen = {setModalOpen} feed = {feed} selectedIndex = {selectedIndex} isLiked = {isLiked} setIsLiked={setIsLiked} />
         </Card>
   );
 };

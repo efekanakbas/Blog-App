@@ -52,7 +52,7 @@ const Share: React.FC<ShareProps> = () => {
             <Avatar src='images/avatars/6.png' />
         </figure>
         <form className='w-full' onSubmit={handleSubmit} >
-        <Input size='small' autoFocus = {false}  paddingLeft={false} className='w-full' name='shareValue' type='text' value={values.shareValue} handleChange={handleChange}placeholder='Share something...'/>
+        <Input sx={null} size='small' autoFocus = {false}  paddingLeft={false} className='w-full' name='shareValue' type='text' value={values.shareValue} handleChange={handleChange}placeholder='Share something...'/>
         </form>
       </Box>
 

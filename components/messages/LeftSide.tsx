@@ -179,7 +179,7 @@ const LeftSide: React.FC<LeftSideProps> = () => {
             <Box className="flex flex-col w-full gap-1">
               <Box className="flex items-center justify-between">
                 <Typography>Mustafa Turan</Typography>
-                <Typography className="text-[12px] text-gray-400">
+                <Typography sx={{fontSize:"12px"}} className=" text-gray-400">
                   05 Jan
                 </Typography>
               </Box>
