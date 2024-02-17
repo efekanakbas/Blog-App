@@ -43,17 +43,19 @@ const Main: React.FC<MainProps> = ({messages}) => {
       <Box sx={{height:"calc(100% - 80px)"}} className='bg-gray-100   flex shrink-0 rounded-2xl p-4 overflow-x-hidden overflow-y-auto scrollBarHidden relative w-full'>
           <Box className='w-full mb-[9.5%] rounded-2xl p-4 pt-[52px] flex flex-col-reverse max-h-full overflow-y-auto gap-4 scrollBarHidden'>
             
-            
+          
           {
+            //@ts-ignore
   messages?.map((item, i, array) => (
     <Box className={`flex px-8 relative ${item.me ? ' justify-end' : 'justify-start '}`} key={i}>
       <figure className='absolute -left-4 top-2'>
       {!item.me && array[i + 1]?.me !== item.me && <Avatar src='images/avatars/6.png' />}
       </figure>
-      {/* @ts-ignore */}
+     
       <Typography
       
       style={{
+         //@ts-ignore
         borderTopLeftRadius: !item.me && array[i + 1]?.me !== item.me && '3px',
         borderTopRightRadius: item.me && array[i + 1]?.me !== item.me && '3px'
     }}

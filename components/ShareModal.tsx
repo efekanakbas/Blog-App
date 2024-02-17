@@ -88,7 +88,11 @@ const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2,
       >
         <CloseIcon
           onClick={() => {
-            filterPoolHandler(image);
+            (image: File) => {
+              const updatedPool = imagesPool.filter((img) => img !== image);
+          
+              setImagesPool(updatedPool);
+            };
           }}
           color="error"
           sx={{color:"white"}}
@@ -114,11 +118,6 @@ const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2,
     }
   };
 
-  const filterPoolHandler = (image: File) => {
-    const updatedPool = imagesPool.filter((img) => img !== image);
-
-    setImagesPool(updatedPool);
-  };
 
   const inputClick = () => {
     //@ts-ignore
