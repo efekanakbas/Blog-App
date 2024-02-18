@@ -105,7 +105,7 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
             gridColumn: arr.length === 3 && i === 2 ? "1 / span 2" : arr.length === 1 && i === 0 ? "1 / span 2" : undefined, display: arr.length === 5 && i === 4 ? 'none' : "", position:'relative'
           }}
         >
-          {arr.length === 5 && i === 3 && 
+          {arr.length === 5 && i === 3 && onLoad && 
             <span  className="absolute z-20 flex text-white justify-center items-center  w-full h-full bg-gray-900 opacity-60 rounded-2xl">
               <PlusOneIcon onClick={() => {
               setModalOpen(true);
@@ -153,10 +153,13 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
           </Box>
           {
             commentShow && 
-            <Box className="mt-8" >
+            <Box sx={{marginTop:"32px"}} >
               <Typography className="text-gray-500" >
                 Comments
               </Typography>
+              <Box sx={{maxHeight:'350px', overflowY:"auto", overflowX:"hidden"}} className='scrollBarHidden' >
+
+             
               {
                 feed.feed.comments.map((comment : any, i: number) => (
                   <Box className='flex mt-6 gap-3 px-2' key={i}>
@@ -184,6 +187,7 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
                   </Box>
                 ))
               }
+               </Box>
 
               
                 <Box className='flex gap-4 mb-2 mt-6 mx-2'>
