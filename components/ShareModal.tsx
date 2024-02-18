@@ -305,7 +305,7 @@ const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2,
     handleSubmit();
   }
 }} >
-          <Input sx={null} size="small" autoFocus = {true}  paddingLeft={true} type="text" value={values.inputValue} handleChange={handleChange} name='inputValue' placeholder="Type..." className="w-full"  />
+          <Input disabled={false} sx={null} size="small" autoFocus = {true}  paddingLeft={true} type="text" value={values.inputValue} handleChange={handleChange} name='inputValue' placeholder="Type..." className="w-full"  />
           </form>
           
         </Box>
