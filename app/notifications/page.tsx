@@ -26,7 +26,7 @@ const page: React.FC<pageProps> = () => {
   //*
 
   return (
-    <div>
+    <div className='mt-20' >
       page
     </div>
   );

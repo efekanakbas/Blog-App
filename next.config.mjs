@@ -9,8 +9,8 @@ const nextConfig = {
               loader: 'file-loader',
               options: {
                 name: '[name].[ext]',
-                outputPath: 'static/audios/',
-                publicPath: '_next/static/audios/', 
+                outputPath: '/static/audios/',
+                publicPath: '/_next/static/audios/', 
               },
             },
           ],

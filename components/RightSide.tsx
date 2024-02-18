@@ -12,37 +12,37 @@ interface RightSideProps {
 
 const persons = [
     {
-        avatar: "images/avatars/24.png",
+        avatar: "/images/avatars/24.png",
         name: "Enes Doğan",
         title: "Product Manager"
     },
     {
-        avatar: "images/avatars/25.png",
+        avatar: "/images/avatars/25.png",
         name: "Uğur Öztürk",
         title: "Sales Manager"
     },
     {
-        avatar: "images/avatars/28.png",
+        avatar: "/images/avatars/28.png",
         name: "Ayşe Yılmaz",
         title: "CEO"
     },
     {
-        avatar: "images/avatars/28.png",
+        avatar: "/images/avatars/28.png",
         name: "Ayşe Yılmaz",
         title: "CEO"
     },
     {
-        avatar: "images/avatars/28.png",
+        avatar: "/images/avatars/28.png",
         name: "Ayşe Yılmaz",
         title: "CEO"
     },
     {
-        avatar: "images/avatars/28.png",
+        avatar: "/images/avatars/28.png",
         name: "Ayşe Yılmaz",
         title: "CEO"
     },
     {
-        avatar: "images/avatars/28.png",
+        avatar: "/images/avatars/28.png",
         name: "Ayşe Yılmaz",
         title: "CEO"
     },

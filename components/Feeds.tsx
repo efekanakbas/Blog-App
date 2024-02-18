@@ -6,10 +6,14 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Share from './Share';
 
+interface Feeds {
+  shareShow: boolean
+}
 
 
 
-const Feeds: React.FC = () => {
+
+const Feeds: React.FC<Feeds> = ({shareShow}) => {
   //! States
 
   const { isLoading, error, data } = useQuery({
@@ -17,7 +21,6 @@ const Feeds: React.FC = () => {
     queryFn: () =>
       axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/feed")
   })
-  
   
       
   //!
@@ -37,7 +40,7 @@ const Feeds: React.FC = () => {
 
   return (
     <Box className="flex flex-col gap-7">
-    <Share/>
+    {shareShow && <Share/>}
     {
     //@ts-ignore
     data.map((feed, i) => (

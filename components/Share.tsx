@@ -11,6 +11,8 @@ import Man4Icon from '@mui/icons-material/Man4';
 import ShareModal from './ShareModal';
 import PlaceIcon from '@mui/icons-material/Place';
 import { useGeneral } from '@/contexts/GeneralContext';
+import axios, { AxiosResponse } from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface ShareProps {
   
@@ -18,13 +20,14 @@ interface ShareProps {
 
 const Share: React.FC<ShareProps> = () => {
   //! States
+      const queryClient = useQueryClient()
       const {avatar} = useGeneral()
       const {values, handleChange, handleReset, handleSubmit} = useFormik({
         initialValues: {
           shareValue: ""
         },
         onSubmit: values => {
-          console.log( values)
+          mutate({me:true, message:values.shareValue})
           handleReset(values);
         },
       });
@@ -34,6 +37,18 @@ const Share: React.FC<ShareProps> = () => {
       const [pos2, setPos2] = useState<boolean>(false)
       const [pos3, setPos3] = useState<boolean>(false)
       const [inputShow, setInputShow] = useState<boolean>(false)
+
+
+      const { data, mutate, isPending } = useMutation({
+        mutationKey: ['feeds'],
+        mutationFn: (feeds: any) => {
+          return axios.post("https://65cbe2afefec34d9ed883ace.mockapi.io/feeds", { feeds })
+            .then(response => response.data);
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['feeds'] });
+        },
+      });
 
         
   //!
@@ -54,7 +69,7 @@ const Share: React.FC<ShareProps> = () => {
             <Avatar src={avatar} />
         </figure>
         <form className='w-full' onSubmit={handleSubmit} >
-        <Input sx={null} size='small' autoFocus = {false}  paddingLeft={false} className='w-full' name='shareValue' type='text' value={values.shareValue} handleChange={handleChange}placeholder='Share something...'/>
+        <Input disabled = {isPending} sx={null} size='small' autoFocus = {false}  paddingLeft={false} className='w-full' name='shareValue' type='text' value={values.shareValue} handleChange={handleChange}placeholder='Share something...'/>
         </form>
       </Box>
 

@@ -18,6 +18,7 @@ import Input from "./Input";
 import FeedModal from './feedModal/FeedModal';
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useGeneral } from "@/contexts/GeneralContext";
 
 
 interface FeedsProps {
@@ -37,6 +38,7 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
     const [commentShow, setCommentShow] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
     const [selectedIndex, setSelectedIndex] = useState(0)
+    const {avatar} = useGeneral()
 
     const {handleChange, handleReset, handleSubmit, values} = useFormik({
       initialValues: {
@@ -47,7 +49,6 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
         handleReset(values)
       },
     });
-
   //!
   //todo Functions
     const likeHandler = () => {
@@ -176,11 +177,11 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
                         <MoreHorizIcon className="text-gray-400" />
                         </Box>
                         <Typography className='pt-4'>
-                          {comment.feed.text}
+                          {comment.comment.text}
                         </Typography>
                      </Box>
                      <Typography className="mt-2">
-                      {comment.feed.liked ? "Unlike" : "Like"} <span className='text-blue-600' >({comment.feed.likesCount})</span>
+                      {comment.comment.liked ? "Unlike" : "Like"} <span className='text-blue-600' >({comment.comment.likesCount})</span>
                      </Typography>
                      </Box>
                      
@@ -192,11 +193,11 @@ const Feed: React.FC<FeedsProps> = ({feed}) => {
               
                 <Box className='flex gap-4 mb-2 mt-6 mx-2'>
                   <figure>
-                    <Avatar src="images/avatars/6.png" />
+                    <Avatar src={avatar} />
                   </figure>
 
                   <form className="w-full" onSubmit={handleSubmit}>
-                    <Input sx={null} size="small" autoFocus = {false}  paddingLeft = {false} className='w-full' name="commentValue" type='text' placeholder="Messages..." value={values.commentValue} handleChange={handleChange}  />
+                    <Input disabled={false} sx={null} size="small" autoFocus = {false}  paddingLeft = {false} className='w-full' name="commentValue" type='text' placeholder="Messages..." value={values.commentValue} handleChange={handleChange}  />
                   </form>
                 </Box>
             </Box>

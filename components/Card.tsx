@@ -20,7 +20,7 @@ const Card: React.FC<CardProps> = ({children}) => {
   //*
 
   return (
-    <Box  className='rounded-[15px] px-5  py-5 shadow-md bg-white' >
+    <Box  className='rounded-[15px] p-5 bg-white' >
       {children}
     </Box>
   );

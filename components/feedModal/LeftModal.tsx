@@ -2,6 +2,7 @@ import { Box } from '@mui/material';
 import React, { useState, useEffect, lazy } from 'react';
 //@ts-ignore
 import ImageGallery from "react-image-gallery";
+import CloseIcon from "@mui/icons-material/Close";
 
 
   
@@ -9,9 +10,10 @@ import ImageGallery from "react-image-gallery";
 interface LeftModalProps {
   images: Array<string>
   selectedIndex: number
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const LeftModal: React.FC<LeftModalProps> = ({images, selectedIndex}) => {
+const LeftModal: React.FC<LeftModalProps> = ({images, selectedIndex, setModalOpen}) => {
   //! States
 
 
@@ -32,7 +34,13 @@ const LeftModal: React.FC<LeftModalProps> = ({images, selectedIndex}) => {
   //*
 
   return (
-    <Box  className='scrollBarHidden' sx={{width:'63%', overflow:"auto"}} >
+    <Box  className='scrollBarHidden' sx={{width:{xs: '100%', md: '63%' }, overflow:"auto", position:"relative"}} >
+        <CloseIcon
+          onClick={() => {
+            setModalOpen(false);
+          }}
+          sx={{ position:'absolute', cursor: "pointer", display:{xs: 'inline', md:"none", top:'10px', right:"10px"}, zIndex:"10" }}
+        />
         <ImageGallery startIndex={selectedIndex}  showBullets={true}  lazyLoad = {true} showPlayButton = {false} showThumbnails = {false} useBrowserFullscreen = {false} items = {imagesItem} />
     </Box>
   );

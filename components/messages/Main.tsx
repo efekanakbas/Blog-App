@@ -25,14 +25,13 @@ const Main: React.FC<MainProps> = ({ messages }) => {
     },
   });
 
-  const { data, mutate, isPending } = useMutation({
+  const { data, mutate, isPending} = useMutation({
     mutationKey: ['messages'],
     mutationFn: (messages: any) => {
       return axios.post("https://65cbe2afefec34d9ed883ace.mockapi.io/messages", { messages })
         .then(response => response.data);
     },
     onSuccess: () => {
-      console.log("invalidateQueries called");
       queryClient.invalidateQueries({ queryKey: ['messages'] });
     },
   });
@@ -47,7 +46,7 @@ const Main: React.FC<MainProps> = ({ messages }) => {
   //* consoleLogs
   // console.log("messages", messages);
   // if(data) {console.log("data", data)}
-  console.log("değer", değer)
+  console.log('pending', isPending)
   //*
 // 
   return (
@@ -103,12 +102,13 @@ const Main: React.FC<MainProps> = ({ messages }) => {
   <Typography sx={{fontSize:'12px'}} className=" text-gray-400">Developer Manager</Typography>
 </Box>
         </Box>
-        <Box  className="bg-white absolute bottom-0 w-[97%] h-[80px] mb-4 rounded-2xl">
-          <form onSubmit={handleSubmit}>
+        <Box className="bg-white absolute bottom-0 w-[97%] h-[80px] mb-4 rounded-2xl">
+          <form  onSubmit={handleSubmit}>
             <Input
               sx = {{'width': '100%', 'padding' : '0 80px', 'marginTop': '12px'}}
               size="medium"
               className=""
+              disabled = {isPending}
               paddingLeft={false}
               autoFocus={false}
               value={values.inputValue}

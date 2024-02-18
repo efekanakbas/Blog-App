@@ -26,7 +26,7 @@ export default async function Home() {
     <main className="">
       <HomePageLayout>
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <Feeds />
+          <Feeds shareShow={true} />
         </HydrationBoundary>
       </HomePageLayout>
     </main>

@@ -27,13 +27,17 @@ import SearchIcon from '@mui/icons-material/Search';
 import Image from "next/image";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useGeneral } from "@/contexts/GeneralContext";
+import { useRouter } from "next/navigation";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const pages = [
   { icon: HomeIcon, title: "Homepage", link:"/" },
   { icon: ChatIcon, title: "Messages", link:"/messages" },
   { icon: NotificationsIcon, title: "Notifications", link:"/notifications" },
 ];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = [{title: "Profile", icon: AccountBoxIcon}, {title:'Settings', icon: SettingsIcon}, {title: "Logout", icon: LogoutIcon}];
 
 interface NavbarProps {
   // Define props here
@@ -63,6 +67,8 @@ const Navbar: React.FC<NavbarProps> = () => {
       handleReset(values)
     },
   });
+
+  const router = useRouter()
 
   //!
   //todo Functions
@@ -262,8 +268,8 @@ const Navbar: React.FC<NavbarProps> = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Box className='flex items-center gap-3'>
             <Tooltip TransitionComponent={Zoom} title="Open settings">
-              <Box className="flex items-center cursor-pointer gap-2" onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User Avatar" src={avatar} />
+              <Box onClick={handleOpenUserMenu} sx={{ p: 0, display:"flex", alignItems:"center", cursor:"pointer", gap:'8px' }}>
+                <Avatar alt="User avatar" src={avatar} />
                 <Typography color='black'>
                 Efekan Akbaş
               </Typography>
@@ -278,8 +284,9 @@ const Navbar: React.FC<NavbarProps> = () => {
             <Menu
               PaperProps={{
                 style: {
-                  borderRadius: "15px",
-                  padding:"10px 80px 10px 10px ",
+                  borderRadius:"16px",
+                  padding:"10px",
+                  width:"187px"
                 }, 
               }}
               sx={{ mt: "45px", }}
@@ -299,11 +306,12 @@ const Navbar: React.FC<NavbarProps> = () => {
               
             >
              
-              <Box  >
+              <Box sx={{display:'flex', flexDirection:'column', gap:'12px'}}>
                 {settings.map((setting) => (
-                <MenuItem   key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+                <MenuItem sx={{display:"flex", gap:'12px', borderRadius:"16px"}}  key={setting.title} onClick={() => {handleCloseUserMenu() ; setting.title === 'Profile' && router.push('/profile/efekan')}}>
+                <setting.icon sx={{color:"gray"}} />
+                <Typography textAlign="center">{setting.title}</Typography>
+              </MenuItem>
                 ))}
               </Box>
             </Menu>

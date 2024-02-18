@@ -56,7 +56,7 @@ const RightModal: React.FC<RightModalProps> = ({
   return (
     <Box
       sx={{
-        width: "37%",
+        width: {xs: '100%', md: "37%"},
         padding: "24px",
         display: "flex",
         flexDirection: "column",
@@ -97,7 +97,7 @@ const RightModal: React.FC<RightModalProps> = ({
           onClick={() => {
             setModalOpen(!modalOpen);
           }}
-          sx={{ cursor: "pointer" }}
+          sx={{ cursor: "pointer", display:{xs: 'none', md:"inline"} }}
         />
       </Box>
 
@@ -154,11 +154,11 @@ const RightModal: React.FC<RightModalProps> = ({
                 <MoreHorizIcon className="text-gray-400" />
               </Box>
               <Typography sx={{ marginTop: "12px" }}>
-                {item.feed.text}
+                {item.comment.text}
               </Typography>
             </Box>
             <Box sx={{marginTop:'8px', marginLeft:'52px'}}>
-              Like <span className="text-blue-500" >({item.feed.likesCount})</span>
+              Like <span className="text-blue-500" >({item.comment.likesCount})</span>
               {/* <span className="border-l absolute top-[7px] border-l-gray-300 text-white ms-3 text-[8px]">se</span> */}
             </Box>
           </Box>
@@ -166,7 +166,7 @@ const RightModal: React.FC<RightModalProps> = ({
       </Box>
       <Box>
         <form className="mb-1" onSubmit={handleSubmit} >
-        <Input name="inputValue" sx={{'width':'100%'}} value={values.inputValue} handleChange={handleChange} type="text" paddingLeft={false} size="small" autoFocus={false} className="" placeholder="Type here..."  />
+        <Input disabled = {false} name="inputValue" sx={{'width':'100%'}} value={values.inputValue} handleChange={handleChange} type="text" paddingLeft={false} size="small" autoFocus={false} className="" placeholder="Type here..."  />
         </form>
         
       </Box>
