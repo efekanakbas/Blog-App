@@ -41,7 +41,7 @@ const LeftModal: React.FC<LeftModalProps> = ({images, selectedIndex, setModalOpe
           }}
           sx={{ position:'absolute', cursor: "pointer", display:{xs: 'inline', md:"none", top:'10px', right:"10px"}, zIndex:"10" }}
         />
-        <ImageGallery startIndex={selectedIndex}  showBullets={true}  lazyLoad = {true} showPlayButton = {false} showThumbnails = {false} useBrowserFullscreen = {false} items = {imagesItem} />
+        <ImageGallery loading = {lazy} startIndex={selectedIndex}  showBullets={true}  lazyLoad = {true} showPlayButton = {false} showThumbnails = {false} useBrowserFullscreen = {false} items = {imagesItem} />
     </Box>
   );
 };

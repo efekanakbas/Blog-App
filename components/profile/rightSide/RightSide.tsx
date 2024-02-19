@@ -1,10 +1,11 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy } from 'react';
 import Card from '../../Card';
 import { Box } from '@mui/material';
 import { useGeneral } from '@/contexts/GeneralContext';
 import FeedSelected from './FeedSelected';
-import ProfileSelected from './ProfileSelected';
+const ProfileSelected = lazy(() => import('./ProfileSelected'))
+
 
 interface RightSideProps {
   // Define props here
