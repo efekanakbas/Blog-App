@@ -105,6 +105,7 @@ const Main: React.FC<MainProps> = ({ messages }) => {
         <Box className="bg-white absolute bottom-0 w-[97%] h-[80px] mb-4 rounded-2xl">
           <form  onSubmit={handleSubmit}>
             <Input
+              id="messageInput"
               onKeyDownHandler={undefined}
               sx = {{'width': '100%', 'padding' : '0 80px', 'marginTop': '16px'}}
               size="medium"

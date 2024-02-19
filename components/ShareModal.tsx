@@ -336,6 +336,7 @@ const ShareModal: React.FC<ModalProps> = ({
               }}
             >
               <Input
+                id="shareModalInput"
                 onKeyDownHandler = {undefined}
                 disabled={false}
                 sx={null}

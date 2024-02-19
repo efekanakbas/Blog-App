@@ -1,4 +1,4 @@
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, InputLabel, TextField, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import Input from "@/components/Input";
@@ -73,7 +73,11 @@ const SkillsForm: React.FC<SkillsFormProps> = () => {
         }}
       >
         <Box>
+          <InputLabel sx={{marginBottom:'8px', color:'black'}} htmlFor="mainInput" >
+            Main Skills
+          </InputLabel>
           <Input
+            id="mainInput"
             onKeyDownHandler={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -135,7 +139,11 @@ const SkillsForm: React.FC<SkillsFormProps> = () => {
         </Box>
 
         <Box>
+        <InputLabel sx={{marginBottom:'8px', color:'black'}} htmlFor="compInput" >
+            Complementary Skills
+          </InputLabel>
           <Input
+            id="compInput"
             onKeyDownHandler={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -197,7 +205,11 @@ const SkillsForm: React.FC<SkillsFormProps> = () => {
         </Box>
 
         <Box>
+        <InputLabel sx={{marginBottom:'8px', color:'black'}} htmlFor="intInput" >
+            Interests
+          </InputLabel>
           <Input
+            id="intInput"
             onKeyDownHandler={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();

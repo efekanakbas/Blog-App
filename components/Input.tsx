@@ -14,9 +14,10 @@ interface InputProps {
     sx: any
     disabled: boolean
     onKeyDownHandler: React.KeyboardEventHandler<HTMLInputElement> | undefined
+    id: string
 }
 
-const Input: React.FC<InputProps> = ({value, handleChange, name, type, placeholder,className, paddingLeft, autoFocus, size, sx, disabled, onKeyDownHandler}) => {
+const Input: React.FC<InputProps> = ({value, handleChange, name, type, placeholder,className, paddingLeft, autoFocus, size, sx, disabled, onKeyDownHandler, id}) => {
   //! States
       
   //!
@@ -49,7 +50,7 @@ const Input: React.FC<InputProps> = ({value, handleChange, name, type, placehold
               value={value}
               onChange={handleChange}
               size={size === 'small' ? 'small' : 'small'} 
-              id="outlined-basic"
+              id={id}
               variant="outlined"
               className={className}
               onKeyDown={onKeyDownHandler}

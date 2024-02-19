@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Avatar, Box, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
@@ -33,15 +33,15 @@ const RightModal: React.FC<RightModalProps> = ({
   const [play] = useSound(likeSound);
   const [play2] = useSound(unlikeSound);
 
-  const {values, handleChange, handleReset, handleSubmit} = useFormik({
-    initialValues : {
-        inputValue:""
+  const { values, handleChange, handleReset, handleSubmit } = useFormik({
+    initialValues: {
+      inputValue: "",
     },
     onSubmit: (values) => {
-        console.log(values)
-        handleReset(values)
-    }
-  })
+      console.log(values);
+      handleReset(values);
+    },
+  });
   //!
   //todo Functions
 
@@ -56,7 +56,7 @@ const RightModal: React.FC<RightModalProps> = ({
   return (
     <Box
       sx={{
-        width: {xs: '100%', md: "37%"},
+        width: { xs: "100%", md: "37%" },
         padding: "24px",
         display: "flex",
         flexDirection: "column",
@@ -97,7 +97,7 @@ const RightModal: React.FC<RightModalProps> = ({
           onClick={() => {
             setModalOpen(!modalOpen);
           }}
-          sx={{ cursor: "pointer", display:{xs: 'none', md:"inline"} }}
+          sx={{ cursor: "pointer", display: { xs: "none", md: "inline" } }}
         />
       </Box>
 
@@ -123,20 +123,20 @@ const RightModal: React.FC<RightModalProps> = ({
           gap: "32px",
           paddingTop: "32px",
           overflowY: "auto",
-          paddingBottom:'16px'
+          paddingBottom: "16px",
         }}
       >
         {feed.feed.comments.map((item: any, i: number) => (
-          <Box sx={{position:'relative'}} key={i}>
-            <figure className="absolute top-0 left-0" >
-                <Avatar src={item.user.avatar} />
+          <Box sx={{ position: "relative" }} key={i}>
+            <figure className="absolute top-0 left-0">
+              <Avatar src={item.user.avatar} />
             </figure>
             <Box
               sx={{
                 backgroundColor: "#eeeeee",
                 padding: "16px",
                 borderRadius: "16px",
-                marginLeft:'52px'
+                marginLeft: "52px",
               }}
             >
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -157,18 +157,32 @@ const RightModal: React.FC<RightModalProps> = ({
                 {item.comment.text}
               </Typography>
             </Box>
-            <Box sx={{marginTop:'8px', marginLeft:'52px'}}>
-              Like <span className="text-blue-500" >({item.comment.likesCount})</span>
+            <Box sx={{ marginTop: "8px", marginLeft: "52px" }}>
+              Like{" "}
+              <span className="text-blue-500">({item.comment.likesCount})</span>
               {/* <span className="border-l absolute top-[7px] border-l-gray-300 text-white ms-3 text-[8px]">se</span> */}
             </Box>
           </Box>
         ))}
       </Box>
       <Box>
-        <form className="mb-1" onSubmit={handleSubmit} >
-        <Input onKeyDownHandler={undefined} disabled = {false} name="inputValue" sx={{'width':'100%'}} value={values.inputValue} handleChange={handleChange} type="text" paddingLeft={false} size="small" autoFocus={false} className="" placeholder="Type here..."  />
+        <form className="mb-1" onSubmit={handleSubmit}>
+          <Input
+            id="feedModalInput"
+            onKeyDownHandler={undefined}
+            disabled={false}
+            name="inputValue"
+            sx={{ width: "100%" }}
+            value={values.inputValue}
+            handleChange={handleChange}
+            type="text"
+            paddingLeft={false}
+            size="small"
+            autoFocus={false}
+            className=""
+            placeholder="Type here..."
+          />
         </form>
-        
       </Box>
     </Box>
   );
