@@ -180,7 +180,10 @@ const Feed: React.FC<FeedsProps> = ({ feed }) => {
           {feed.feed.commentsCount}
         </Box>
       </Box>
+
+
       {commentShow && (
+        <React.Suspense fallback={<div>Loading...</div>}>
         <Box sx={{ marginTop: "32px" }}>
           <Typography className="text-gray-500">Comments</Typography>
           <Box
@@ -238,7 +241,11 @@ const Feed: React.FC<FeedsProps> = ({ feed }) => {
             </form>
           </Box>
         </Box>
+        </React.Suspense>
       )}
+
+
+
       <React.Suspense fallback={<div>Loading...</div>}>
         <FeedModal
           modalOpen={modalOpen}
