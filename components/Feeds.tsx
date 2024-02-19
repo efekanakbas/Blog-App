@@ -18,8 +18,8 @@ const Feeds: React.FC<Feeds> = ({shareShow}) => {
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["feeds"],
-    queryFn: () =>
-      axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/feed")
+    // queryFn: () =>
+    //   axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/feed")
   })
   
       
