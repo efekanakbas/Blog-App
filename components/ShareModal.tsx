@@ -10,7 +10,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState, useEffect, useMemo, useRef, Dispatch, SetStateAction } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import ImageIcon from "@mui/icons-material/Image";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
@@ -20,7 +27,7 @@ import Image from "next/image";
 import AddIcon from "@mui/icons-material/Add";
 import Input from "./Input";
 import { useFormik } from "formik";
-import PlaceIcon from '@mui/icons-material/Place';
+import PlaceIcon from "@mui/icons-material/Place";
 import toast from "react-hot-toast";
 import { useGeneral } from "@/contexts/GeneralContext";
 
@@ -35,66 +42,75 @@ interface ModalProps {
   setPos2: Dispatch<SetStateAction<boolean>>;
   setPos3: Dispatch<SetStateAction<boolean>>;
   setInputShow: Dispatch<SetStateAction<boolean>>;
-
 }
 
-const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2, pos3, setPos1, setPos2, setPos3, inputShow, setInputShow }) => {
+const ShareModal: React.FC<ModalProps> = ({
+  modalOpen,
+  setModalOpen,
+  pos1,
+  pos2,
+  pos3,
+  setPos1,
+  setPos2,
+  setPos3,
+  inputShow,
+  setInputShow,
+}) => {
   //! States
-  const {avatar} = useGeneral()
+  const { avatar } = useGeneral();
   const [imagesPool, setImagesPool] = useState<File[]>([]);
-  const [hashtagPool, setHashtagPool] = useState<string[]>([])
-  const [mentionPool, setMentionPool] = useState<string[]>([])
-  const [location, setLocation] = useState<string>("")
-  const myRef = useRef(null)
- 
-  
+  const [hashtagPool, setHashtagPool] = useState<string[]>([]);
+  const [mentionPool, setMentionPool] = useState<string[]>([]);
+  const [location, setLocation] = useState<string>("");
+  const myRef = useRef(null);
 
-  const {values, handleChange, handleReset, handleSubmit} = useFormik({
-    initialValues:{
-      inputValue:''
-    }, 
-    onSubmit: values => {
-      if(pos1) {
-        const existingHashtag = hashtagPool.find(hashtag => hashtag === values.inputValue);
+  const { values, handleChange, handleReset, handleSubmit } = useFormik({
+    initialValues: {
+      inputValue: "",
+    },
+    onSubmit: (values) => {
+      if (pos1) {
+        const existingHashtag = hashtagPool.find(
+          (hashtag) => hashtag === values.inputValue
+        );
 
         if (existingHashtag) {
-          toast.error('You can not entry same hashtag!')
+          toast.error("You can not entry same hashtag!");
         } else {
           setHashtagPool([...hashtagPool, values.inputValue]);
         }
-      } else if(pos2) {
-        const existingMention = mentionPool.find(mention => mention === values.inputValue);
+      } else if (pos2) {
+        const existingMention = mentionPool.find(
+          (mention) => mention === values.inputValue
+        );
 
         if (existingMention) {
-          toast.error('You can not entry same mention!')
+          toast.error("You can not entry same mention!");
         } else {
           setMentionPool([...mentionPool, values.inputValue]);
         }
       } else if (pos3) {
-        setLocation(values.inputValue)
-      };
-      handleReset(values)
-      if(!pos3) {
+        setLocation(values.inputValue);
+      }
+      handleReset(values);
+      if (!pos3) {
         handleScrollToBottom();
       } else {
         handleScrollToTop();
       }
     },
-  })
+  });
 
   const memoizedImagesPool = useMemo(() => {
     return imagesPool.map((image, i) => (
-      <figure
-        className="relative  w-[150px] h-[150px] flex-shrink-0"
-        key={i}
-      >
+      <figure className="relative  w-[150px] h-[150px] flex-shrink-0" key={i}>
         <CloseIcon
           onClick={() => {
             const updatedPool = imagesPool.filter((img) => img !== image);
             setImagesPool(updatedPool);
           }}
           color="error"
-          sx={{color:"white"}}
+          sx={{ color: "white" }}
           className="absolute right-2 top-2 z-10  bg-red-600 rounded-full p-[1px] scale-110 cursor-pointer"
         />
         <Image
@@ -117,7 +133,6 @@ const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2,
     }
   };
 
-
   const inputClick = () => {
     //@ts-ignore
     document.getElementById("fileInput").click();
@@ -133,20 +148,19 @@ const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2,
   const handleScrollToTop = () => {
     if (myRef.current) {
       //@ts-ignore
-      myRef.current.scrollTop = 0
+      myRef.current.scrollTop = 0;
     }
   };
 
-  const handleHashtagFilter = (hashtag:string) => {
-    const updatedHashtagPool = hashtagPool.filter((item) => item !== hashtag)
-    setHashtagPool(updatedHashtagPool)
-  }
+  const handleHashtagFilter = (hashtag: string) => {
+    const updatedHashtagPool = hashtagPool.filter((item) => item !== hashtag);
+    setHashtagPool(updatedHashtagPool);
+  };
 
-
-  const handleMentionFilter = (mention:string) => {
-    const updatedMentionPool = mentionPool.filter((item) => item !== mention)
-    setMentionPool(updatedMentionPool)
-  }
+  const handleMentionFilter = (mention: string) => {
+    const updatedMentionPool = mentionPool.filter((item) => item !== mention);
+    setMentionPool(updatedMentionPool);
+  };
 
   const closeModal = () => {
     setTimeout(() => {
@@ -157,13 +171,13 @@ const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2,
       handleReset(values);
     }, 300);
   };
-  
+
   //todo
   //? useEffect
 
   //?
   //* consoleLogs
-    
+
   //*
 
   return (
@@ -180,32 +194,32 @@ const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2,
       open={modalOpen}
       onClose={() => {
         setModalOpen(!modalOpen);
-        closeModal()
+        closeModal();
       }}
     >
       <DialogTitle className="flex justify-between p-5">
-        <Typography sx={{fontSize:"22px"}} >Create Post</Typography>
-        <button onClick={() => {
-        setModalOpen(!modalOpen);
-        closeModal()
-      }} >
+        <Typography sx={{ fontSize: "22px" }}>Create Post</Typography>
+        <button
+          onClick={() => {
+            setModalOpen(!modalOpen);
+            closeModal();
+          }}
+        >
           <CloseIcon />
         </button>
       </DialogTitle>
       <hr />
-      <DialogContent ref = {myRef} className="py-8 pb-[22px] overflow-auto  scrollBarHidden transition-all duration-300 ">
+      <DialogContent
+        ref={myRef}
+        className="py-8 pb-[22px] overflow-auto  scrollBarHidden transition-all duration-300 "
+      >
         <Box className="flex mb-8 gap-6 ml-[14px] items-center">
           <figure>
-            <Avatar
-              sx={{ transform: "scale(1.4)" }}
-              src={avatar}
-            />
+            <Avatar sx={{ transform: "scale(1.4)" }} src={avatar} />
           </figure>
-          <Box className='flex flex-col'>
-          <Typography sx={{ fontWeight: "bold" }}>Efekan Akbaş</Typography>
-          <Typography>
-            {location}
-          </Typography>
+          <Box className="flex flex-col">
+            <Typography sx={{ fontWeight: "bold" }}>Efekan Akbaş</Typography>
+            <Typography>{location}</Typography>
           </Box>
         </Box>
         <Box className="">
@@ -236,81 +250,112 @@ const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2,
                   onClick={inputClick}
                   className="w-[150px] h-[150px] rounded-xl bg-gray-200 flex-shrink-0"
                 >
-                  <AddIcon sx={{color:"white", fontSize:"120px"}}  />
+                  <AddIcon sx={{ color: "white", fontSize: "120px" }} />
                 </button>
               )}
             </Box>
           )}
-          {
-            hashtagPool.length > 0 && 
-            <Box className='flex flex-col gap-4 mt-6  w-full' >
-              <Typography variant="h5">
-                Hashtags
-              </Typography>
-              <Box className='flex gap-4 flex-wrap'>
-                
-              {
-                hashtagPool.map((hashtag, i) => (
-                  <span className="border border-blue-500 px-4 py-1 rounded-full text-blue-500 relative" key={i} >
-                    <button onClick={() => {handleHashtagFilter(hashtag)}} className="absolute -top-1 -right-[1px] scale-[0.60]">
-                  <CloseIcon color="error" />
-                </button>
+          {hashtagPool.length > 0 && (
+            <Box className="flex flex-col gap-4 mt-6  w-full">
+              <Typography variant="h5">Hashtags</Typography>
+              <Box className="flex gap-4 flex-wrap">
+                {hashtagPool.map((hashtag, i) => (
+                  <span
+                    className="border border-blue-500 px-4 py-1 rounded-full text-blue-500 relative"
+                    key={i}
+                  >
+                    <button
+                      onClick={() => {
+                        handleHashtagFilter(hashtag);
+                      }}
+                      className="absolute -top-1 -right-[1px] scale-[0.60]"
+                    >
+                      <CloseIcon color="error" />
+                    </button>
                     #{hashtag}
                   </span>
-                ))
-              }
+                ))}
               </Box>
-              
             </Box>
-          }
+          )}
 
-{
-            mentionPool.length > 0 && 
-            <Box className='flex flex-col gap-4 mt-6  ' >
-              <Typography variant="h5">
-                Mentions
-              </Typography>
-              <Box className='flex gap-4 flex-wrap'>
-              {
-                mentionPool.map((mention, i) => (
-                  <span className="px-4 py-1 rounded-lg text-blue-500 bg-blue-200 relative" key={i} >
-                    <button onClick={() => {handleMentionFilter(mention)}} className="absolute -top-1 -right-[2.5px] scale-[0.60]">
-                  <CloseIcon color="error" />
-                </button>
+          {mentionPool.length > 0 && (
+            <Box className="flex flex-col gap-4 mt-6  ">
+              <Typography variant="h5">Mentions</Typography>
+              <Box className="flex gap-4 flex-wrap">
+                {mentionPool.map((mention, i) => (
+                  <span
+                    className="px-4 py-1 rounded-lg text-blue-500 bg-blue-200 relative"
+                    key={i}
+                  >
+                    <button
+                      onClick={() => {
+                        handleMentionFilter(mention);
+                      }}
+                      className="absolute -top-1 -right-[2.5px] scale-[0.60]"
+                    >
+                      <CloseIcon color="error" />
+                    </button>
                     {mention}
                   </span>
-                ))
-              }
+                ))}
               </Box>
-              
             </Box>
-          }
+          )}
         </Box>
-        
-        
       </DialogContent>
-      <DialogActions sx={{display:"flex", flexDirection:"column", padding:"8px 24px"}}  >
-      {
-          inputShow && <Box sx={{width:"100%"}} className='mb-8 relative'>
-          <figure className="absolute left-[10px] top-[6.5px]">
-            {pos1 ? <TagIcon color="error" /> : pos2 ? <Man4Icon color="secondary" /> : <PlaceIcon color="info" />}
-          </figure>
-          <button onClick={() => {setInputShow(false)}} className="absolute right-[10px] top-[6.5px] z-10" >
-            <CloseIcon color="error" />
-          </button>
-          <form onSubmit={(event) => {
-  event.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
+      <DialogActions
+        sx={{ display: "flex", flexDirection: "column", padding: "8px 24px" }}
+      >
+        {inputShow && (
+          <Box sx={{ width: "100%" }} className="mb-8 relative">
+            <figure className="absolute left-[10px] top-[6.5px]">
+              {pos1 ? (
+                <TagIcon color="error" />
+              ) : pos2 ? (
+                <Man4Icon color="secondary" />
+              ) : (
+                <PlaceIcon color="info" />
+              )}
+            </figure>
+            <button
+              onClick={() => {
+                setInputShow(false);
+              }}
+              className="absolute right-[10px] top-[6.5px] z-10"
+            >
+              <CloseIcon color="error" />
+            </button>
+            <form
+              onSubmit={(event) => {
+                event.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
 
-  if (values.inputValue.length > 0) {
-    handleSubmit();
-  }
-}} >
-          <Input disabled={false} sx={null} size="small" autoFocus = {true}  paddingLeft={true} type="text" value={values.inputValue} handleChange={handleChange} name='inputValue' placeholder="Type..." className="w-full"  />
-          </form>
-          
-        </Box>
-        }
-      <Box sx={{width:"100%", padding:"28px 0"}} className="flex  justify-evenly bg-gray-100 rounded-lg ">
+                if (values.inputValue.length > 0) {
+                  handleSubmit();
+                }
+              }}
+            >
+              <Input
+                onKeyDownHandler = {undefined}
+                disabled={false}
+                sx={null}
+                size="small"
+                autoFocus={true}
+                paddingLeft={true}
+                type="text"
+                value={values.inputValue}
+                handleChange={handleChange}
+                name="inputValue"
+                placeholder="Type..."
+                className="w-full"
+              />
+            </form>
+          </Box>
+        )}
+        <Box
+          sx={{ width: "100%", padding: "28px 0" }}
+          className="flex  justify-evenly bg-gray-100 rounded-lg "
+        >
           <Box
             onClick={() => imagesPool.length < 5 && inputClick()}
             className="flex gap-2 items-center cursor-pointer"
@@ -328,28 +373,43 @@ const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2,
             <Typography className="none450v2">Image</Typography>
           </Box>
 
-          <Box  className="flex gap-1 cursor-pointer">
+          <Box className="flex gap-1 cursor-pointer">
             <figure className="scale450v2">
               <AttachFileIcon color="warning" />
             </figure>
             <Typography className="none450v2">Attachment</Typography>
           </Box>
 
-          <Box onClick={() => {setInputShow(true), setPos1(true), setPos2(false), setPos3(false)}} className="flex gap-1 cursor-pointer">
+          <Box
+            onClick={() => {
+              setInputShow(true), setPos1(true), setPos2(false), setPos3(false);
+            }}
+            className="flex gap-1 cursor-pointer"
+          >
             <figure className="scale450v2">
               <TagIcon color="error" />
             </figure>
             <Typography className="none450v2">Hashtag</Typography>
           </Box>
 
-          <Box onClick={() => {setInputShow(true), setPos1(false), setPos2(true), setPos3(false)}} className="flex gap-1 cursor-pointer">
+          <Box
+            onClick={() => {
+              setInputShow(true), setPos1(false), setPos2(true), setPos3(false);
+            }}
+            className="flex gap-1 cursor-pointer"
+          >
             <figure className="scale450v2">
               <Man4Icon color="secondary" />
             </figure>
             <Typography className="none450v2">Mention</Typography>
           </Box>
 
-          <Box onClick={() => {setInputShow(true), setPos1(false), setPos2(false), setPos3(true)}} className="flex gap-1 cursor-pointer">
+          <Box
+            onClick={() => {
+              setInputShow(true), setPos1(false), setPos2(false), setPos3(true);
+            }}
+            className="flex gap-1 cursor-pointer"
+          >
             <figure className="scale450v2">
               <PlaceIcon color="info" />
             </figure>
@@ -357,7 +417,14 @@ const ShareModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, pos1, pos2,
           </Box>
         </Box>
         <Button
-          sx={{ fontWeight: "bolder", marginTop:"32px", marginBottom:"32px", width:"100%", borderRadius:"200px", padding:"12px 0" }}
+          sx={{
+            fontWeight: "bolder",
+            marginTop: "32px",
+            marginBottom: "32px",
+            width: "100%",
+            borderRadius: "200px",
+            padding: "12px 0",
+          }}
           className=" bg-slate-50"
           size="large"
           variant="outlined"

@@ -166,7 +166,7 @@ const RightModal: React.FC<RightModalProps> = ({
       </Box>
       <Box>
         <form className="mb-1" onSubmit={handleSubmit} >
-        <Input disabled = {false} name="inputValue" sx={{'width':'100%'}} value={values.inputValue} handleChange={handleChange} type="text" paddingLeft={false} size="small" autoFocus={false} className="" placeholder="Type here..."  />
+        <Input onKeyDownHandler={undefined} disabled = {false} name="inputValue" sx={{'width':'100%'}} value={values.inputValue} handleChange={handleChange} type="text" paddingLeft={false} size="small" autoFocus={false} className="" placeholder="Type here..."  />
         </form>
         
       </Box>

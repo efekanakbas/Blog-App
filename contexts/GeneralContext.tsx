@@ -17,6 +17,8 @@ export const GeneralContextProvider = ({
 
   const [tabValue, setTabValue] = useState(0);
   const [verticalTabvalue, setVerticalTabValue] = useState(0);
+  const [profilePage, setProfilePage] = useState(0)
+  const [inputFocus, setInputFocus] = useState(null)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -32,7 +34,13 @@ export const GeneralContextProvider = ({
     tabValue: tabValue,
     handleChange: handleChange,
     verticalTabvalue: verticalTabvalue,
-    handleChangeVertical: handleChangeVertical
+    setVerticalTabValue: setVerticalTabValue,
+    handleChangeVertical: handleChangeVertical,
+    isMe: true,
+    profilePage: profilePage,
+    setProfilePage: setProfilePage,
+    inputFocus: inputFocus,
+    setInputFocus: setInputFocus
 }
 
 

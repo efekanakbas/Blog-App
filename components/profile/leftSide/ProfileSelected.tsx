@@ -13,7 +13,7 @@ interface ProfileSelectedProps {
 
 const ProfileSelected: React.FC<ProfileSelectedProps> = () => {
   //! States
-  const { verticalTabvalue, handleChangeVertical } = useGeneral();
+  const { verticalTabvalue, handleChangeVertical, setProfilePage} = useGeneral();
   //!
   //todo Functions
   function a11yProps(index: number) {
@@ -46,6 +46,8 @@ const ProfileSelected: React.FC<ProfileSelectedProps> = () => {
           sx={{ borderRight: 1, borderColor: "divider" }}
         >
           <Tab
+            onClick={() => {setProfilePage(0)}}
+            href="#skills"
             style={{
               alignItems: "start",
               backgroundColor: verticalTabvalue === 0 ? "#f0f3ff" : "",
@@ -61,6 +63,8 @@ const ProfileSelected: React.FC<ProfileSelectedProps> = () => {
             {...a11yProps(0)}
           />
           <Tab
+            onClick={() => {setProfilePage(0)}}
+            href="#experience"
             style={{
               alignItems: "start",
               backgroundColor: verticalTabvalue === 1 ? "#f0f3ff" : "",
@@ -77,6 +81,8 @@ const ProfileSelected: React.FC<ProfileSelectedProps> = () => {
             {...a11yProps(1)}
           />
           <Tab
+            onClick={() => {setProfilePage(0)}}
+            href="#education"
             style={{
               alignItems: "start",
               backgroundColor: verticalTabvalue === 2 ? "#f0f3ff" : "",
@@ -93,6 +99,8 @@ const ProfileSelected: React.FC<ProfileSelectedProps> = () => {
             {...a11yProps(2)}
           />
           <Tab
+            onClick={() => {setProfilePage(0)}}
+            href="#language"
             style={{
               alignItems: "start",
               backgroundColor: verticalTabvalue === 3 ? "#f0f3ff" : "",
@@ -103,26 +111,10 @@ const ProfileSelected: React.FC<ProfileSelectedProps> = () => {
             label={
               <Box>
                 {" "}
-                <BorderColorIcon sx={{ marginRight: "12px" }} /> References{" "}
-              </Box>
-            }
-            {...a11yProps(3)}
-          />
-          <Tab
-            style={{
-              alignItems: "start",
-              backgroundColor: verticalTabvalue === 4 ? "#f0f3ff" : "",
-              borderRadius: "10px 0 0 10px",
-              transition: "all .5s",
-              marginTop:'8px'
-            }}
-            label={
-              <Box>
-                {" "}
                 <PublicIcon sx={{ marginRight: "12px" }} /> Language{" "}
               </Box>
             }
-            {...a11yProps(4)}
+            {...a11yProps(3)}
           />
         </Tabs>
       </Box>

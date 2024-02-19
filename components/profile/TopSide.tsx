@@ -11,7 +11,7 @@ interface TopSideProps {
 
 const TopSide: React.FC<TopSideProps> = () => {
   //! States
-  const { avatar, name, tabValue, handleChange } = useGeneral();
+  const { avatar, name, tabValue, handleChange, setProfilePage, setVerticalTabValue } = useGeneral();
   
 
 
@@ -72,7 +72,7 @@ const TopSide: React.FC<TopSideProps> = () => {
         <Box>
         <Tabs value={tabValue} onChange={handleChange} aria-label="basic tabs">
           <Tab style={{backgroundColor: tabValue === 0 ? '#eeeeee' : '', borderRadius:'10px 10px 0 0', fontWeight:'bold', transition:'all .5s', marginRight:'8px'}} label="Feed" {...a11yProps(0)} />
-          <Tab style={{backgroundColor: tabValue === 1 ? '#eeeeee' : '', borderRadius:'10px 10px 0 0', fontWeight:'bold', transition:'all .5s'}} label="Profile" {...a11yProps(1)} />
+          <Tab onClick={() => {setProfilePage(0); setVerticalTabValue(0)}} style={{backgroundColor: tabValue === 1 ? '#eeeeee' : '', borderRadius:'10px 10px 0 0', fontWeight:'bold', transition:'all .5s'}} label="Profile" {...a11yProps(1)} />
         </Tabs>
         </Box>
       </Box>

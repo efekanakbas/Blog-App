@@ -226,6 +226,7 @@ const Feed: React.FC<FeedsProps> = ({ feed }) => {
 
             <form className="w-full" onSubmit={handleSubmit}>
               <Input
+                onKeyDownHandler={undefined}
                 disabled={false}
                 sx={null}
                 size="small"

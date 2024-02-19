@@ -13,9 +13,10 @@ interface InputProps {
     size: 'small' | 'medium'
     sx: any
     disabled: boolean
+    onKeyDownHandler: React.KeyboardEventHandler<HTMLInputElement> | undefined
 }
 
-const Input: React.FC<InputProps> = ({value, handleChange, name, type, placeholder,className, paddingLeft, autoFocus, size, sx, disabled}) => {
+const Input: React.FC<InputProps> = ({value, handleChange, name, type, placeholder,className, paddingLeft, autoFocus, size, sx, disabled, onKeyDownHandler}) => {
   //! States
       
   //!
@@ -33,9 +34,10 @@ const Input: React.FC<InputProps> = ({value, handleChange, name, type, placehold
     <TextField
               InputProps={{
                 style: {
-                  borderRadius: "25px",
+                  borderRadius: "100px",
                   //@ts-ignore
-                  padding: paddingLeft && '0 0 0 24px'
+                  padding: paddingLeft ? '0 24px 0 24px' :  '0 4px',
+                  height: size === 'medium' ? '48px' : ""
                 },
               }}
               autoFocus = {autoFocus}
@@ -46,10 +48,11 @@ const Input: React.FC<InputProps> = ({value, handleChange, name, type, placehold
               type={type}
               value={value}
               onChange={handleChange}
-              size={size}
+              size={size === 'small' ? 'small' : 'small'} 
               id="outlined-basic"
               variant="outlined"
               className={className}
+              onKeyDown={onKeyDownHandler}
             />
   );
 };
