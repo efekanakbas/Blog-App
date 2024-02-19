@@ -122,7 +122,6 @@ const Feed: React.FC<FeedsProps> = ({ feed }) => {
                   </span>
                 )}
                 <Image
-                  loading="lazy"
                   onLoad={() => setOnLoad(true)}
                   onClick={() => {
                     setModalOpen(true);
