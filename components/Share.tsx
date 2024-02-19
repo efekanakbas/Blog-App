@@ -8,7 +8,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import TagIcon from '@mui/icons-material/Tag';
 import Man4Icon from '@mui/icons-material/Man4';
-import ShareModal from './ShareModal';
+const ShareModal = React.lazy(() => import("./ShareModal"));
 import PlaceIcon from '@mui/icons-material/Place';
 import { useGeneral } from '@/contexts/GeneralContext';
 import axios, { AxiosResponse } from "axios";
@@ -125,9 +125,9 @@ const Share: React.FC<ShareProps> = () => {
             
         </Box>
       </Box>
-
+      <React.Suspense fallback={<div>Loading...</div>}>
       <ShareModal modalOpen = {modalOpen} setModalOpen={setModalOpen} pos1={pos1} pos2={pos2} pos3={pos3} setPos1 = {setPos1} setPos2 = {setPos2} setPos3 = {setPos3} inputShow = {inputShow} setInputShow = {setInputShow} />
-
+      </React.Suspense>
 
     </Card>
   );
