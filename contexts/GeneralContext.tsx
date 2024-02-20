@@ -1,5 +1,6 @@
 "use client";
 import { createContext, ReactNode, useContext,useEffect,useState } from "react";
+import Cookies from 'js-cookie'
 
 
 
@@ -19,7 +20,8 @@ export const GeneralContextProvider = ({
   const [verticalTabvalue, setVerticalTabValue] = useState(0);
   const [profilePage, setProfilePage] = useState(0)
   const [inputFocus, setInputFocus] = useState(null)
-  const [avatar, setAvatar] = useState(localStorage.getItem('avatar'))
+  const isBrowser = typeof window !== 'undefined';
+  const [avatar, setAvatar] = useState(Cookies.get('avatar'))
 
   console.log("image", avatar)
 

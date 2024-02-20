@@ -5,6 +5,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Cropper from "react-easy-crop";
 import { useGeneral } from "@/contexts/GeneralContext";
+import Cookies from 'js-cookie'
 
 interface CropModalProps {
   open: boolean;
@@ -113,7 +114,8 @@ const CropModal: React.FC<CropModalProps> = ({ open, setOpen, sizeType }) => {
   //? useEffect
   useEffect(() => {
     if (croppedImage && croppedImage.src) {
-        localStorage.setItem('avatar', croppedImage.src);
+        Cookies.set('avatar',  croppedImage.src)
+        
         setAvatar(croppedImage.src)
       }
   }, [croppedImage, setAvatar]);
