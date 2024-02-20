@@ -1,7 +1,9 @@
 import {
   Autocomplete,
   Box,
+  FormControlLabel,
   InputLabel,
+  Switch,
   TextField,
   Typography,
 } from "@mui/material";
@@ -12,6 +14,7 @@ import { useGeneral } from "@/contexts/GeneralContext";
 import Button from "@/components/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import toast from "react-hot-toast";
+import MuiSwitch from "@/components/MuiSwitch";
 
 const contractType = [
   { label: "Part Time" },
@@ -19,12 +22,6 @@ const contractType = [
   { label: "Permanent" },
   { label: "Freelance" },
 ];
-
-
-
-
-
-
 
 interface ExperienceFormProps {
   // Define props here
@@ -36,10 +33,11 @@ const ExperienceForm: React.FC<ExperienceFormProps> = () => {
     initialValues: {
       company: "",
       title: "",
-      mission: "",
       contractType: "",
       startDate: "",
-      endDate: ""
+      endDate: "",
+      checked: false,
+      mission: "",
     },
     onSubmit: (values) => {
       console.log("selam");
@@ -50,9 +48,14 @@ const ExperienceForm: React.FC<ExperienceFormProps> = () => {
   const { setProfilePage, setVerticalTabValue } = useGeneral();
 
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: currentYear - 1949 }, (_, index) => (currentYear - index).toString());
+  const years = Array.from({ length: currentYear - 1949 }, (_, index) =>
+    (currentYear - index).toString()
+  );
 
-  const years2 = Array.from({ length: currentYear - Number(values?.startDate) }, (_, index) => (currentYear - index).toString());
+  const years2 = Array.from(
+    { length: currentYear - Number(values?.startDate) },
+    (_, index) => (currentYear - index).toString()
+  );
   //!
   //todo Functions
 
@@ -61,8 +64,8 @@ const ExperienceForm: React.FC<ExperienceFormProps> = () => {
 
   //?
   //* consoleLogs
-      console.log("ZAAAAA", values.startDate)
-  //* 
+  
+  //*
 
   return (
     <Box>
@@ -140,7 +143,9 @@ const ExperienceForm: React.FC<ExperienceFormProps> = () => {
             //@ts-ignore
             value={values.contractType}
             onChange={(event, newValue) => {
-              handleChange({ target: { name: "contractType", value: newValue } });
+              handleChange({
+                target: { name: "contractType", value: newValue },
+              });
             }}
             ListboxProps={{ style: { maxHeight: 250 } }}
             disablePortal
@@ -158,7 +163,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = () => {
                     padding: "0 12px",
                     height: "48px",
                     //@ts-ignore
-                    ...params.InputProps.style, 
+                    ...params.InputProps.style,
                   },
                 }}
                 label=""
@@ -167,76 +172,90 @@ const ExperienceForm: React.FC<ExperienceFormProps> = () => {
           />
         </Box>
 
-        <Box sx={{display:'flex', width:'100%', gap:'16px'}}>
-        <Box sx={{width:'100%'}} >
-          <InputLabel
-            sx={{ marginBottom: "8px", color: "black" }}
-            htmlFor="startDate"
-          >
-            Start Date
-          </InputLabel>
-          <Autocomplete
-            //@ts-ignore
-            value={values.startDate}
-            onChange={(event, newValue) => {
-              handleChange({ target: { name: "startDate", value: newValue } });
-            }}
-            ListboxProps={{ style: { maxHeight: 250 } }}
-            disablePortal
-            id="startDate"
-            options={years}
-            sx={{ width: "100%" }}
-            renderInput={(params) => (
-              <TextField
-                placeholder="Start Date"
-                {...params}
-                InputProps={{
-                  ...params.InputProps,
-                  style: {
-                    borderRadius: "100px",
-                    padding: "0 12px",
-                    height: "48px",
-                    //@ts-ignore
-                    ...params.InputProps.style, 
-                  },
-                }}
-                label=""
-              />
-            )}
-          />
+        <Box sx={{ display: "flex", width: "100%", gap: "16px" }}>
+          <Box sx={{ width: "100%" }}>
+            <InputLabel
+              sx={{ marginBottom: "8px", color: "black" }}
+              htmlFor="startDate"
+            >
+              Start Date
+            </InputLabel>
+            <Autocomplete
+              disabled = {values.endDate === null ? false : values.endDate !== "" && true }
+              //@ts-ignore
+              value={values.startDate}
+              onChange={(event, newValue) => {
+                handleChange({
+                  target: { name: "startDate", value: newValue },
+                });
+              }}
+              ListboxProps={{ style: { maxHeight: 250 } }}
+              disablePortal
+              id="startDate"
+              options={years}
+              sx={{ width: "100%" }}
+              renderInput={(params) => (
+                <TextField
+                  placeholder="Start Date"
+                  {...params}
+                  InputProps={{
+                    ...params.InputProps,
+                    style: {
+                      borderRadius: "100px",
+                      padding: "0 12px",
+                      height: "48px",
+                      //@ts-ignore
+                      ...params.InputProps.style,
+                    },
+                  }}
+                  label=""
+                />
+              )}
+            />
+          </Box>
+          <Box sx={{ width: "100%" }}>
+            <InputLabel
+              sx={{ marginBottom: "8px", color: "black" }}
+              htmlFor="endDate"
+            >
+              End Date
+            </InputLabel>
+            <Autocomplete
+              disabled = {values.startDate === null ? true : values.startDate === "" && true }
+              value={values.endDate}
+              onChange={(event, newValue) => {
+                handleChange({
+                  target: { name: "endDate", value: newValue },
+                });
+              }}
+              ListboxProps={{ style: { maxHeight: 250 } }}
+              disablePortal
+              id="endDate"
+              options={years2}
+              sx={{ width: "100%" }}
+              renderInput={(params) => (
+                <TextField
+                  placeholder="End Date"
+                  {...params}
+                  InputProps={{
+                    ...params.InputProps,
+                    style: {
+                      borderRadius: "100px",
+                      padding: "0 12px",
+                      height: "48px",
+                      //@ts-ignore
+                      ...params.InputProps.style,
+                    },
+                  }}
+                  label=""
+                />
+              )}
+            />
+          </Box>
         </Box>
-        <Box sx={{width:'100%'}}>
-          <InputLabel
-            sx={{ marginBottom: "8px", color: "black" }}
-            htmlFor="endDate"
-          >
-            End Date
-          </InputLabel>
-          <Autocomplete
-            ListboxProps={{ style: { maxHeight: 250 } }}
-            disablePortal
-            id="endDate"
-            options={years2}
-            sx={{ width: "100%" }}
-            renderInput={(params) => (
-              <TextField
-                placeholder="End Date"
-                {...params}
-                InputProps={{
-                  ...params.InputProps,
-                  style: {
-                    borderRadius: "100px",
-                    padding: "0 12px",
-                    height: "48px",
-                    //@ts-ignore
-                    ...params.InputProps.style, 
-                  },
-                }}
-                label=""
-              />
-            )}
-          />
-        </Box>
+
+        <Box>
+          <MuiSwitch name='checked' checked = {values.checked} onChange={handleChange} label="I am currently working here" />
         </Box>
 
         <Box>

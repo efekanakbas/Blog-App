@@ -15,9 +15,6 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-/* .MuiTabs-indicator {
-  display: none;
-} */
 
 .scrollBarStyled::-webkit-scrollbar-track
 {
