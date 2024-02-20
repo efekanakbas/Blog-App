@@ -9,7 +9,7 @@ import axios from "axios";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Home Page",
+  title: "Home",
   description: "Home Page of Blog",
 };
 
