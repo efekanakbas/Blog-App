@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, lazy } from 'react';
+import React, { useState, useEffect, lazy,Suspense } from 'react';
 import Card from '../../Card';
 import { Box } from '@mui/material';
 import { useGeneral } from '@/contexts/GeneralContext';
@@ -26,8 +26,12 @@ const RightSide: React.FC<RightSideProps> = () => {
   //*
 
   return (
-    <Box sx={{width:'66.667%'}}>
-        {tabValue === 0 ? <FeedSelected/> : <ProfileSelected/>}
+    <Box sx={{width:{xs: '100%', md:'66.667%'}}}>
+        {tabValue === 0 ? <FeedSelected/> : (
+        <Suspense fallback={<div>Loading...</div>}>
+          <ProfileSelected />
+        </Suspense>
+      )}
     </Box>
     
   );

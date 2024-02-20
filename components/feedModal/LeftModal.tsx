@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { useState, useEffect, lazy } from 'react';
+import React, { useState, useEffect } from 'react';
 //@ts-ignore
 import ImageGallery from "react-image-gallery";
 import CloseIcon from "@mui/icons-material/Close";
@@ -41,7 +41,7 @@ const LeftModal: React.FC<LeftModalProps> = ({images, selectedIndex, setModalOpe
           }}
           sx={{ position:'absolute', cursor: "pointer", display:{xs: 'inline', md:"none", top:'10px', right:"10px"}, zIndex:"10" }}
         />
-        <ImageGallery loading = {lazy} startIndex={selectedIndex}  showBullets={true}  lazyLoad = {true} showPlayButton = {false} showThumbnails = {false} useBrowserFullscreen = {false} items = {imagesItem} />
+        <ImageGallery loading = 'lazy' startIndex={selectedIndex}  showBullets={true}  lazyLoad = {true} showPlayButton = {false} showThumbnails = {false} useBrowserFullscreen = {false} items = {imagesItem} />
     </Box>
   );
 };

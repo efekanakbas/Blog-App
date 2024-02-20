@@ -1,5 +1,5 @@
 "use client";
-import { createContext, ReactNode, useContext,useState } from "react";
+import { createContext, ReactNode, useContext,useEffect,useState } from "react";
 
 
 
@@ -19,6 +19,11 @@ export const GeneralContextProvider = ({
   const [verticalTabvalue, setVerticalTabValue] = useState(0);
   const [profilePage, setProfilePage] = useState(0)
   const [inputFocus, setInputFocus] = useState(null)
+  const [avatar, setAvatar] = useState(localStorage.getItem('avatar'))
+
+  console.log("image", avatar)
+
+  
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -29,7 +34,7 @@ export const GeneralContextProvider = ({
   };
 
   const values = {
-    avatar: "/images/avatars/6.png",
+    avatar: avatar ? avatar : "/images/avatars/6.png",
     name: 'Efekan Akbaş',
     tabValue: tabValue,
     handleChange: handleChange,
@@ -40,7 +45,8 @@ export const GeneralContextProvider = ({
     profilePage: profilePage,
     setProfilePage: setProfilePage,
     inputFocus: inputFocus,
-    setInputFocus: setInputFocus
+    setInputFocus: setInputFocus,
+    setAvatar: setAvatar
 }
 
 

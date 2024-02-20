@@ -28,7 +28,7 @@ const ProfilePageLayout: React.FC<ProfilePageLayoutProps> = ({children}) => {
       <Box  sx={{width:{xs:'100%', md:'75.426%'}, padding:{xs:'0 25px ', md:"0"}, display:'flex', flexDirection:'column', gap:'25px'}}   >
       
       <TopSide/>
-      <Box sx={{display:'flex', gap:'25px'}}>
+      <Box sx={{display:{xs: 'grid', md:'flex'}, gap:'25px'}}>
         <LeftSide/>
         <RightBottom/>
       </Box>
