@@ -17,7 +17,7 @@ import { useDebounce } from "usehooks-ts";
 const PhotoModal = React.lazy(() => import(/* webpackChunkName: "PhotoModal" */ "../PhotoModal"));
 const CropModal = React.lazy(() => import(/* webpackChunkName: "CropModal" */ "../CropModal"));
 import Image from "next/image";
-import grayBg from "../../public/images/grayBG.jpg";
+import grayBg from "../../public/images/grayBG.webp";
 import ImageIcon from "@mui/icons-material/Image";
 
 

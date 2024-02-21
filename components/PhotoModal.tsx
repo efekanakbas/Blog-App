@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal';
 import { Avatar, Box } from '@mui/material';
 import { useGeneral } from '@/contexts/GeneralContext';
 import Image from 'next/image';
-import grayBg from "../public/images/grayBG.jpg";
+import grayBg from "../public/images/grayBG.webp";
 import CloseIcon from '@mui/icons-material/Close';
 
 interface PhotoModalProps {
