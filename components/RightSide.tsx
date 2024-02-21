@@ -78,7 +78,7 @@ const RightSide: React.FC<RightSideProps> = () => {
             <Box className="flex justify-between items-center"  key={i} >
                 <Box className="flex gap-2 items-center">
                     <figure>
-                        <Avatar src={person.avatar} />
+                        <Avatar alt="user avatar" src={person.avatar} />
                     </figure>
                     <Box>
                         <Typography>

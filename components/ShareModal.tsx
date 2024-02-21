@@ -215,7 +215,7 @@ const ShareModal: React.FC<ModalProps> = ({
       >
         <Box className="flex mb-8 gap-6 ml-[14px] items-center">
           <figure>
-            <Avatar sx={{ transform: "scale(1.4)" }} src={avatar} />
+            <Avatar alt="user avatar" sx={{ transform: "scale(1.4)" }} src={avatar} />
           </figure>
           <Box className="flex flex-col">
             <Typography sx={{ fontWeight: "bold" }}>Efekan Akbaş</Typography>

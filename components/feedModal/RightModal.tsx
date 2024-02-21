@@ -74,6 +74,7 @@ const RightModal: React.FC<RightModalProps> = ({
         <Box sx={{ display: "flex", gap: "12px" }}>
           <figure>
             <Avatar
+              alt="user avatar"
               sx={{ width: "50px", height: "50px" }}
               src={feed.user.avatar}
             />
@@ -129,7 +130,7 @@ const RightModal: React.FC<RightModalProps> = ({
         {feed.feed.comments.map((item: any, i: number) => (
           <Box sx={{ position: "relative" }} key={i}>
             <figure className="absolute top-0 left-0">
-              <Avatar src={item.user.avatar} />
+              <Avatar alt="user avatar" src={item.user.avatar} />
             </figure>
             <Box
               sx={{

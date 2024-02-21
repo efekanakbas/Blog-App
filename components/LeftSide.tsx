@@ -29,7 +29,7 @@ const LeftSide: React.FC<LeftSideProps> = () => {
 
         <Box sx={{display:"flex", gap:"8px"}} >
         <figure className='flex items-center' >
-      <Avatar  style={{ width: '50px', height: '50px' }}  alt="Avatar" src={avatar} />
+      <Avatar   style={{ width: '50px', height: '50px' }}  alt="Avatar" src={avatar} />
       </figure>
 
       <Box sx={{display:"flex", flexDirection:"column", justifyContent:"center"}} >
@@ -37,8 +37,8 @@ const LeftSide: React.FC<LeftSideProps> = () => {
             Efekan Akbaş
         </Typography>
 
-        <Typography sx={{fontSize:"14px", textAlign:"start", color:"gray"}} >
-            Efekan Akbaş
+        <Typography sx={{fontSize:"14px", textAlign:"start", color:"black", marginTop:'4px'}} >
+            Lorem ipsum dolor sit amet.
         </Typography>
       </Box>
         </Box>

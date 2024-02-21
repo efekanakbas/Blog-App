@@ -111,6 +111,7 @@ const TopSide: React.FC<TopSideProps> = () => {
               <PhotoCameraIcon />
             </button>
             <Avatar
+              alt="user avatar"
               onClick={() => {
                 setModalOpen(true);
                 setSizeToggle('avatar')

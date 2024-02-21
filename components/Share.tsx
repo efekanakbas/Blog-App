@@ -66,7 +66,7 @@ const Share: React.FC<ShareProps> = () => {
     <Card>
       <Box className='flex gap-4'>
         <figure>
-            <Avatar src={avatar} />
+            <Avatar alt="user avatar" src={avatar} />
         </figure>
         <form className='w-full' onSubmit={handleSubmit} >
         <Input id='ShareModal' onKeyDownHandler = {undefined} disabled = {isPending} sx={null} size='small' autoFocus = {false}  paddingLeft={false} className='w-full' name='shareValue' type='text' value={values.shareValue} handleChange={handleChange}placeholder='Share something...'/>

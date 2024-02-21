@@ -236,7 +236,7 @@ const Navbar: React.FC<NavbarProps> = () => {
               value={values.searchValue}
               onChange={handleChange}
               size="small"
-              id="outlined-basic"
+              id="outlinedInput"
               variant="outlined"
             />
           </form>

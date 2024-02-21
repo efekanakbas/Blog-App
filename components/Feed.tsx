@@ -67,7 +67,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
     <Box  sx={{borderRadius:'15px', padding:'20px', backgroundColor:'white'}}  ref={ref ? ref : null} >
       <Box className="flex justify-between items-center mb-4">
         <Box className="flex gap-2 items-center">
-          <Avatar src={feed.user.avatar} />
+          <Avatar alt="user avatar" src={feed.user.avatar} />
           <Box className="flex flex-col justify-center">
             <Typography>{feed.user.name}</Typography>
             <Typography>2 Hours Ago</Typography>
@@ -194,7 +194,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
             {feed.feed.comments.map((comment: any, i: number) => (
               <Box className="flex mt-6 gap-3 px-2" key={i}>
                 <figure>
-                  <Avatar src={comment.user.avatar} />
+                  <Avatar alt="user avatar" src={comment.user.avatar} />
                 </figure>
 
                 <Box className="flex-1">
@@ -222,7 +222,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
 
           <Box className="flex gap-4 mb-2 mt-6 mx-2">
             <figure>
-              <Avatar src={avatar} />
+              <Avatar alt="user avatar" src={avatar} />
             </figure>
 
             <form className="w-full" onSubmit={handleSubmit}>

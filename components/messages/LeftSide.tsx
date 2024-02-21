@@ -174,7 +174,7 @@ const LeftSide: React.FC<LeftSideProps> = () => {
             }}
           >
             <figure>
-              <Avatar src={message.avatar} />
+              <Avatar alt="user avatar" src={message.avatar} />
             </figure>
             <Box className="flex flex-col w-full gap-1">
               <Box className="flex items-center justify-between">

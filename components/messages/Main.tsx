@@ -71,7 +71,7 @@ const Main: React.FC<MainProps> = ({ messages }) => {
               >
                 <figure className="absolute -left-4 top-2">
                   {!item.messages.me && array[i + 1]?.messages.me !== item.messages.me && (
-                    <Avatar src="images/avatars/6.png" />
+                    <Avatar alt="user avatar" src="images/avatars/6.png" />
                   )}
                 </figure>
 
@@ -97,7 +97,7 @@ const Main: React.FC<MainProps> = ({ messages }) => {
 
           <hr className="my-4" />
           <Box className="flex items-center flex-col">
-  <Avatar src={avatar} sx={{ width: '100px', height: '100px' }} />
+  <Avatar alt="user avatar" src={avatar} sx={{ width: '100px', height: '100px' }} />
   <Typography sx={{marginTop:"8px", fontWeight:"bold"}} >Mustafa Turan</Typography>
   <Typography sx={{fontSize:'12px'}} className=" text-gray-400">Developer Manager</Typography>
 </Box>
