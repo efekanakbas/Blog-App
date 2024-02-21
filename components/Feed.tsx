@@ -24,7 +24,7 @@ interface FeedsProps {
   feed: any;
 }
 
-const Feed: React.FC<FeedsProps> = ({ feed }) => {
+const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
   //! States
   const [onLoad, setOnLoad] = useState(false);
   const [isLiked, setIsLiked] = useState(feed.feed.liked);
@@ -60,10 +60,11 @@ const Feed: React.FC<FeedsProps> = ({ feed }) => {
   //* consoleLogs
   // console.log("selectedIndex", selectedIndex)
   // console.log("OPEN", open)
+  // console.log("refOOOOO", ref)
   //*
 
   return (
-    <Card>
+    <Box  sx={{borderRadius:'15px', padding:'20px', backgroundColor:'white'}}  ref={ref ? ref : null} >
       <Box className="flex justify-between items-center mb-4">
         <Box className="flex gap-2 items-center">
           <Avatar src={feed.user.avatar} />
@@ -258,8 +259,10 @@ const Feed: React.FC<FeedsProps> = ({ feed }) => {
           setIsLiked={setIsLiked}
         />
       </React.Suspense>
-    </Card>
+    </Box>
   );
-};
+});
+
+Feed.displayName = 'Feed';
 
 export default Feed;

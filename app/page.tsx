@@ -8,6 +8,7 @@ import {
 import axios from "axios";
 import type { Metadata } from "next";
 
+
 export const metadata: Metadata = {
   title: "Home",
   description: "Home Page of Blog",
@@ -15,11 +16,21 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({
+  await queryClient.prefetchInfiniteQuery({
     queryKey: ["feeds"],
-    queryFn: () => {
-    return axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/feed").then((response) => response.data);
+    queryFn: ({pageParam}) => {
+    return axios.get(`https://65cbe2afefec34d9ed883ace.mockapi.io/feed?page=${pageParam}&limit=5`).then((response) => response.data);
   },
+  staleTime: 5000,
+  initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => {
+      const morePageExist = lastPage.length === 5;
+      if(!morePageExist) {
+        return;
+      }
+      return pages.length + 1;
+    },
+    pages: 1,
   });
 
   return (
