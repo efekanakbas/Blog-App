@@ -9,7 +9,6 @@ interface ClientProviderProps {
 
 const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
   const { isLoggedIn } = useAuth();
-  console.log("zAAAAA", isLoggedIn);
 
   if (!isLoggedIn) {
     return <div className="mt-20">selam</div>;

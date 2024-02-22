@@ -23,21 +23,26 @@ import avatar1 from "../../public/images/avatars/6.png";
 import { useFormik } from "formik";
 import Link from "next/link";
 import Card from "./Card";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import Image from "next/image";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useGeneral } from "@/contexts/GeneralContext";
 import { useRouter } from "next/navigation";
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import SettingsIcon from "@mui/icons-material/Settings";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useAuth } from "@/contexts/AuthContext";
 
 const pages = [
-  { icon: HomeIcon, title: "Homepage", link:"/" },
-  { icon: ChatIcon, title: "Messages", link:"/messages" },
-  { icon: NotificationsIcon, title: "Notifications", link:"/notifications" },
+  { icon: HomeIcon, title: "Homepage", link: "/" },
+  { icon: ChatIcon, title: "Messages", link: "/messages" },
+  { icon: NotificationsIcon, title: "Notifications", link: "/notifications" },
 ];
-const settings = [{title: "Profile", icon: AccountBoxIcon}, {title:'Settings', icon: SettingsIcon}, {title: "Logout", icon: LogoutIcon}];
+const settings = [
+  { title: "Profile", icon: AccountBoxIcon },
+  { title: "Settings", icon: SettingsIcon },
+  { title: "Logout", icon: LogoutIcon },
+];
 
 interface NavbarProps {
   // Define props here
@@ -45,7 +50,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = () => {
   //! States
-  const {avatar} = useGeneral()
+  const { avatar } = useGeneral();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -53,23 +58,18 @@ const Navbar: React.FC<NavbarProps> = () => {
     null
   );
 
-  const {
-    values,
-    handleChange,
-    handleSubmit,
-    handleReset,
-  } = useFormik({
+  const { values, handleChange, handleSubmit, handleReset } = useFormik({
     initialValues: {
       searchValue: "",
     },
     onSubmit: (values) => {
       console.log("sss", values);
-      handleReset(values)
+      handleReset(values);
     },
   });
 
-  const router = useRouter()
-
+  const router = useRouter();
+  const {logout, signin} = useAuth()
   //!
   //todo Functions
 
@@ -139,8 +139,8 @@ const Navbar: React.FC<NavbarProps> = () => {
             <Menu
               PaperProps={{
                 style: {
-                  borderRadius: "15px"
-                }, 
+                  borderRadius: "15px",
+                },
               }}
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -160,35 +160,52 @@ const Navbar: React.FC<NavbarProps> = () => {
                 color: "#1976D2",
               }}
             >
-              <Box sx={{p:"2.5rem", pl:"1rem", py:"0.75rem", pt:"1rem", borderRadius:"15px", }} >
-              <form onSubmit={handleSubmit}>
-            <TextField
-              InputProps={{
-                style: {
-                  borderRadius: "25px",
-                  outline:"none"
-                },
-              }}
-              placeholder="Search"
-              sx={{ display: { xs: "flex", md: "none"}, width:"150px", transform:"translateX(10px)", mb:"5px" }}
-              name="searchValue"
-              type="text"
-              value={values.searchValue}
-              onChange={handleChange}
-              size="small"
-              id="outlined-basic"
-              variant="outlined"
-            />
-          </form>
-              {pages.map((page, i) => (
-                <Link prefetch={true} href={page.link} key={i}>
-                  <MenuItem sx={{display:"flex", gap:"5px"}}  onClick={handleCloseNavMenu}>
-                  <page.icon color="primary" />
-                  <Typography sx={{color:"#1976d2"}} textAlign="center">{page.title}</Typography>
-                </MenuItem>
-                </Link>
-                
-              ))}
+              <Box
+                sx={{
+                  p: "2.5rem",
+                  pl: "1rem",
+                  py: "0.75rem",
+                  pt: "1rem",
+                  borderRadius: "15px",
+                }}
+              >
+                <form onSubmit={handleSubmit}>
+                  <TextField
+                    InputProps={{
+                      style: {
+                        borderRadius: "25px",
+                        outline: "none",
+                      },
+                    }}
+                    placeholder="Search"
+                    sx={{
+                      display: { xs: "flex", md: "none" },
+                      width: "150px",
+                      transform: "translateX(10px)",
+                      mb: "5px",
+                    }}
+                    name="searchValue"
+                    type="text"
+                    value={values.searchValue}
+                    onChange={handleChange}
+                    size="small"
+                    id="outlined-basic"
+                    variant="outlined"
+                  />
+                </form>
+                {pages.map((page, i) => (
+                  <Link prefetch={true} href={page.link} key={i}>
+                    <MenuItem
+                      sx={{ display: "flex", gap: "5px" }}
+                      onClick={handleCloseNavMenu}
+                    >
+                      <page.icon color="primary" />
+                      <Typography sx={{ color: "#1976d2" }} textAlign="center">
+                        {page.title}
+                      </Typography>
+                    </MenuItem>
+                  </Link>
+                ))}
               </Box>
             </Menu>
           </Box>
@@ -217,16 +234,26 @@ const Navbar: React.FC<NavbarProps> = () => {
           >
             LOGO
           </Typography>
-          <form style={{position:"relative"}} onSubmit={handleSubmit}>
-            <figure style={{position:"absolute", color:"gray", top:"9px", left:"10px"}} >
-              <SearchIcon sx={{ display: { xs: "none", md: "block" } }} style={{fontSize:"22px"}} />
+          <form style={{ position: "relative" }} onSubmit={handleSubmit}>
+            <figure
+              style={{
+                position: "absolute",
+                color: "gray",
+                top: "9px",
+                left: "10px",
+              }}
+            >
+              <SearchIcon
+                sx={{ display: { xs: "none", md: "block" } }}
+                style={{ fontSize: "22px" }}
+              />
             </figure>
             <TextField
               InputProps={{
                 style: {
                   borderRadius: "25px",
-                  outline:"none",
-                  paddingLeft:"20px"
+                  outline: "none",
+                  paddingLeft: "20px",
                 },
               }}
               placeholder="Search"
@@ -247,49 +274,53 @@ const Navbar: React.FC<NavbarProps> = () => {
               justifyContent: "center",
               gap: "20px",
               color: "#1976D2",
-              transform:{xs:"0", lg:"translateX(-90px)"}
+              transform: { xs: "0", lg: "translateX(-90px)" },
             }}
           >
             {pages.map((page, i) => (
-              <Link prefetch={true} href={page.link}  key={i}>
+              <Link prefetch={true} href={page.link} key={i}>
                 <Button
-                
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "#1976D2", display: "flex", gap: "8px" }}
-              >
-                <page.icon />
-                {page.title}
-              </Button>
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "#1976D2", display: "flex", gap: "8px" }}
+                >
+                  <page.icon />
+                  {page.title}
+                </Button>
               </Link>
-              
             ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Box className='flex items-center gap-3'>
-            <Tooltip TransitionComponent={Zoom} title="Open settings">
-              <Box onClick={handleOpenUserMenu} sx={{ p: 0, display:"flex", alignItems:"center", cursor:"pointer", gap:'8px' }}>
-                <Avatar alt="User avatar" src={avatar} />
-                <Typography color='black'>
-                Efekan Akbaş
-              </Typography>
-              <figure>
-                <KeyboardArrowDownIcon sx={{color:"black"}} />
-              </figure>
-              </Box>
-            </Tooltip>
-            
+            <Box className="flex items-center gap-3">
+              <Tooltip TransitionComponent={Zoom} title="Open settings">
+                <Box
+                  onClick={handleOpenUserMenu}
+                  sx={{
+                    p: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    gap: "8px",
+                  }}
+                >
+                  <Avatar alt="User avatar" src={avatar} />
+                  <Typography color="black">Efekan Akbaş</Typography>
+                  <figure>
+                    <KeyboardArrowDownIcon sx={{ color: "black" }} />
+                  </figure>
+                </Box>
+              </Tooltip>
             </Box>
-            
+
             <Menu
               PaperProps={{
                 style: {
-                  borderRadius:"16px",
-                  padding:"10px",
-                  width:"187px"
-                }, 
+                  borderRadius: "16px",
+                  padding: "10px",
+                  width: "187px",
+                },
               }}
-              sx={{ mt: "45px", }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -303,15 +334,25 @@ const Navbar: React.FC<NavbarProps> = () => {
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
-              
             >
-             
-              <Box sx={{display:'flex', flexDirection:'column', gap:'12px'}}>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", gap: "12px" }}
+              >
                 {settings.map((setting) => (
-                <MenuItem sx={{display:"flex", gap:'12px', borderRadius:"16px"}}  key={setting.title} onClick={() => {handleCloseUserMenu() ; setting.title === 'Profile' && router.push('/profile/efekan')}}>
-                <setting.icon sx={{color:"gray"}} />
-                <Typography textAlign="center">{setting.title}</Typography>
-              </MenuItem>
+                  <MenuItem
+                    sx={{ display: "flex", gap: "12px", borderRadius: "16px" }}
+                    key={setting.title}
+                    onClick={() => {
+                      handleCloseUserMenu();
+                      setting.title === "Profile" &&
+                        router.push("/profile/efekan");
+                      setting.title === "Logout" && 
+                      signin()
+                    }}
+                  >
+                    <setting.icon sx={{ color: "gray" }} />
+                    <Typography textAlign="center">{setting.title}</Typography>
+                  </MenuItem>
                 ))}
               </Box>
             </Menu>

@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useGeneral } from "@/contexts/GeneralContext";
 
 interface MainProps {
-  messages: AxiosResponse<any, any> | undefined;
+  messages: AxiosResponse<any, any> | undefined | any;
 }
 
 const Main: React.FC<MainProps> = ({ messages }) => {

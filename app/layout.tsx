@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { GeneralContextProvider } from "@/contexts/GeneralContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ClientProvider from "@/providers/ClientProvider";
+import AuthCover from "@/contexts/AuthCover";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <TanstackProvider>
         <GeneralContextProvider>
+          <AuthCover>
         <AuthProvider>
         <SpeedInsights/>
         <Toaster
@@ -33,6 +35,7 @@ export default function RootLayout({
         </ClientProvider>
         </main>
         </AuthProvider>
+        </AuthCover>
         </GeneralContextProvider>
         </TanstackProvider>
         </body>

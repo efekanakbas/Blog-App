@@ -64,6 +64,7 @@ const Feeds: React.FC<Feeds> = ({ shareShow }) => {
   //* consoleLogs
   // console.log("ref", ref);
   // console.log("inView", inView);
+  // console.log("data", data)
   //*
 
   if (status === "pending") return <h1>Loading</h1>;

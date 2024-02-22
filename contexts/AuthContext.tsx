@@ -1,6 +1,10 @@
 'use client'
-
+import React, { useEffect, useMemo } from 'react';
+import { QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getUser, postUser } from '@/api';
 import { createContext, useContext, useState, ReactNode } from 'react';
+import Cookies from 'js-cookie';
+import AuthCover from './AuthCover';
 
 interface AuthContextProps {
   children: ReactNode;
@@ -10,33 +14,61 @@ interface AuthContextType {
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
+  signin: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const queryClient = useQueryClient()
+
+  const {data} = useQuery({
+    queryKey:['users'],
+    queryFn: getUser
+  })
+
+
+  const {mutate} = useMutation({
+    mutationFn: postUser,
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['users'] })
+    },
+  })
+
+
+
+  console.log("data", data)
+
+  const [isLoggedIn, setIsLoggedIn] = useState(data[0].isLogged);
+
+  const signin = () => {
+    setIsLoggedIn(true);
+  };
 
   const login = () => {
-    // Login işlemleri burada gerçekleştirilir
     setIsLoggedIn(true);
   };
 
   const logout = () => {
-    // Logout işlemleri burada gerçekleştirilir
     setIsLoggedIn(false);
   };
 
   const values = {
     isLoggedIn: isLoggedIn,
     login: login,
-    logout:logout
-  }
+    logout: logout,
+    signin: signin,
+  };
 
   return (
-    <AuthContext.Provider value={values}>
-      {children}
-    </AuthContext.Provider>
+    
+      <AuthContext.Provider value={values}>
+        {/* <AuthCover> */}
+        {children}
+        {/* </AuthCover> */}
+      </AuthContext.Provider>
+   
   );
 };
 

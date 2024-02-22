@@ -14,11 +14,11 @@ const MessagesPageLayout: React.FC<MessagesPageLayoutProps> = () => {
   //! States
   const { error, data, isLoading } = useQuery({
     queryKey: ["messages"],
-    queryFn: async () => {
-      const response = await axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/messages");
+    // queryFn: async () => {
+    //   const response = await axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/messages");
      
-      return response.data.reverse();
-    }
+    //   return response.data.reverse();
+    // }
   })
   //!
   //todo Functions
