@@ -23,7 +23,7 @@ export const GeneralContextProvider = ({
   const isBrowser = typeof window !== 'undefined';
   const [avatar, setAvatar] = useState(Cookies.get('avatar'))
 
-  console.log("image", avatar)
+ 
 
   
 

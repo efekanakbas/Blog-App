@@ -62,8 +62,8 @@ const Feeds: React.FC<Feeds> = ({ shareShow }) => {
   }, [])
   //?
   //* consoleLogs
-  console.log("ref", ref);
-  console.log("inView", inView);
+  // console.log("ref", ref);
+  // console.log("inView", inView);
   //*
 
   if (status === "pending") return <h1>Loading</h1>;
@@ -76,7 +76,6 @@ const Feeds: React.FC<Feeds> = ({ shareShow }) => {
       {
         //@ts-ignore
         data.pages.map((page, i) => {
-          console.log("sadsaddsa", page.length);
           return (
             <React.Fragment key={i}>
               {page.map((feed: any, index: number) =>

@@ -125,7 +125,7 @@ const Share: React.FC<ShareProps> = () => {
             
         </Box>
       </Box>
-      <React.Suspense fallback={<div>Loading...</div>}>
+      <React.Suspense>
       <ShareModal modalOpen = {modalOpen} setModalOpen={setModalOpen} pos1={pos1} pos2={pos2} pos3={pos3} setPos1 = {setPos1} setPos2 = {setPos2} setPos3 = {setPos3} inputShow = {inputShow} setInputShow = {setInputShow} />
       </React.Suspense>
 

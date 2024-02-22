@@ -9,12 +9,22 @@ import axios from "axios";
 import type { Metadata } from "next";
 
 
+
+
+
 export const metadata: Metadata = {
   title: "Home",
   description: "Home Page of Blog",
 };
 
+
+
+
+
 export default async function Home() {
+
+
+
   const queryClient = new QueryClient();
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["feeds"],
@@ -33,6 +43,7 @@ export default async function Home() {
     pages: 1,
   });
 
+
   return (
     <main className="">
       <HomePageLayout>
@@ -43,3 +54,4 @@ export default async function Home() {
     </main>
   );
 }
+
