@@ -39,6 +39,9 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
 
 
   console.log("data", data)
+  console.log("COOKIE", Cookies.get('loggedIn'))
+
+
 
   const [isLoggedIn, setIsLoggedIn] = useState(data[0].isLogged);
 

@@ -46,7 +46,7 @@ const Main: React.FC<MainProps> = ({ messages }) => {
   //* consoleLogs
   // console.log("messages", messages);
   // if(data) {console.log("data", data)}
-  console.log('pending', isPending)
+  // console.log('pending', isPending)
   //*
 // 
   return (

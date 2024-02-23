@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import type { Metadata } from "next";
-import { Box } from '@mui/material';
-import LeftSide from '@/components/messages/LeftSide';
-import Main from '@/components/messages/Main';
 import {
   dehydrate,
   HydrationBoundary,
