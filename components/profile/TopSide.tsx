@@ -181,7 +181,7 @@ const TopSide: React.FC<TopSideProps> = () => {
                   <input
                     maxLength={27}
                     name="inputValue"
-                    className="min-w-[75px] m-0 p-0 "
+                    className="min-w-[75px] m-0 p-0 outline-0"
                     value={values.inputValue}
                     onChange={handleChange}
                     style={{ width: inputWidth }}

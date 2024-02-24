@@ -144,11 +144,11 @@ const LoginForm: React.FC<LoginFormProps> = () => {
           type="submit"
           disabled={!!errors.email || !!errors.password || values.email.length === 0 || values.password.length === 0}
           style={{
-            backgroundColor: errors.email || errors.password  ? "" : "#1976D2",
+            backgroundColor: errors.email || errors.password || values.email.length === 0 || values.password.length === 0  ? "" : "#1976D2",
             padding: "13px 0",
             borderRadius: "100px",
           }}
-          variant={errors.email || errors.password ? "outlined" : "contained"}
+          variant={errors.email || errors.password || values.email.length === 0 || values.password.length === 0 ? "outlined" : "contained"}
         >
           Login
         </Button>
