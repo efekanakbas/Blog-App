@@ -240,6 +240,9 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
                 placeholder="Messages..."
                 value={values.commentValue}
                 handleChange={handleChange}
+                helperText=""
+                error= {false}
+                handleBlur={null}
               />
             </form>
           </Box>

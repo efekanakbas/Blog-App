@@ -349,6 +349,9 @@ const ShareModal: React.FC<ModalProps> = ({
                 name="inputValue"
                 placeholder="Type..."
                 className="w-full"
+                helperText=""
+                error= {false}
+                handleBlur={null}
               />
             </form>
           </Box>

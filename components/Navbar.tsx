@@ -18,7 +18,7 @@ import Zoom from "@mui/material/Zoom";
 import HomeIcon from "@mui/icons-material/Home";
 import ChatIcon from "@mui/icons-material/Chat";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { TextField } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 import avatar1 from "../../public/images/avatars/6.png";
 import { useFormik } from "formik";
 import Link from "next/link";
@@ -249,23 +249,26 @@ const Navbar: React.FC<NavbarProps> = () => {
               />
             </figure>
             <TextField
-              InputProps={{
-                style: {
-                  borderRadius: "25px",
-                  outline: "none",
-                  paddingLeft: "20px",
-                },
-              }}
-              placeholder="Search"
-              sx={{ display: { xs: "none", md: "flex" } }}
-              name="searchValue"
-              type="text"
-              value={values.searchValue}
-              onChange={handleChange}
-              size="small"
-              id="outlinedInput"
-              variant="outlined"
-            />
+      placeholder="Search"
+      name="searchValue"
+      type="search"
+      value={values.searchValue}
+      onChange={handleChange}
+      size="small"
+      id="outlinedInput"
+      variant="outlined"
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start" style={{ marginLeft: '15px' }}>
+            {/* İstenirse buraya bir simge veya içerik eklenebilir */}
+          </InputAdornment>
+        ),
+        style: {
+          borderRadius: '25px',
+          outline: 'none',
+        },
+      }}
+    />
           </form>
           <Box
             sx={{
@@ -347,7 +350,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                       setting.title === "Profile" &&
                         router.push("/profile/efekan");
                       setting.title === "Logout" && 
-                      signin()
+                      logout()
                     }}
                   >
                     <setting.icon sx={{ color: "gray" }} />

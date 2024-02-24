@@ -110,6 +110,9 @@ const EducationForm: React.FC<EducationFormProps> = () => {
             autoFocus={false}
             name="school"
             placeholder="Ex. Harvard Business School"
+            helperText=""
+            error= {false}
+            handleBlur={null}
           />
         </Box>
 

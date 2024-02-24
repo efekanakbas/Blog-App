@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ClientProvider from "@/providers/ClientProvider";
 import AuthCover from "@/contexts/AuthCover";
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 

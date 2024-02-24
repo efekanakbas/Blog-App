@@ -105,6 +105,9 @@ const SkillsForm: React.FC<SkillsFormProps> = () => {
             autoFocus={inputFocus === 0}
             name="main"
             placeholder="Main Skills"
+            helperText=""
+            error= {false}
+            handleBlur={null}
           />
           <Typography
             sx={{ marginTop: "8px", color: "gray", fontSize: "14px" }}
@@ -171,6 +174,9 @@ const SkillsForm: React.FC<SkillsFormProps> = () => {
             autoFocus={inputFocus === 1}
             name="comp"
             placeholder="Complementary Skills"
+            helperText=""
+            error= {false}
+            handleBlur={null}
           />
           <Typography
             sx={{ marginTop: "8px", color: "gray", fontSize: "14px" }}
@@ -237,6 +243,9 @@ const SkillsForm: React.FC<SkillsFormProps> = () => {
             autoFocus={inputFocus === 2}
             name="int"
             placeholder="Interest"
+            helperText=""
+            error= {false}
+            handleBlur={null}
           />
           <Typography
             sx={{ marginTop: "8px", color: "gray", fontSize: "14px" }}

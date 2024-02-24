@@ -105,6 +105,9 @@ const ExperienceForm: React.FC<ExperienceFormProps> = () => {
             autoFocus={false}
             name="company"
             placeholder="Company"
+            helperText=""
+            error= {false}
+            handleBlur={null}
           />
         </Box>
 
@@ -129,6 +132,9 @@ const ExperienceForm: React.FC<ExperienceFormProps> = () => {
             autoFocus={false}
             name="title"
             placeholder="Title"
+            helperText=""
+            error= {false}
+            handleBlur={null}
           />
         </Box>
 

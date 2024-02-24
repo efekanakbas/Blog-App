@@ -5,7 +5,6 @@ import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
-  QueryClientProvider ,
 } from "@tanstack/react-query";
 import { getUser } from '@/api';
 
@@ -24,6 +23,7 @@ const AuthCover: React.FC<AuthCoverProps> = async  ({children}) => {
     queryKey: ["users"],
     queryFn: getUser
   });
+
 
 
   //!

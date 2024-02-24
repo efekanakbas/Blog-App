@@ -3,12 +3,25 @@
 @tailwind utilities;
 @import "~react-image-gallery/styles/css/image-gallery.css";
 
+
+
 body{
   background-color:whitesmoke
 }
 
 .scrollBarHidden::-webkit-scrollbar {
   display: none;
+}
+
+input:-webkit-autofill {
+  height: 29px; 
+}
+
+
+#outlinedInput:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px #E8F0FE  inset !important;
+  border-radius: 0 25px 25px 0 ;
+
 }
 
 body::-webkit-scrollbar {

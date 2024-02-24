@@ -118,6 +118,9 @@ const Main: React.FC<MainProps> = ({ messages }) => {
               name="inputValue"
               type="text"
               placeholder="Type here..."
+              helperText=""
+              error= {false}
+              handleBlur={null}
             />
           </form>
         </Box>

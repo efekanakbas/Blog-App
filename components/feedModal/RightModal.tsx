@@ -182,6 +182,9 @@ const RightModal: React.FC<RightModalProps> = ({
             autoFocus={false}
             className=""
             placeholder="Type here..."
+            helperText=""
+            error= {false}
+            handleBlur={null}
           />
         </form>
       </Box>

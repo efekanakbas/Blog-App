@@ -1,10 +1,10 @@
 'use client'
 import React, { useEffect, useMemo } from 'react';
 import { QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getUser, postUser } from '@/api';
+import { getUser,postUser, putUser} from '@/api';
 import { createContext, useContext, useState, ReactNode } from 'react';
 import Cookies from 'js-cookie';
-import AuthCover from './AuthCover';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextProps {
   children: ReactNode;
@@ -21,40 +21,50 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const queryClient = useQueryClient()
+  const router = useRouter()
 
-  const {data} = useQuery({
+  const {data:userData} = useQuery({
     queryKey:['users'],
     queryFn: getUser
   })
 
 
-  const {mutate} = useMutation({
-    mutationFn: postUser,
+
+
+  const {mutate: putMutate} = useMutation({
+    mutationFn: putUser,
     onSuccess: () => {
-      // Invalidate and refetch
+      
       queryClient.invalidateQueries({ queryKey: ['users'] })
     },
   })
 
 
 
-  console.log("data", data)
-  console.log("COOKIE", Cookies.get('loggedIn'))
+  // console.log("dataUser", userData)
+  // console.log("COOKIE", Cookies.get('loggedIn'))
 
 
 
-  const [isLoggedIn, setIsLoggedIn] = useState(data[0].isLogged);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(userData.isLogged);
 
   const signin = () => {
+    putMutate({isLogged: true})
     setIsLoggedIn(true);
+    router.push('/')
   };
 
   const login = () => {
+    putMutate({isLogged: true})
     setIsLoggedIn(true);
+    router.push('/')
   };
 
   const logout = () => {
+    putMutate({isLogged: false})
     setIsLoggedIn(false);
+    router.push('/login')
   };
 
   const values = {
@@ -67,9 +77,7 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   return (
     
       <AuthContext.Provider value={values}>
-        {/* <AuthCover> */}
         {children}
-        {/* </AuthCover> */}
       </AuthContext.Provider>
    
   );

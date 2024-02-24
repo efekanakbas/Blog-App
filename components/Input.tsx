@@ -15,9 +15,12 @@ interface InputProps {
     disabled: boolean
     onKeyDownHandler: React.KeyboardEventHandler<HTMLInputElement> | undefined
     id: string
+    helperText: any
+    error: any
+    handleBlur: any
 }
 
-const Input: React.FC<InputProps> = ({value, handleChange, name, type, placeholder,className, paddingLeft, autoFocus, size, sx, disabled, onKeyDownHandler, id}) => {
+const Input: React.FC<InputProps> = ({value, handleChange, name, type, placeholder,className, paddingLeft, autoFocus, size, sx, disabled, onKeyDownHandler, id, helperText, error, handleBlur}) => {
   //! States
       
   //!
@@ -37,10 +40,11 @@ const Input: React.FC<InputProps> = ({value, handleChange, name, type, placehold
                 style: {
                   borderRadius: "100px",
                   //@ts-ignore
-                  padding: paddingLeft ? '0 24px 0 24px' :  '0 4px',
-                  height: size === 'medium' ? '48px' : ""
+                  padding: paddingLeft && '0 24px 0 24px',
+                  height: size === 'medium' ? '48px' : "",
                 },
               }}
+              autoComplete='off'
               autoFocus = {autoFocus}
               placeholder={placeholder}
               sx={sx}
@@ -52,8 +56,11 @@ const Input: React.FC<InputProps> = ({value, handleChange, name, type, placehold
               size={size === 'small' ? 'small' : 'small'} 
               id={id}
               variant="outlined"
-              className={className}
+              className={`${className} ${size === 'medium' ? 'mediumInput' : ''}`}
               onKeyDown={onKeyDownHandler}
+              helperText={helperText}
+              error={error}
+              onBlur={handleBlur}
             />
   );
 };
