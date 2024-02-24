@@ -142,7 +142,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
         </Box>
         <Button
           type="submit"
-          disabled={!!errors.email || !!errors.password}
+          disabled={!!errors.email || !!errors.password || values.email.length === 0 || values.password.length === 0}
           style={{
             backgroundColor: errors.email || errors.password  ? "" : "#1976D2",
             padding: "13px 0",
