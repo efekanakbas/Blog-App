@@ -50,8 +50,8 @@ const SlickSlider: React.FC<SlickSliderProps> = () => {
             onPointerUp={() => {
               setGrabbing(false);
             }}
-            className={` h-screen  relative w-full  cursor-${
-              !grabbing ? "grab" : "grabbing"
+            className={` h-screen  relative w-full  ${
+              !grabbing ? "cursor-grab" : "cursor-grabbing"
             }`}
           >
             <div className="absolute z-30 top-6 right-6 flex gap-2">

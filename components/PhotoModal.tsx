@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Modal from '@mui/material/Modal';
-import { Avatar, Box } from '@mui/material';
+import {  Box } from '@mui/material';
 import { useGeneral } from '@/contexts/GeneralContext';
 import Image from 'next/image';
 import grayBg from "../public/images/grayBG.svg";

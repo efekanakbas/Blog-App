@@ -1,4 +1,7 @@
 import React from 'react';
+import { Metadata } from "next";
+import RegisterPageLayout from '@/layouts/RegisterPageLayout';
+
 
 interface RegisterProps {
   // Define props here
@@ -19,9 +22,7 @@ const Register: React.FC<RegisterProps> = () => {
   //*
 
   return (
-    <div className='mt-20'>
-      Register
-    </div>
+    <RegisterPageLayout/>
   );
 };
 

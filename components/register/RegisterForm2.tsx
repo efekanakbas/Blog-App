@@ -3,31 +3,45 @@ import React, { useState } from "react";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import { Box, Button, Checkbox, InputLabel, Typography } from "@mui/material";
 import { useFormik } from "formik";
-import Input from "./Input";
+import Input from "../Input";
 import Link from "next/link";
-import validationSchema from '../schemas/loginSchema'
+import validationSchema from "../../schemas/register2Schema";
 import { useAuth } from "@/contexts/AuthContext";
+import WestIcon from '@mui/icons-material/West';
+const RegisterModal = dynamic(() => import("./RegisterModal"))
+import dynamic from 'next/dynamic'
 
-interface LoginFormProps {
-  // Define props here
+
+interface RegisterFormProps {
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const LoginForm: React.FC<LoginFormProps> = () => {
+const RegisterForm: React.FC<RegisterFormProps> = ({setToggle}) => {
   //! States
-  const { values, handleChange, handleReset, handleSubmit, handleBlur, touched, errors } = useFormik({
+  const {
+    values,
+    handleChange,
+    handleReset,
+    handleSubmit,
+    handleBlur,
+    touched,
+    errors,
+  } = useFormik({
     initialValues: {
-      email: "",
       password: "",
-      check: false
+      confirm: ""
     },
     validationSchema,
     onSubmit: (values) => {
-      login()
+      setShowModal(true)
       handleReset(values);
     },
   });
-  const {login} = useAuth()
-  const auth = !!errors.email || !!errors.password || values.email.length === 0 || values.password.length === 0
+  const { login } = useAuth();
+  const auth = !!errors.password || !!errors.confirm  || values.password.length === 0 || values.confirm.length === 0 
+  const [showModal, setShowModal] = useState(false)
+
+  
   //!
   //todo Functions
 
@@ -36,27 +50,30 @@ const LoginForm: React.FC<LoginFormProps> = () => {
 
   //?
   //* consoleLogs
-    console.log("values", values)
+  console.log("values", values);
   //*
 
   return (
-    <Box sx={{ height: "100%", padding: "95px 150px" }}>
+    <Box sx={{ height: "100%", padding: "95px 150px", position:'relative' }}>
+      <button title="Back to register page" onClick={() => {setToggle(false)}} className="absolute left-[4em] top-[7em]">
+        <WestIcon color="primary"/>
+      </button>
+      <Box sx={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
       <figure className="bg-blue-100 inline-flex p-2 rounded-xl">
         <AcUnitIcon sx={{ width: "40px", height: "40px" }} color="primary" />
       </figure>
+      <Typography sx={{color:'gray'}} >
+      2/3
+      </Typography>
+      </Box>
+      
 
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
           marginTop: "50px",
-          gap: "10px",
         }}
       >
-        <Typography variant="h4">Login</Typography>
-        <Typography sx={{ color: "gray" }}>
-          Explore and keep connected with your network.
-        </Typography>
+        <Typography variant="h4">Generate Password</Typography>
       </Box>
       <form
         onKeyDown={(e) => {
@@ -70,34 +87,6 @@ const LoginForm: React.FC<LoginFormProps> = () => {
           handleSubmit();
         }}
       >
-        
-        <Box>
-          <InputLabel
-            sx={{ marginBottom: "8px", color: "black" }}
-            htmlFor="emailInput"
-          >
-            Email
-          </InputLabel>
-          <Input
-            id="emailInput"
-            onKeyDownHandler={undefined}
-            disabled={false}
-            sx={{ width: "100%" }}
-            size="medium"
-            handleChange={handleChange}
-            value={values.email}
-            paddingLeft={false}
-            className=""
-            type="email"
-            autoFocus={false}
-            name="email"
-            placeholder="Email"
-            helperText={touched.email && errors.email && errors.email}
-            error= {touched.email && errors.email}
-            handleBlur={handleBlur}
-          />
-        </Box>
-
         <Box>
           <InputLabel
             sx={{ marginBottom: "8px", color: "black" }}
@@ -120,28 +109,39 @@ const LoginForm: React.FC<LoginFormProps> = () => {
             name="password"
             placeholder="Password"
             helperText={touched.password && errors.password && errors.password}
-            error= {touched.password && errors.password}
+            error={touched.password && errors.password}
             handleBlur={handleBlur}
           />
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
-            <Checkbox name="check" checked = {values.check} onChange={handleChange} inputProps={{ "aria-label": "Checkbox" }} />
-            <Typography>Keep me logged in</Typography>
-          </Box>
-          <Box>
-            <Link className="text-blue-500 font-bold" href="#">
-              Forgot?
-            </Link>
-          </Box>
+        <Box>
+          <InputLabel
+            sx={{ marginBottom: "8px", color: "black" }}
+            htmlFor="confirmInput"
+          >
+            Username
+          </InputLabel>
+          <Input
+            id="confirmInput"
+            onKeyDownHandler={undefined}
+            disabled={false}
+            sx={{ width: "100%" }}
+            size="medium"
+            handleChange={handleChange}
+            value={values.confirm}
+            paddingLeft={false}
+            className=""
+            type="password"
+            autoFocus={false}
+            name="confirm"
+            placeholder="Username"
+            helperText={touched.confirm && errors.confirm && errors.confirm}
+            error={touched.confirm && errors.confirm}
+            handleBlur={handleBlur}
+          />
         </Box>
+
+
         <Button
           type="submit"
           disabled={auth}
@@ -152,16 +152,20 @@ const LoginForm: React.FC<LoginFormProps> = () => {
           }}
           variant={auth ? "outlined" : "contained"}
         >
-          Login
+          Continue
         </Button>
       </form>
-      <Box sx={{marginTop:'40px'}} >
-        <Typography sx={{textAlign:'center'}} >
-            Don&apos;t have an account? <Link className="text-blue-600" href='/register' >Register</Link>
+      <Box sx={{ marginTop: "40px" }}>
+        <Typography sx={{ textAlign: "center" }}>
+          Have an account?{" "}
+          <Link className="text-blue-600" href="/login">
+            Login
+          </Link>
         </Typography>
       </Box>
+      <RegisterModal open={showModal} setOpen={setShowModal} />
     </Box>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
