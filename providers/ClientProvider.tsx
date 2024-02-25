@@ -34,7 +34,15 @@ const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
         router.replace('/login'); 
       router.refresh()
       }
-    } 
+    } if(path === '/register') {
+      router.replace('/'); 
+   
+    } else if(path === '/confirm') {
+      router.replace('/'); 
+  
+    } else if (path === '/login') {
+      router.replace('/'); 
+    }
   }, [isLoggedIn, router, path]);
 
   if (!isLoggedIn) {
