@@ -32,10 +32,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle}) => {
     validationSchema,
     onSubmit: (values) => {
       setToggle(true)
-      handleReset(values);
+      // handleReset(values);
     },
   });
-  const { login } = useAuth();
   const auth = !!errors.email || !!errors.first || !!errors.last || !!errors.username || values.email.length === 0 || values.first.length === 0 || values.last.length === 0 || values.username.length === 0
   //!
   //todo Functions
@@ -45,7 +44,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle}) => {
 
   //?
   //* consoleLogs
-  console.log("values", values);
+
   //*
 
   return (

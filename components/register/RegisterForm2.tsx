@@ -8,8 +8,8 @@ import Link from "next/link";
 import validationSchema from "../../schemas/register2Schema";
 import { useAuth } from "@/contexts/AuthContext";
 import WestIcon from '@mui/icons-material/West';
-const RegisterModal = dynamic(() => import("./RegisterModal"))
 import dynamic from 'next/dynamic'
+import { useRouter } from "next/navigation";
 
 
 interface RegisterFormProps {
@@ -18,6 +18,7 @@ interface RegisterFormProps {
 
 const RegisterForm: React.FC<RegisterFormProps> = ({setToggle}) => {
   //! States
+  const route = useRouter()
   const {
     values,
     handleChange,
@@ -33,13 +34,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle}) => {
     },
     validationSchema,
     onSubmit: (values) => {
-      setShowModal(true)
-      handleReset(values);
+      route.push('/confirm')
+      // handleReset(values);
     },
   });
-  const { login } = useAuth();
   const auth = !!errors.password || !!errors.confirm  || values.password.length === 0 || values.confirm.length === 0 
-  const [showModal, setShowModal] = useState(false)
+  
 
   
   //!
@@ -50,7 +50,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle}) => {
 
   //?
   //* consoleLogs
-  console.log("values", values);
+  
   //*
 
   return (
@@ -163,7 +163,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle}) => {
           </Link>
         </Typography>
       </Box>
-      <RegisterModal open={showModal} setOpen={setShowModal} />
     </Box>
   );
 };

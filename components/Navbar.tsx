@@ -251,7 +251,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             <TextField
       placeholder="Search"
       name="searchValue"
-      type="search"
+      type="text"
       value={values.searchValue}
       onChange={handleChange}
       size="small"

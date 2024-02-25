@@ -56,9 +56,9 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   };
 
   const login = () => {
-    putMutate({isLogged: true})
     setIsLoggedIn(true);
     router.push('/')
+    putMutate({isLogged: true})
   };
 
   const logout = () => {
