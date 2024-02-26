@@ -33,6 +33,7 @@ const Main: React.FC<MainProps> = () => {
       break;
 
     case 2:
+      //@ts-ignore
       return <BlockList />;
       break;
 
