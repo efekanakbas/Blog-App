@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import type { Metadata } from "next";
-import NotifPageLayout from '@/layouts/NotifPageLayout';
+import SettingsPageLayout from '@/layouts/SettingsPageLayout';
 import {
   dehydrate,
   HydrationBoundary,
@@ -10,24 +10,23 @@ import axios from "axios";
 
 
 
-
 export const metadata: Metadata = {
-    title: "Notifications",
-    description: "Notifications Page of Blog",
+    title: "Settings",
+    description: "Setting Page of Blog",
   };
-  
+
 
 interface pageProps {
   // Define props here
 }
 
-const page: React.FC<pageProps> = async  () => {
+const page: React.FC<pageProps> = async() => {
   //! States
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ["notifications"],
+    queryKey: ["blocked"],
     queryFn: async () => {
-      const {data} = await axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/notifications");
+      const {data} = await axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/blocked");
      
       return data;
     }
@@ -40,13 +39,13 @@ const page: React.FC<pageProps> = async  () => {
       
   //?
   //* consoleLogs
-     
+      
   //*
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <NotifPageLayout/>
-      </HydrationBoundary>
+    <SettingsPageLayout/>
+    </HydrationBoundary>
   );
 };
 

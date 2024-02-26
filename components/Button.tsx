@@ -6,10 +6,11 @@ interface ButtonProps {
   type: 'contained' | 'outlined'
   buttonType: string
   handleClick: any
+  disabled: boolean | null
   
 }
 
-const Button: React.FC<ButtonProps> = ({type, text, buttonType, handleClick}) => {
+const Button: React.FC<ButtonProps> = ({type, text, buttonType, handleClick, disabled}) => {
   //! States
       
   //!
@@ -25,7 +26,7 @@ const Button: React.FC<ButtonProps> = ({type, text, buttonType, handleClick}) =>
 
   return (
     //@ts-ignore
-    <MuiButton onClick={handleClick} type={buttonType} variant={type} style={{ backgroundColor: type === 'contained' ? '#1976D2' : "", color: type === 'contained' ? 'white' : "", borderRadius:'100px', height:'48px', width:'120px' }} >
+    <MuiButton disabled = {disabled} onClick={handleClick} type={buttonType} variant={type} style={{ backgroundColor: type === 'contained' ? disabled ? 'lightgray' : '#1976D2' : "", color: type === 'contained' ? 'white' : "", borderRadius:'100px', height:'48px', width:'120px' }} >
       {text}
     </MuiButton>
   );

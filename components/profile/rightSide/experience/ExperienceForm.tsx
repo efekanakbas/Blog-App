@@ -295,6 +295,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = () => {
 
         <Box sx={{ display: "flex", justifyContent: "end", gap: "20px" }}>
           <Button
+          disabled={null}
             handleClick={() => {
               setProfilePage(0);
               setVerticalTabValue(0);
@@ -304,6 +305,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = () => {
             text="Cancel"
           />
           <Button
+          disabled={null}
             handleClick={null}
             buttonType="submit"
             type="contained"

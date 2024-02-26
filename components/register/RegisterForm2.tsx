@@ -119,7 +119,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle}) => {
             sx={{ marginBottom: "8px", color: "black" }}
             htmlFor="confirmInput"
           >
-            Username
+            Confirm
           </InputLabel>
           <Input
             id="confirmInput"

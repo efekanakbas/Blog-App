@@ -170,6 +170,7 @@ const LanguageForm: React.FC<LanguageFormProps> = () => {
 
         <Box sx={{ display: "flex", justifyContent: "end", gap: "20px" }}>
           <Button
+          disabled={null}
             handleClick={() => {
               setProfilePage(0);
               setVerticalTabValue(0);
@@ -179,6 +180,7 @@ const LanguageForm: React.FC<LanguageFormProps> = () => {
             text="Cancel"
           />
           <Button
+          disabled={null}
             handleClick={null}
             buttonType="submit"
             type="contained"

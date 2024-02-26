@@ -1,13 +1,11 @@
 'use client'
+import React, { ReactNode, useEffect } from "react";
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuth } from "@/contexts/AuthContext";
 import Login from "@/app/login/page";
 import Navbar from "@/components/Navbar";
-import { useAuth } from "@/contexts/AuthContext";
-import React, { ReactNode, useEffect } from "react";
-import { redirect, usePathname, useRouter } from 'next/navigation';
-import Head from 'next/head';
 import Register from "@/app/register/page";
 import Confirm from "@/app/confirm/page";
-
 
 interface ClientProviderProps {
   children: ReactNode;
@@ -18,38 +16,30 @@ const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
   const router = useRouter();
   const path = usePathname()
 
-  const url = path
-
-  console.log("PATH", path)
+  console.log("PATH", path);
 
   useEffect(() => {
     if (!isLoggedIn) {
-      if(path === '/register') {
-        router.replace('/register'); 
-      router.refresh()
-      } else if(path === '/confirm') {
-        router.replace('/confirm'); 
-      router.refresh()
+      if (path !== '/login' && path !== '/register' && path !== '/confirm') {
+        // Kullanıcı oturum açmamışsa ve /login, /register veya /confirm olmayan bir yola erişmeye  çalışıyorsa, kullanıcıyı /login sayfasına yönlendir.
+        router.replace('/login');
       } else {
-        router.replace('/login'); 
-      router.refresh()
+        router.refresh()
       }
-    } if(path === '/register') {
-      router.replace('/'); 
-   
-    } else if(path === '/confirm') {
-      router.replace('/'); 
-  
-    } else if (path === '/login') {
-      router.replace('/'); 
+    } else {
+      // Kullanıcı oturum açmışsa ve /login, /register veya /confirm sayfalarına erişmeye  çalışıyorsa, kullanıcıyı ana sayfaya yönlendir.
+      if (path === '/login' || path === '/register' || path === '/confirm') {
+        router.replace('/');
+      }
     }
   }, [isLoggedIn, router, path]);
 
   if (!isLoggedIn) {
-    return <>
-    {path === '/register' ? <Register /> : path === '/confirm' ? <Confirm /> : <Login />}
-
-    </>
+    return (
+      <>
+        {path === '/register' ? <Register /> : path === '/confirm' ? <Confirm /> : <Login />}
+      </>
+    );
   } else {
     return (
       <>

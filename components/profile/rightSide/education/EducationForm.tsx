@@ -273,6 +273,7 @@ const EducationForm: React.FC<EducationFormProps> = () => {
 
         <Box sx={{ display: "flex", justifyContent: "end", gap: "20px" }}>
           <Button
+            disabled={null}
             handleClick={() => {
               setProfilePage(0);
               setVerticalTabValue(0);
@@ -282,6 +283,7 @@ const EducationForm: React.FC<EducationFormProps> = () => {
             text="Cancel"
           />
           <Button
+          disabled={null}
             handleClick={null}
             buttonType="submit"
             type="contained"

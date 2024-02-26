@@ -69,7 +69,7 @@ const Navbar: React.FC<NavbarProps> = () => {
   });
 
   const router = useRouter();
-  const {logout, signin} = useAuth()
+  const { logout, signin } = useAuth();
   //!
   //todo Functions
 
@@ -249,26 +249,29 @@ const Navbar: React.FC<NavbarProps> = () => {
               />
             </figure>
             <TextField
-      placeholder="Search"
-      name="searchValue"
-      type="text"
-      value={values.searchValue}
-      onChange={handleChange}
-      size="small"
-      id="outlinedInput"
-      variant="outlined"
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start" style={{ marginLeft: '15px' }}>
-            {/* İstenirse buraya bir simge veya içerik eklenebilir */}
-          </InputAdornment>
-        ),
-        style: {
-          borderRadius: '25px',
-          outline: 'none',
-        },
-      }}
-    />
+              placeholder="Search"
+              name="searchValue"
+              type="text"
+              value={values.searchValue}
+              onChange={handleChange}
+              size="small"
+              id="outlinedInput"
+              variant="outlined"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment
+                    position="start"
+                    style={{ marginLeft: "15px" }}
+                  >
+                    {/* İstenirse buraya bir simge veya içerik eklenebilir */}
+                  </InputAdornment>
+                ),
+                style: {
+                  borderRadius: "25px",
+                  outline: "none",
+                },
+              }}
+            />
           </form>
           <Box
             sx={{
@@ -349,8 +352,8 @@ const Navbar: React.FC<NavbarProps> = () => {
                       handleCloseUserMenu();
                       setting.title === "Profile" &&
                         router.push("/profile/efekan");
-                      setting.title === "Logout" && 
-                      logout()
+                      setting.title === "Logout" && logout();
+                      setting.title === 'Settings' && router.push("/settings");
                     }}
                   >
                     <setting.icon sx={{ color: "gray" }} />

@@ -22,6 +22,7 @@ export const GeneralContextProvider = ({
   const [inputFocus, setInputFocus] = useState(null)
   const isBrowser = typeof window !== 'undefined';
   const [avatar, setAvatar] = useState(Cookies.get('avatar'))
+  const [settingsTabValue, setSettingsTabValue] = useState(0);
 
  
 
@@ -33,6 +34,10 @@ export const GeneralContextProvider = ({
 
   const handleChangeVertical = (event: React.SyntheticEvent, newValue: number) => {
     setVerticalTabValue(newValue);
+  };
+
+  const handleChangeSettings = (event: React.SyntheticEvent, newValue: number) => {
+    setSettingsTabValue(newValue);
   };
 
   const values = {
@@ -48,7 +53,10 @@ export const GeneralContextProvider = ({
     setProfilePage: setProfilePage,
     inputFocus: inputFocus,
     setInputFocus: setInputFocus,
-    setAvatar: setAvatar
+    setAvatar: setAvatar,
+    settingsTabValue: settingsTabValue,
+    setSettingsTabValue: setSettingsTabValue,
+    handleChangeSettings: handleChangeSettings
 }
 
 
