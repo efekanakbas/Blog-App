@@ -39,15 +39,25 @@ const Main: React.FC<MainProps> = () => {
   //*
 
   return (
-    <Card  > 
+    <Card>
       <Typography variant="h6">Notifications</Typography>
       <hr className="mt-4" />
-      {
-          data.length === 0 ? (<Box sx={{paddingTop:'24px'}} >
-            Notifications person not found
-          </Box>) : ( <Box className='scrollBarHidden' sx={{ display: "flex", flexDirection: "column", gap: "32px", overflow:'auto', maxHeight:'calc(100vh - 225px)', paddingTop:'24px' }}>
-          {data.map((item: Notification) => (
-            <Box sx={{ display: "flex", gap: "12px" }} key={item.id}>
+      {data.length === 0 ? (
+        <Box sx={{ paddingTop: "24px" }}>Notifications person not found</Box>
+      ) : (
+        <Box
+          className="scrollBarHidden"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "32px",
+            overflow: "auto",
+            maxHeight: "calc(100vh - 210px)",
+            paddingTop: "24px",
+          }}
+        >
+          {data.map((item: Notification, i: number) => (
+            <Box sx={{ display: "flex", gap: "12px" }} key={i}>
               <Avatar
                 sx={{ width: "70px", height: "70px" }}
                 alt="user avatar"
@@ -66,8 +76,8 @@ const Main: React.FC<MainProps> = () => {
               </Box>
             </Box>
           ))}
-        </Box>)
-        }
+        </Box>
+      )}
     </Card>
   );
 };

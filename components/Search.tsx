@@ -1,13 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Popper from "@mui/material/Popper";
 import Typography from "@mui/material/Typography";
-import { Box, Fade, InputAdornment, TextField } from "@mui/material";
+import { Avatar, Box, Fade, InputAdornment, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import SearchIcon from "@mui/icons-material/Search";
 import { useDebounce } from "usehooks-ts";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { getSearch } from "@/api";
+import { useRouter } from "next/navigation";
+
 
 interface dataProps {
   avatar: string
@@ -33,7 +35,10 @@ const Search: React.FC<SearchProps> = () => {
   });
 
   // useDebounce hook'unu kullanarak input değişikliklerini izle
-  const debouncedValue = useDebounce(values.searchValue.length > 0, 600);
+  const debouncedValueFirst = useDebounce(values.searchValue.length > 0, 600);
+  const [debouncedValue, setDebouncedValue] = useState(debouncedValueFirst)
+  
+  const debouncedValueText = useDebounce(values.searchValue, 600);
   const open = debouncedValue;
   const id = open ? "popper" : undefined;
 
@@ -42,6 +47,10 @@ const Search: React.FC<SearchProps> = () => {
     queryFn: getSearch,
     enabled: debouncedValue
   })
+
+  const [isTextFieldDisabled, setIsTextFieldDisabled] = useState(true);
+
+  const router = useRouter()
   //! 
 
   //todo Functions
@@ -56,11 +65,21 @@ const Search: React.FC<SearchProps> = () => {
   //todo
 
   //? useEffect
-  
+    useEffect(() => {
+      setIsTextFieldDisabled(false)
+    }, [])
+
+    useEffect(() => {
+     if (debouncedValueFirst) {
+      setDebouncedValue(
+        debouncedValueFirst
+      )
+     } else {setDebouncedValue(false)}
+    }, [debouncedValueFirst])
   //?
 
   //* consoleLogs
-    console.log("data", data)
+    console.log("dede", debouncedValue)
   //*
 
   return (
@@ -80,6 +99,8 @@ const Search: React.FC<SearchProps> = () => {
           />
         </figure>
         <TextField
+          autoComplete="off"
+          disabled= {isTextFieldDisabled}
           placeholder="Search"
           name="searchValue"
           type="text"
@@ -108,6 +129,7 @@ const Search: React.FC<SearchProps> = () => {
         />
       </form>
       <Popper
+        style={{zIndex: 10000}}
         id={id}
         open={open}
         anchorEl={anchorEl}
@@ -123,8 +145,11 @@ const Search: React.FC<SearchProps> = () => {
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
             <Box
+              onMouseLeave = {() => {
+                setDebouncedValue(false);
+                handleReset(values)
+              }}
               sx={{
-                
                 paddingTop: "15px", 
                 backgroundColor: "white",
                 boxShadow:
@@ -142,17 +167,34 @@ const Search: React.FC<SearchProps> = () => {
                 </Typography>
                 </Box>
 
-                <Box sx={{borderRight:'1px solid #eeeff3',  p:2, px:3, display:'flex', flexDirection:'column', gap:'12px'}}>
+                <Box sx={{borderRight:'1px solid #eeeff3',  p:2, px:3, display:'flex', flexDirection:'column', gap:'16px' , height:'320px'}}>
                   {data?.users?.map((item: dataProps , i: number) => (
-                    <Box key={i}>
-                      {
-                        item.username
-                      }
+                    <Box key={i} sx={{display:'flex', gap:'12px', alignItems:'center'}}>
+                      <Avatar sx={{width:'60px', height:'60px'}} alt="user avatar" src={item.avatar}/>
+                      <Box sx={{display:'flex', flexDirection:'column', gap:'0px', justifyContent:'center'}}>
+                        <Typography>
+                          {item.name}
+                        </Typography>
+
+                        <Typography sx={{color:'gray', fontSize:'14px'}}>
+                          {item.username}
+                        </Typography>
+                      </Box>
                     </Box>
                   ))}
                 </Box>
 
-                <Box sx={{borderRight:'1px solid #eeeff3'}}>
+                <Box sx={{borderRight:'1px solid #eeeff3', borderTop:'1px solid #eeeff3', p:2, px:3, height:'70px'}}>
+                  <button onClick={() => {router.push('/search'); setDebouncedValue(false), handleReset(values)} } style={{display:'flex', gap:'8px', alignItems:'center'}}>
+                  <figure  style={{backgroundColor:'#0071d8', color:'white', borderRadius:'100px', padding:'5px', display:'inline-flex', height:'40px', width:'40px', justifyContent:'center', alignItems:'center'}}>
+                  <SearchIcon />
+                  </figure>
+
+                  <Typography>
+                    Search for <span className="font-bold" >{debouncedValueText}</span>
+                  </Typography>
+                  </button>
+                  
                   
                 </Box>
               </Box>
@@ -164,11 +206,34 @@ const Search: React.FC<SearchProps> = () => {
                 </Typography>
                 </Box>
 
-                <Box sx={{borderRight:'1px solid #eeeff3',  p:2, px:3}}>
-                  selam2
+                <Box sx={{borderRight:'1px solid #eeeff3',  p:2, px:3, display:'flex', flexDirection:'column', gap:'16px', height:'320px'}}>
+                  {data?.projects?.map((item: dataProps , i: number) => (
+                    <Box key={i} sx={{display:'flex', gap:'12px', alignItems:'center'}}>
+                      <Avatar sx={{width:'60px', height:'60px'}} alt="user avatar" src={item.avatar}/>
+                      <Box sx={{display:'flex', flexDirection:'column', gap:'0px', justifyContent:'center'}}>
+                        <Typography>
+                          {item.name}
+                        </Typography>
+
+                        <Typography sx={{color:'gray', fontSize:'14px'}}>
+                          {item.username}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  ))}
                 </Box>
 
-                <Box sx={{borderRight:'1px solid #eeeff3'}}>
+                <Box sx={{borderRight:'1px solid #eeeff3', borderTop:'1px solid #eeeff3', p:2, px:3, height:'70px'}}>
+                  <button onClick={() => {router.push('/search'); setDebouncedValue(false), handleReset(values)} } style={{display:'flex', gap:'8px', alignItems:'center'}}>
+                  <figure  style={{backgroundColor:'#0071d8', color:'white', borderRadius:'100px', padding:'5px', display:'inline-flex', height:'40px', width:'40px', justifyContent:'center', alignItems:'center'}}>
+                  <SearchIcon />
+                  </figure>
+
+                  <Typography>
+                    Search for <span className="font-bold" >{debouncedValueText}</span>
+                  </Typography>
+                  </button>
+                  
                   
                 </Box>
               </Box>
@@ -180,11 +245,34 @@ const Search: React.FC<SearchProps> = () => {
                 </Typography>
                 </Box>
 
-                <Box sx={{borderRight:'1px solid #eeeff3',  p:2, px:3}}>
-                  
+                <Box sx={{borderRight:'1px solid #eeeff3',  p:2, px:3, display:'flex', flexDirection:'column', gap:'16px', height:'320px'}}>
+                  {data?.companies?.map((item: dataProps , i: number) => (
+                    <Box key={i} sx={{display:'flex', gap:'12px', alignItems:'center'}}>
+                      <Avatar sx={{width:'60px', height:'60px'}} alt="user avatar" src={item.avatar}/>
+                      <Box sx={{display:'flex', flexDirection:'column', gap:'0px', justifyContent:'center'}}>
+                        <Typography>
+                          {item.name}
+                        </Typography>
+
+                        <Typography sx={{color:'gray', fontSize:'14px'}}>
+                          {item.username}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  ))}
                 </Box>
 
-                <Box sx={{borderRight:'1px solid #eeeff3'}}>
+                <Box sx={{borderRight:'1px solid #eeeff3', borderTop:'1px solid #eeeff3', p:2, px:3, height:'70px'}}>
+                  <button onClick={() => {router.push('/search'); setDebouncedValue(false), handleReset(values)} } style={{display:'flex', gap:'8px', alignItems:'center'}}>
+                  <figure  style={{backgroundColor:'#0071d8', color:'white', borderRadius:'100px', padding:'5px', display:'inline-flex', height:'40px', width:'40px', justifyContent:'center', alignItems:'center'}}>
+                  <SearchIcon />
+                  </figure>
+
+                  <Typography>
+                    Search for <span className="font-bold" >{debouncedValueText}</span>
+                  </Typography>
+                  </button>
+                  
                   
                 </Box>
               </Box>

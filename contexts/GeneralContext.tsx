@@ -23,6 +23,7 @@ export const GeneralContextProvider = ({
   const isBrowser = typeof window !== 'undefined';
   const [avatar, setAvatar] = useState(Cookies.get('avatar'))
   const [settingsTabValue, setSettingsTabValue] = useState(0);
+  const [searchTabValue, setSearchTabValue] = useState(0)
 
  
 
@@ -38,6 +39,10 @@ export const GeneralContextProvider = ({
 
   const handleChangeSettings = (event: React.SyntheticEvent, newValue: number) => {
     setSettingsTabValue(newValue);
+  };
+
+  const handleChangeSearch = (event: React.SyntheticEvent, newValue: number) => {
+    setSearchTabValue(newValue);
   };
 
   const values = {
@@ -56,7 +61,10 @@ export const GeneralContextProvider = ({
     setAvatar: setAvatar,
     settingsTabValue: settingsTabValue,
     setSettingsTabValue: setSettingsTabValue,
-    handleChangeSettings: handleChangeSettings
+    handleChangeSettings: handleChangeSettings,
+    searchTabValue: searchTabValue,
+    setSearchTabValue:setSearchTabValue,
+    handleChangeSearch:handleChangeSearch
 }
 
 
