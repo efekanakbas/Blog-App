@@ -19,4 +19,12 @@ export const putUser = async (obj: object) => {
 };
 //!
 
+//! Search
+  //get
+  export const getSearch = async () => {
+    const { data } = await axios.get(`https://65cbe2afefec34d9ed883ace.mockapi.io/search/1`);
+    return data;
+  };
+//!
+
 

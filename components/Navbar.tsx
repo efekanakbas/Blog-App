@@ -32,6 +32,7 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useAuth } from "@/contexts/AuthContext";
+import Search from "./Search";
 
 const pages = [
   { icon: HomeIcon, title: "Homepage", link: "/" },
@@ -234,45 +235,7 @@ const Navbar: React.FC<NavbarProps> = () => {
           >
             LOGO
           </Typography>
-          <form style={{ position: "relative" }} onSubmit={handleSubmit}>
-            <figure
-              style={{
-                position: "absolute",
-                color: "gray",
-                top: "9px",
-                left: "10px",
-              }}
-            >
-              <SearchIcon
-                sx={{ display: { xs: "none", md: "block" } }}
-                style={{ fontSize: "22px" }}
-              />
-            </figure>
-            <TextField
-              placeholder="Search"
-              name="searchValue"
-              type="text"
-              value={values.searchValue}
-              onChange={handleChange}
-              size="small"
-              id="outlinedInput"
-              variant="outlined"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment
-                    position="start"
-                    style={{ marginLeft: "15px" }}
-                  >
-                    {/* İstenirse buraya bir simge veya içerik eklenebilir */}
-                  </InputAdornment>
-                ),
-                style: {
-                  borderRadius: "25px",
-                  outline: "none",
-                },
-              }}
-            />
-          </form>
+         <Search/>
           <Box
             sx={{
               flexGrow: 1,
