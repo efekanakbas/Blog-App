@@ -61,6 +61,7 @@ const RightModal: React.FC<RightModalProps> = ({
         display: "flex",
         flexDirection: "column",
         borderLeft: "1px #eeeeee solid",
+        position:'relative'
       }}
     >
       <Box
@@ -166,7 +167,7 @@ const RightModal: React.FC<RightModalProps> = ({
           </Box>
         ))}
       </Box>
-      <Box>
+      <Box sx={{position:'absolute', bottom:'15px', backgroundColor:'white', width:'89.7%', borderRadius:'100px'}}>
         <form className="mb-1" onSubmit={handleSubmit}>
           <Input
             id="feedModalInput"
