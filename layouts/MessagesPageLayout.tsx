@@ -28,7 +28,7 @@ const MessagesPageLayout: React.FC<MessagesPageLayoutProps> = () => {
       
   //?
   //* consoleLogs
-      console.log("data", data)
+      // console.log("data", data)
   //*
 
   if (isLoading) return <div>Loading...</div>

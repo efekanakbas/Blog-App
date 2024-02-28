@@ -16,7 +16,7 @@ const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
   const router = useRouter();
   const path = usePathname()
 
-  console.log("PATH", path);
+  // console.log("PATH", path);
 
   useEffect(() => {
     if (!isLoggedIn) {
