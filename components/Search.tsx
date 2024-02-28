@@ -30,6 +30,7 @@ const Search: React.FC<SearchProps> = () => {
       searchValue: "",
     },
     onSubmit: (values) => {
+      router.push('/search')
       handleReset(values);
     },
   });
