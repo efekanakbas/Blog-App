@@ -29,7 +29,7 @@ const Left: React.FC<LeftProps> = () => {
   return (
     <Box sx={{borderRadius:'15px', padding:'20px', backgroundColor:'white', position:'sticky', top:'95px'}}>
       <Typography sx={{ fontWeight: "bold", fontSize: "20px" }}>
-        About
+        Search Filter
       </Typography>
       <Box sx={{ marginTop: "24px" }}>
         <Tabs
