@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
 
 
 
-  const [isLoggedIn, setIsLoggedIn] = useState(userData.isLogged);
+  const [isLoggedIn, setIsLoggedIn] = useState(userData?.isLogged);
 
   const signin = () => {
     putMutate({isLogged: true})
