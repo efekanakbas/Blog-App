@@ -46,7 +46,7 @@ const settings = [
 ];
 
 interface NavbarProps {
-  // Define props here
+
 }
 
 const Navbar: React.FC<NavbarProps> = () => {
@@ -235,6 +235,7 @@ const Navbar: React.FC<NavbarProps> = () => {
           >
             LOGO
           </Typography>
+          {/*@ts-ignore*/}
          <Search/>
           <Box
             sx={{
