@@ -40,7 +40,7 @@ const Input: React.FC<InputProps> = ({value, handleChange, name, type, placehold
                 style: {
                   borderRadius: "100px",
                   //@ts-ignore
-                  padding: paddingLeft && '0 24px 0 24px',
+                  padding: paddingLeft ? '0 24px 0 24px' : '0 4px',
                   height: size === 'medium' ? '48px' : "",
                 },
               }}
