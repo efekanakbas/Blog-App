@@ -38,6 +38,7 @@ const page: React.FC<pageProps> = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      {/*@ts-ignore*/}
       <SearchPageLayout/>
       </HydrationBoundary>
   );
