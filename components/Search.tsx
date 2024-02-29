@@ -80,7 +80,7 @@ const Search: React.FC<SearchProps> = () => {
   //?
 
   //* consoleLogs
-    console.log("dede", debouncedValue)
+    // console.log("dede", debouncedValue)
   //*
 
   return (
@@ -151,7 +151,7 @@ const Search: React.FC<SearchProps> = () => {
                 handleReset(values)
               }}
               sx={{
-                paddingTop: "15px", 
+                marginTop: "15.4px", 
                 backgroundColor: "white",
                 boxShadow:
                   "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
@@ -169,7 +169,7 @@ const Search: React.FC<SearchProps> = () => {
                 </Box>
 
                 <Box sx={{borderRight:'1px solid #eeeff3',  p:2, px:3, display:'flex', flexDirection:'column', gap:'16px' , height:'320px'}}>
-                  {data?.users?.map((item: dataProps , i: number) => (
+                  {data?.users?.slice(0,4).map((item: dataProps , i: number) => (
                     <Box key={i} sx={{display:'flex', gap:'12px', alignItems:'center'}}>
                       <Avatar sx={{width:'60px', height:'60px'}} alt="user avatar" src={item.avatar}/>
                       <Box sx={{display:'flex', flexDirection:'column', gap:'0px', justifyContent:'center'}}>
@@ -208,7 +208,7 @@ const Search: React.FC<SearchProps> = () => {
                 </Box>
 
                 <Box sx={{borderRight:'1px solid #eeeff3',  p:2, px:3, display:'flex', flexDirection:'column', gap:'16px', height:'320px'}}>
-                  {data?.projects?.map((item: dataProps , i: number) => (
+                  {data?.projects?.slice(0,4).map((item: dataProps , i: number) => (
                     <Box key={i} sx={{display:'flex', gap:'12px', alignItems:'center'}}>
                       <Avatar sx={{width:'60px', height:'60px'}} alt="user avatar" src={item.avatar}/>
                       <Box sx={{display:'flex', flexDirection:'column', gap:'0px', justifyContent:'center'}}>
@@ -247,7 +247,7 @@ const Search: React.FC<SearchProps> = () => {
                 </Box>
 
                 <Box sx={{borderRight:'1px solid #eeeff3',  p:2, px:3, display:'flex', flexDirection:'column', gap:'16px', height:'320px'}}>
-                  {data?.companies?.map((item: dataProps , i: number) => (
+                  {data?.companies?.slice(0,4).map((item: dataProps , i: number) => (
                     <Box key={i} sx={{display:'flex', gap:'12px', alignItems:'center'}}>
                       <Avatar sx={{width:'60px', height:'60px'}} alt="user avatar" src={item.avatar}/>
                       <Box sx={{display:'flex', flexDirection:'column', gap:'0px', justifyContent:'center'}}>

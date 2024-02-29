@@ -1,12 +1,12 @@
-import Card from '@/components/Card';
-import { Avatar, Box, InputLabel, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
+import Card from "@/components/Card";
+import { Avatar, Box, InputLabel, Typography } from "@mui/material";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import validationSchema from "../../../schemas/settingsEmailSchema";
-import Input from '@/components/Input';
-import Button from '@/components/Button';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import Input from "@/components/Input";
+import Button from "@/components/Button";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 interface BlockedList {
   id: string;
@@ -14,7 +14,6 @@ interface BlockedList {
   username: string;
   text: string;
 }
-
 
 interface BlockListProps {
   data: BlockedList[];
@@ -46,42 +45,52 @@ const BlockList: React.FC<BlockListProps> = () => {
     queryKey: ["blocked"],
     queryFn: async () => {
       const response = await axios.get(
-        "https://65cbe2afefec34d9ed883ace.mockapi.io/messages"
+        "https://65cbe2afefec34d9ed883ace.mockapi.io/blocked"
       );
 
-      return response.data.reverse();
+      return response.data;
     },
   });
-  
+
   //!
   //todo Functions
-      
+
   //todo
   //? useEffect
-  
+
   //?
   //* consoleLogs
-      
+  console.log("data", data);
   //*
 
   return (
-    <Card >
-        <Box sx={{display:'flex', flexDirection:'column', gap:'8px'}} >
-        <Typography variant='h6' >
-        See people that I blocked
-      </Typography>
-      <Typography sx={{color:'gray'}} >
-      You can select who can see your connections, your followers and your following list.
-      </Typography>
-        </Box>
-        <hr className='mt-6 ' />
+    <Box sx={{borderRadius:'15px', backgroundColor:'white', padding:'20px', pb:'0'}}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <Typography variant="h6">See people that I blocked</Typography>
+        <Typography sx={{ color: "gray" }}>
+          You can select who can see your connections, your followers and your
+          following list.
+        </Typography>
+      </Box>
+      <hr className="mt-6 " />
 
-        {
-          data.length === 0 ? (<Box sx={{paddingTop:'24px'}} >
-            Blocked person not found
-          </Box>) : ( <Box className='scrollBarHidden' sx={{ display: "flex", flexDirection: "column", gap: "32px", overflow:'auto', maxHeight:'calc(100vh - 250px)', paddingTop:'24px' }}>
-          {data.map((item: BlockedList) => (
-            <Box sx={{ display: "flex", gap: "12px" }} key={item.id}>
+      {data.length === 0 ? (
+        <Box sx={{ paddingTop: "32px" }}>Blocked person not found</Box>
+      ) : (
+        <Box
+          className="scrollBarHidden"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "32px",
+            overflow: "auto",
+            maxHeight: "calc(100vh - 230px)",
+            paddingTop: "32px",
+            paddingBottom:'32px'
+          }}
+        >
+          {data.map((item: BlockedList, i: number) => (
+            <Box sx={{ display: "flex", gap: "12px" }} key={i}>
               <Avatar
                 sx={{ width: "70px", height: "70px" }}
                 alt="user avatar"
@@ -100,10 +109,9 @@ const BlockList: React.FC<BlockListProps> = () => {
               </Box>
             </Box>
           ))}
-        </Box>)
-        }
-       
-    </Card>
+        </Box>
+      )}
+    </Box>
   );
 };
 

@@ -1,25 +1,34 @@
-'use client'
-import Left from '@/components/search/Left';
-import Main from '@/components/search/Main';
-import { Box } from '@mui/material';
-import React from 'react';
+"use client";
+import Left from "@/components/search/Left";
+import Main from "@/components/search/Main";
+import { useGeneral } from "@/contexts/GeneralContext";
+import { Box } from "@mui/material";
+import React from "react";
+
+interface dataProps {
+  id: string;
+  users: Data[];
+  projects: Data[];
+  companies: Data[];
+}
 
 interface SearchPageLayoutProps {
-  // Define props here
+  data: dataProps;
 }
 
 const SearchPageLayout: React.FC<SearchPageLayoutProps> = () => {
   //! States
-      
+  const { searchTabValue } = useGeneral();
+
   //!
   //todo Functions
-      
+
   //todo
   //? useEffect
-      
+
   //?
   //* consoleLogs
-      
+
   //*
 
   return (
@@ -31,6 +40,8 @@ const SearchPageLayout: React.FC<SearchPageLayoutProps> = () => {
         padding: { xs: "0", md: "0 50px", lg: "0 50px", xl: "0 214px" },
         gap: "25px",
         margin: "95px 0 28px 0",
+        height: searchTabValue !== 0 ? "calc(100vh - 123px)" : "",
+       
       }}
     >
       <Box
@@ -39,18 +50,21 @@ const SearchPageLayout: React.FC<SearchPageLayoutProps> = () => {
           padding: { xs: "0 25px ", md: "0" },
         }}
       >
-     <Left/>
+        <Left />
       </Box>
       <Box
+        className='scrollBarHidden'
         sx={{
           width: { xs: "100%", md: "75.426%" },
           padding: { xs: "0 25px ", md: "0" },
           display: "flex",
           flexDirection: "column",
-          gap: "25px",
+          height: "87vh",
+          overflow: "auto",
         }}
       >
-        <Main/>
+          {/*@ts-ignore*/}
+          <Main />
       </Box>
     </Box>
   );

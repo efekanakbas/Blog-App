@@ -21,10 +21,10 @@ const Main: React.FC<MainProps> = () => {
     queryKey: ["notifications"],
     queryFn: async () => {
       const response = await axios.get(
-        "https://65cbe2afefec34d9ed883ace.mockapi.io/messages"
+        "https://65cbe2afefec34d9ed883ace.mockapi.io/notifications"
       );
 
-      return response.data.reverse();
+      return response.data;
     },
   });
   //!
@@ -35,15 +35,15 @@ const Main: React.FC<MainProps> = () => {
 
   //?
   //* consoleLogs
-  // console.log("data", data)
+    console.log("data", data)
   //*
 
   return (
-    <Card>
+    <Box sx={{borderRadius:'15px', backgroundColor:'white', padding:'20px', pb:'0'}}>
       <Typography variant="h6">Notifications</Typography>
       <hr className="mt-4" />
       {data.length === 0 ? (
-        <Box sx={{ paddingTop: "24px" }}>Notifications person not found</Box>
+        <Box sx={{ paddingTop: "32px" }}>Notifications person not found</Box>
       ) : (
         <Box
           className="scrollBarHidden"
@@ -52,8 +52,9 @@ const Main: React.FC<MainProps> = () => {
             flexDirection: "column",
             gap: "32px",
             overflow: "auto",
-            maxHeight: "calc(100vh - 210px)",
-            paddingTop: "24px",
+            maxHeight: "calc(100vh - 190px)",
+            paddingTop: "32px",
+            paddingBottom:'12px'
           }}
         >
           {data.map((item: Notification, i: number) => (
@@ -78,7 +79,7 @@ const Main: React.FC<MainProps> = () => {
           ))}
         </Box>
       )}
-    </Card>
+    </Box>
   );
 };
 

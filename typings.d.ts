@@ -26,4 +26,10 @@ interface FeedsProps {
     };
   }
 
+  interface Data {
+    avatar: string
+    username: string
+    name: string
+  }
+
 

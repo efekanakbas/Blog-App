@@ -22,7 +22,7 @@ const page: React.FC<pageProps> = async () => {
   //! States
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ["search"],
+    queryKey: ["searchData"],
     queryFn: getSearch
   });
   //!

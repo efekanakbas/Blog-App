@@ -31,6 +31,7 @@ const SettingsPageLayout: React.FC<SettingsPageLayoutProps> = () => {
       padding: { xs: "0", md: "0 50px", lg: "0 50px", xl: "0 214px" },
       gap: "25px",
       margin: "95px 0 28px 0",
+      height:'calc(100vh - 123px)'
     }}
   >
     <Box
