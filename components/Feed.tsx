@@ -145,8 +145,8 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
                   className="cursor-pointer rounded-2xl"
                   alt="Image"
                   fill
-                  objectFit="cover"
                   src={`http://localhost:5000/${item}`}
+                  style={{objectFit: 'cover'}}
                 />
                 {!onLoad && (
                   <Box
