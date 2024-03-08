@@ -136,6 +136,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
                   </span>
                 )}
                 <Image
+                  unoptimized
                   onLoad={() => setOnLoad(true)}
                   onClick={() => {
                     setModalOpen(true);
