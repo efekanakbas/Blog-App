@@ -8,6 +8,7 @@ import axios from "axios";
 import Share from "./Share";
 //@ts-ignore
 import {animateScroll as scroll} from 'react-scroll'
+import {getData} from "../utils/CRUD"
 
 interface Feeds {
   shareShow: boolean;
@@ -27,16 +28,12 @@ const Feeds: React.FC<Feeds> = ({ shareShow }) => {
   } = useInfiniteQuery({
     queryKey: ["feeds"],
     queryFn: ({ pageParam }) => {
-      return axios
-        .get(
-          `https://65cbe2afefec34d9ed883ace.mockapi.io/feed?page=${pageParam}&limit=5`
-        )
-        .then((response) => response.data);
+      return getData(`feeds?page=${pageParam}&limit=10`);
     },
     staleTime: 5000,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
-      const morePageExist = lastPage.length === 5;
+      const morePageExist = lastPage.length === 10;
       if (!morePageExist) {
         return;
       }
@@ -64,7 +61,7 @@ const Feeds: React.FC<Feeds> = ({ shareShow }) => {
   //* consoleLogs
   // console.log("ref", ref);
   // console.log("inView", inView);
-  // console.log("data", data)
+  // console.log("data", data.pages[0].feeds[0])
   //*
 
   if (status === "pending") return <h1>Loading</h1>;
@@ -79,8 +76,12 @@ const Feeds: React.FC<Feeds> = ({ shareShow }) => {
         data.pages.map((page, i) => {
           return (
             <React.Fragment key={i}>
-              {page.map((feed: any, index: number) =>
-                page.length >= 3 && page.length - 3 === index ? (
+              {
+              
+              page.map((feed: any, index: number) =>
+                {
+                 
+                 return page.length >= 3 && page.length - 3 === index ? (
                   <Feed
                     //@ts-ignore
                     ref={ref}
@@ -90,6 +91,7 @@ const Feeds: React.FC<Feeds> = ({ shareShow }) => {
                 ) : (
                   <Feed key={index} feed={feed} />
                 )
+                }
               )}
             </React.Fragment>
           );

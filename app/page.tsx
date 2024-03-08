@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import type { Metadata } from "next";
+import {getData} from "../utils/CRUD"
 
 
 
@@ -29,12 +30,12 @@ export default async function Home() {
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["feeds"],
     queryFn: ({pageParam}) => {
-    return axios.get(`https://65cbe2afefec34d9ed883ace.mockapi.io/feed?page=${pageParam}&limit=5`).then((response) => response.data);
+    return getData(`feeds?page=${pageParam}&limit=10`);
   },
   staleTime: 5000,
   initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
-      const morePageExist = lastPage.length === 5;
+      const morePageExist = lastPage.length === 10;
       if(!morePageExist) {
         return;
       }

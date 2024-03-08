@@ -35,7 +35,7 @@ const FeedModal: React.FC<FeedModalProps> = ({modalOpen, setModalOpen, feed, sel
       },
     }} maxWidth='lg' fullWidth open={modalOpen} onClose={() => {setModalOpen(false)}} >
       <DialogContent sx={{display:{xs : 'block', md: "flex"}, padding:"0", overflow:{xs: "auto", md: "hidden"}}} >
-      <LeftModal images = {feed.feed.image} selectedIndex = {selectedIndex} setModalOpen = {setModalOpen}/>
+      <LeftModal images = {feed.feed.images} selectedIndex = {selectedIndex} setModalOpen = {setModalOpen}/>
       <RightModal feed = {feed} modalOpen = {modalOpen} setModalOpen = {setModalOpen} isLiked = {isLiked} setIsLiked = {setIsLiked} />
       </DialogContent>
       

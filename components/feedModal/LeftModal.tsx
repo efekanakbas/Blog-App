@@ -18,9 +18,10 @@ const LeftModal: React.FC<LeftModalProps> = ({images, selectedIndex, setModalOpe
 
 
   const imagesItem = images.map((item, i) => ({
-    original: item,
+    original: `http://localhost:5000/${item}`,
     thumbnail: "https://picsum.photos/id/1018/250/150/",
-    style: { objectFit: 'cover', height: '200px' },
+    style: { objectFit: 'cover'},
+    
   }));
   //!
   //todo Functions
@@ -41,7 +42,7 @@ const LeftModal: React.FC<LeftModalProps> = ({images, selectedIndex, setModalOpe
           }}
           sx={{ position:'absolute', cursor: "pointer", display:{xs: 'inline', md:"none", top:'10px', right:"10px"}, zIndex:"10" }}
         />
-        <ImageGallery loading = 'lazy' startIndex={selectedIndex}  showBullets={true}  lazyLoad = {true} showPlayButton = {false} showThumbnails = {false} useBrowserFullscreen = {false} items = {imagesItem} />
+        <ImageGallery loading = 'lazy' startIndex={selectedIndex}  showBullets={images.length === 1 ? false : true  }  lazyLoad = {true} showPlayButton = {false} showThumbnails = {false} useBrowserFullscreen = {false} items = {imagesItem}/>
     </Box>
   );
 };

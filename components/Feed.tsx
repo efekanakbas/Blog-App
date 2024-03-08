@@ -19,6 +19,8 @@ import PlusOneIcon from "@mui/icons-material/PlusOne";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useGeneral } from "@/contexts/GeneralContext";
 const FeedModal = React.lazy(() => import("./feedModal/FeedModal"));
+import moment from "moment";
+import Skeleton from "@mui/material/Skeleton";
 
 interface FeedsProps {
   feed: any;
@@ -34,6 +36,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { avatar } = useGeneral();
+  const [Imoment, setIMoment] = useState<null | string>(null);
 
   const { handleChange, handleReset, handleSubmit, values } = useFormik({
     initialValues: {
@@ -55,22 +58,32 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
   };
   //todo
   //? useEffect
-
+  useEffect(() => {
+    setIMoment(moment(feed.feed.createAt).fromNow());
+  }, [feed.feed.createAt]);
   //?
   //* consoleLogs
   // console.log("selectedIndex", selectedIndex)
   // console.log("OPEN", open)
   // console.log("refOOOOO", ref)
+  // console.log("feed", feed)
   //*
 
   return (
-    <Box  sx={{borderRadius:'15px', padding:'20px', backgroundColor:'white'}}  ref={ref ? ref : null} >
+    <Box
+      sx={{ borderRadius: "15px", padding: "20px", backgroundColor: "white" }}
+      ref={ref ? ref : null}
+    >
       <Box className="flex justify-between items-center mb-4">
         <Box className="flex gap-2 items-center">
           <Avatar alt="user avatar" src={feed.user.avatar} />
           <Box className="flex flex-col justify-center">
-            <Typography>{feed.user.name}</Typography>
-            <Typography>2 Hours Ago</Typography>
+            <Typography>{feed.user.username}</Typography>
+            {Imoment ? (
+              <Typography>{Imoment}</Typography>
+            ) : (
+              <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+            )}
           </Box>
         </Box>
         <MoreHorizIcon color="primary" />
@@ -80,13 +93,13 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
 
       {
         //@ts-ignore
-        feed.feed.image?.length > 0 && (
+        feed.feed.images?.length > 0 && (
           <Box
             style={{
               display: "grid",
               //@ts-ignore
               gridTemplateColumns:
-                feed.feed.image.length === 4
+                feed.feed.images.length === 4
                   ? "repeat(2, 1fr)"
                   : "repeat(2, 1fr)",
               gap: "12px",
@@ -94,7 +107,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
             }}
           >
             {/*@ts-ignore*/}
-            {feed.feed.image.map((item, i, arr) => (
+            {feed.feed.images.map((item, i, arr) => (
               <figure
                 key={i}
                 className={`relative w-full ${
@@ -132,7 +145,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
                   alt="Image"
                   fill
                   objectFit="cover"
-                  src={item}
+                  src={`http://localhost:5000/${item}`}
                 />
                 {!onLoad && (
                   <Box
@@ -155,6 +168,36 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
           </Box>
         )
       }
+
+      {feed?.feed?.hashtags?.length > 0 || feed?.feed?.mentions?.length > 0 ? (
+        <Box sx={{ my: 2.3, display: "flex", flexDirection: "column", gap: 2 }}>
+          {feed.feed.hashtags.length > 0 && (
+            <Box className="flex gap-4 w-full flex-wrap">
+              {feed.feed.hashtags.map((hashtag: string, i: number) => (
+                <span
+                  className="border border-blue-500 px-4 py-1 rounded-full text-blue-500 relative"
+                  key={i}
+                >
+                  #{hashtag}
+                </span>
+              ))}
+            </Box>
+          )}
+
+          {feed.feed.mentions.length > 0 && (
+            <Box className="flex gap-4 w-full flex-wrap">
+              {feed.feed.mentions.map((mention: string, i: number) => (
+                <span
+                  className="px-4 py-1 rounded-md text-blue-500 bg-blue-200 relative"
+                  key={i}
+                >
+                  {mention}
+                </span>
+              ))}
+            </Box>
+          )}
+        </Box>
+      ) : null}
 
       <Box className="flex gap-8 mt-6">
         <Box className="flex gap-1">
@@ -182,77 +225,78 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
         </Box>
       </Box>
 
-
       {commentShow && (
         <React.Suspense fallback={<div>Loading...</div>}>
-        <Box sx={{ marginTop: "32px" }}>
-          <Typography className="text-gray-500">Comments</Typography>
-          <Box
-            sx={{ maxHeight: "350px", overflowY: "auto", overflowX: "hidden" }}
-            className="scrollBarHidden"
-          >
-            {feed.feed.comments.map((comment: any, i: number) => (
-              <Box className="flex mt-6 gap-3 px-2" key={i}>
-                <figure>
-                  <Avatar alt="user avatar" src={comment.user.avatar} />
-                </figure>
+          <Box sx={{ marginTop: "32px" }}>
+            <Typography className="text-gray-500">Comments</Typography>
+            <Box
+              sx={{
+                maxHeight: "350px",
+                overflowY: "auto",
+                overflowX: "hidden",
+              }}
+              className="scrollBarHidden"
+            >
+              {feed.feed.comments.map((comment: any, i: number) => (
+                <Box className="flex mt-6 gap-3 px-2" key={i}>
+                  <figure>
+                    <Avatar alt="user avatar" src={comment.user.avatar} />
+                  </figure>
 
-                <Box className="flex-1">
-                  <Box className="bg-gray-100  flex-col p-4  rounded-lg">
-                    <Box className="flex gap-4 justify-between">
-                      <Typography className="text-gray-900 font">
-                        {comment.user.name}
+                  <Box className="flex-1">
+                    <Box className="bg-gray-100  flex-col p-4  rounded-lg">
+                      <Box className="flex gap-4 justify-between">
+                        <Typography className="text-gray-900 font">
+                          {comment.user.name}
+                        </Typography>
+                        <MoreHorizIcon className="text-gray-400" />
+                      </Box>
+                      <Typography className="pt-4">
+                        {comment.comment.text}
                       </Typography>
-                      <MoreHorizIcon className="text-gray-400" />
                     </Box>
-                    <Typography className="pt-4">
-                      {comment.comment.text}
+                    <Typography className="mt-2">
+                      {comment.comment.liked ? "Unlike" : "Like"}{" "}
+                      <span className="text-blue-600">
+                        ({comment.comment.likesCount})
+                      </span>
                     </Typography>
                   </Box>
-                  <Typography className="mt-2">
-                    {comment.comment.liked ? "Unlike" : "Like"}{" "}
-                    <span className="text-blue-600">
-                      ({comment.comment.likesCount})
-                    </span>
-                  </Typography>
                 </Box>
-              </Box>
-            ))}
-          </Box>
+              ))}
+            </Box>
 
-          <Box className="flex gap-4 mb-2 mt-6 mx-2">
-            <figure>
-              <Avatar alt="user avatar" src={avatar} />
-            </figure>
+            <Box className="flex gap-4 mb-2 mt-6 mx-2">
+              <figure>
+                <Avatar alt="user avatar" src={avatar} />
+              </figure>
 
-            <form className="w-full" onSubmit={handleSubmit}>
-              <Input
-                id="feedInput"
-                onKeyDownHandler={undefined}
-                disabled={false}
-                sx={null}
-                size="small"
-                autoFocus={false}
-                paddingLeft={false}
-                className="w-full"
-                name="commentValue"
-                type="text"
-                placeholder="Messages..."
-                value={values.commentValue}
-                handleChange={handleChange}
-                helperText=""
-                error= {false}
-                handleBlur={null}
-              />
-            </form>
+              <form className="w-full" onSubmit={handleSubmit}>
+                <Input
+                  id="feedInput"
+                  onKeyDownHandler={undefined}
+                  disabled={false}
+                  sx={null}
+                  size="small"
+                  autoFocus={false}
+                  paddingLeft={false}
+                  className="w-full"
+                  name="commentValue"
+                  type="text"
+                  placeholder="Messages..."
+                  value={values.commentValue}
+                  handleChange={handleChange}
+                  helperText=""
+                  error={false}
+                  handleBlur={null}
+                />
+              </form>
+            </Box>
           </Box>
-        </Box>
         </React.Suspense>
       )}
 
-
-
-      <React.Suspense fallback={<div>Loading...</div>}>
+      <React.Suspense>
         <FeedModal
           modalOpen={modalOpen}
           setModalOpen={setModalOpen}
@@ -266,6 +310,6 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
   );
 });
 
-Feed.displayName = 'Feed';
+Feed.displayName = "Feed";
 
 export default Feed;

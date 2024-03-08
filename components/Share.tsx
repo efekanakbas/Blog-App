@@ -11,7 +11,7 @@ import Man4Icon from "@mui/icons-material/Man4";
 const ShareModal = React.lazy(() => import("./ShareModal"));
 import PlaceIcon from "@mui/icons-material/Place";
 import { useGeneral } from "@/contexts/GeneralContext";
-import axios, { AxiosResponse } from "axios";
+import { postData } from "@/utils/CRUD";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface ShareProps {}
@@ -25,7 +25,9 @@ const Share: React.FC<ShareProps> = () => {
       shareValue: "",
     },
     onSubmit: (values) => {
-      mutate({ me: true, message: values.shareValue });
+      mutate({
+        text: values.shareValue
+      });
       handleReset(values);
     },
   });
@@ -39,9 +41,7 @@ const Share: React.FC<ShareProps> = () => {
   const { data, mutate, isPending } = useMutation({
     mutationKey: ["feeds"],
     mutationFn: (feeds: any) => {
-      return axios
-        .post("https://65cbe2afefec34d9ed883ace.mockapi.io/feeds", { feeds })
-        .then((response) => response.data);
+      return postData('feeds', feeds) ;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feeds"] });

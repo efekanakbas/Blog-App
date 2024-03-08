@@ -30,6 +30,8 @@ import { useFormik } from "formik";
 import PlaceIcon from "@mui/icons-material/Place";
 import toast from "react-hot-toast";
 import { useGeneral } from "@/contexts/GeneralContext";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postData } from "@/utils/CRUD";
 
 interface ModalProps {
   modalOpen: boolean;
@@ -63,41 +65,24 @@ const ShareModal: React.FC<ModalProps> = ({
   const [mentionPool, setMentionPool] = useState<string[]>([]);
   const [location, setLocation] = useState<string>("");
   const myRef = useRef(null);
+  const myRef2 = useRef(null);
+  const queryClient = useQueryClient();
+  const [value, setValue] = useState('')
+  const formData = new FormData();
 
   const { values, handleChange, handleReset, handleSubmit } = useFormik({
     initialValues: {
       inputValue: "",
     },
     onSubmit: (values) => {
-      if (pos1) {
-        const existingHashtag = hashtagPool.find(
-          (hashtag) => hashtag === values.inputValue
-        );
-
-        if (existingHashtag) {
-          toast.error("You can not entry same hashtag!");
-        } else {
-          setHashtagPool([...hashtagPool, values.inputValue]);
-        }
-      } else if (pos2) {
-        const existingMention = mentionPool.find(
-          (mention) => mention === values.inputValue
-        );
-
-        if (existingMention) {
-          toast.error("You can not entry same mention!");
-        } else {
-          setMentionPool([...mentionPool, values.inputValue]);
-        }
-      } else if (pos3) {
-        setLocation(values.inputValue);
-      }
-      handleReset(values);
-      if (!pos3) {
-        handleScrollToBottom();
-      } else {
-        handleScrollToTop();
-      }
+      formData.append('text', value);
+      imagesPool.map((item) => (formData.append('images', item)))
+      hashtagPool.map((item) => (formData.append('hashtags', item)))
+      mentionPool.map((item) => (formData.append('mentions', item)))
+      formData.append('location', location)
+      mutate(formData);
+      handleZero()
+      setModalOpen(false)
     },
   });
 
@@ -122,6 +107,17 @@ const ShareModal: React.FC<ModalProps> = ({
       </figure>
     ));
   }, [imagesPool]);
+
+  const { data, mutate, isPending } = useMutation({
+    mutationKey: ["feeds"],
+    mutationFn: (feeds: any) => {
+      return postData('feeds', feeds) ;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feeds"] });
+    },
+  });
+
   //!
   //todo Functions
   const uploadImageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,10 +136,14 @@ const ShareModal: React.FC<ModalProps> = ({
 
   const handleScrollToBottom = () => {
     if (myRef.current) {
-      //@ts-ignore
-      myRef.current.scrollTop = myRef.current.scrollHeight;
+       // DOM güncellemesini bekleyin
+       setTimeout(() => {
+         //@ts-ignore
+         myRef.current.scrollTop = myRef.current.scrollHeight;
+       }, 0);
     }
-  };
+   };
+   
 
   const handleScrollToTop = () => {
     if (myRef.current) {
@@ -172,12 +172,60 @@ const ShareModal: React.FC<ModalProps> = ({
     }, 300);
   };
 
+  const handleInput = () => {
+    if (pos1) {
+      const existingHashtag = hashtagPool.find(
+        (hashtag) => hashtag === values.inputValue
+      );
+
+      if (existingHashtag) {
+        toast.error("You can not entry same hashtag!");
+      } else {
+        setHashtagPool([...hashtagPool, values.inputValue]);
+      }
+    } else if (pos2) {
+      const existingMention = mentionPool.find(
+        (mention) => mention === values.inputValue
+      );
+
+      if (existingMention) {
+        toast.error("You can not entry same mention!");
+      } else {
+        setMentionPool([...mentionPool, values.inputValue]);
+      }
+    } else if (pos3) {
+      setLocation(values.inputValue);
+    }
+    handleReset(values); 
+    if (!pos3) {
+      handleScrollToBottom();
+    } else {
+      handleScrollToTop();
+    }
+  }
+
+  const handleZero = () => {
+      handleReset(values)
+      setValue("")
+      setHashtagPool([])
+      setImagesPool([])
+      setMentionPool([])
+      setInputShow(false)
+      setLocation("")
+  }
+
+   //@ts-ignore
+   const focus = () => setTimeout((myRef2?.current?.focus()), (0))
   //todo
   //? useEffect
 
   //?
   //* consoleLogs
-
+    // console.log("values", values)
+    // console.log("images", imagesPool)
+    console.log("HAshtag", hashtagPool)
+    console.log("mention", mentionPool)
+    console.log("local", location)
   //*
 
   return (
@@ -224,6 +272,9 @@ const ShareModal: React.FC<ModalProps> = ({
         </Box>
         <Box className="">
           <TextField
+            name="textValue"
+            value={value}
+            onChange={(e) => {setValue(e.target.value)}}
             className="w-full rounded-lg "
             id="standard-multiline-static"
             label="Share something..."
@@ -331,7 +382,7 @@ const ShareModal: React.FC<ModalProps> = ({
                 event.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
 
                 if (values.inputValue.length > 0) {
-                  handleSubmit();
+                  handleInput()
                 }
               }}
             >
@@ -352,6 +403,7 @@ const ShareModal: React.FC<ModalProps> = ({
                 helperText=""
                 error= {false}
                 handleBlur={null}
+                ref = {myRef2}
               />
             </form>
           </Box>
@@ -386,7 +438,7 @@ const ShareModal: React.FC<ModalProps> = ({
 
           <Box
             onClick={() => {
-              setInputShow(true), setPos1(true), setPos2(false), setPos3(false);
+              setInputShow(true), setPos1(true), setPos2(false), setPos3(false); focus()
             }}
             className="flex gap-1 cursor-pointer"
           >
@@ -398,7 +450,7 @@ const ShareModal: React.FC<ModalProps> = ({
 
           <Box
             onClick={() => {
-              setInputShow(true), setPos1(false), setPos2(true), setPos3(false);
+              setInputShow(true), setPos1(false), setPos2(true), setPos3(false); focus()
             }}
             className="flex gap-1 cursor-pointer"
           >
@@ -410,7 +462,7 @@ const ShareModal: React.FC<ModalProps> = ({
 
           <Box
             onClick={() => {
-              setInputShow(true), setPos1(false), setPos2(false), setPos3(true);
+              setInputShow(true), setPos1(false), setPos2(false), setPos3(true); focus()
             }}
             className="flex gap-1 cursor-pointer"
           >
@@ -420,6 +472,7 @@ const ShareModal: React.FC<ModalProps> = ({
             <Typography className="none450v2">Location</Typography>
           </Box>
         </Box>
+        {/*@ts-ignore*/}
         <Button
           sx={{
             fontWeight: "bolder",
@@ -432,6 +485,8 @@ const ShareModal: React.FC<ModalProps> = ({
           className=" bg-slate-50"
           size="large"
           variant="outlined"
+          onClick={handleSubmit}
+          disabled={value.length<1}
         >
           Share
         </Button>
