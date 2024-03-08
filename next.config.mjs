@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost', 'blog-app-sigma-eight.vercel.app' ], 
+    domains: ['localhost'], 
   },
   webpack: (config, { isServer }) => {
     config.module.rules.push({
