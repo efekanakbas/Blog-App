@@ -18,7 +18,7 @@ const LeftModal: React.FC<LeftModalProps> = ({images, selectedIndex, setModalOpe
 
 
   const imagesItem = images.map((item, i) => ({
-    original: process.env.NEXT_PUBLIC_HOST+item,
+    original: "https://192.168.1.36:5000/"+item,
     thumbnail: "https://picsum.photos/id/1018/250/150/",
     style: { objectFit: 'cover'},
     
