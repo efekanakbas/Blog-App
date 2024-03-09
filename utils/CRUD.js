@@ -3,7 +3,7 @@ import axios from 'axios';
 // Axios istemcisini oluştur ve yapılandır
 const createNetworkClient = () => {
     const network = axios.create({
-        baseURL: 'http://localhost:5000/'
+        baseURL: 'http://192.168.1.37:5000/'
     });
 
     // İstekleri yakalama ve token ekleme
