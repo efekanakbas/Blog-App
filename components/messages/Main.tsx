@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Skeleton, Typography } from "@mui/material";
 import Input from "../Input";
 import { useFormik } from "formik";
 import axios, { AxiosResponse } from "axios";
@@ -81,9 +81,10 @@ const Main: React.FC<MainProps> = () => {
       <Box className=" h-[80px]  flex items-center shrink-0">Mustafa Turan</Box>
       <Box
         sx={{ height: "calc(100% - 80px)" }}
-        className="bg-gray-100   flex shrink-0 rounded-2xl p-4 overflow-x-hidden overflow-y-auto scrollBarHidden relative w-full"
+        className="bg-gray-100   flex shrink-0 rounded-2xl p-0 overflow-x-hidden overflow-y-auto scrollBarHidden relative w-full"
       >
-        <Box className="w-full mb-[9.5%] rounded-2xl p-4 pt-[52px] flex flex-col-reverse max-h-full overflow-y-auto gap-4 scrollBarHidden">
+        {
+          !isFetching ? <Box className="w-full mb-[9.5%] rounded-2xl p-4 m-4 pt-[52px] flex flex-col-reverse max-h-full overflow-y-auto gap-4 scrollBarHidden">
           {
             //@ts-ignore
             data?.map((item, i, array) => (
@@ -138,8 +139,10 @@ const Main: React.FC<MainProps> = () => {
               Developer Manager
             </Typography>
           </Box>
-        </Box>
-        <Box className="bg-white absolute bottom-0 w-[97%] h-[80px] mb-4 rounded-2xl">
+        </Box> : (<Skeleton  variant="rounded" sx={{width:'100%', height:'100%', bgcolor:"rgb(243 244 246)"}} />
+)
+        }
+        <Box className="bg-white absolute bottom-0 left-4 w-[97%] h-[80px] mb-4 rounded-2xl">
           <form onSubmit={handleSubmit}>
             <Input
               id="messageInput"
