@@ -3,7 +3,7 @@ import axios from "axios";
 // Axios istemcisini oluştur ve yapılandır
 const createNetworkClient = () => {
   const network = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_HOST,
+    baseURL: "https://efekan-akbas-9a21d3a06c36.herokuapp.com/",
   });
 
   // İstekleri yakalama ve token ekleme
