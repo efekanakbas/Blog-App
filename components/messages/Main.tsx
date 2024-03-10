@@ -79,7 +79,7 @@ const Main: React.FC<MainProps> = () => {
         <Box className="w-full mb-[9.5%] rounded-2xl p-4 pt-[52px] flex flex-col-reverse max-h-full overflow-y-auto gap-4 scrollBarHidden">
           {
             //@ts-ignore
-            myData?.map((item, i, array) => (
+            postMessage?.map((item, i, array) => (
               <Box
                 className={`flex px-8 relative ${
                   item.messages.me ? " justify-end" : "justify-start "
