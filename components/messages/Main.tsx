@@ -8,7 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGeneral } from "@/contexts/GeneralContext";
 
 interface MainProps {
-  
+
 }
 
 const Main: React.FC<MainProps> = () => {
@@ -25,18 +25,6 @@ const Main: React.FC<MainProps> = () => {
     },
   });
 
-  const { data, mutate, isPending} = useMutation({
-    mutationKey: ['messages'],
-    mutationFn: (messages: any) => {
-      return axios.post("https://65cbe2afefec34d9ed883ace.mockapi.io/messages", { messages })
-        .then(response => response.data);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['messages'] });
-    },
-  });
-
-
   const { error, data: myData, isLoading } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
@@ -45,6 +33,22 @@ const Main: React.FC<MainProps> = () => {
       return response.data.reverse();
     }
   })
+
+
+
+  const { data, mutate, isPending} = useMutation({
+    mutationKey: ['messages'],
+    mutationFn: (postMessage: any) => {
+      return axios.post("https://65cbe2afefec34d9ed883ace.mockapi.io/messages", { postMessage })
+        .then(response => response.data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['messages'] });
+    },
+  });
+
+
+ 
 
   
   const {değer} = useGeneral()
@@ -75,7 +79,7 @@ const Main: React.FC<MainProps> = () => {
         <Box className="w-full mb-[9.5%] rounded-2xl p-4 pt-[52px] flex flex-col-reverse max-h-full overflow-y-auto gap-4 scrollBarHidden">
           {
             //@ts-ignore
-            messages?.map((item, i, array) => (
+            myData?.map((item, i, array) => (
               <Box
                 className={`flex px-8 relative ${
                   item.messages.me ? " justify-end" : "justify-start "
