@@ -10,9 +10,9 @@ const TanstackProvider= ({children} : {children: React.ReactNode}) => {
     const [queryClient] = useState(() => new QueryClient({
       defaultOptions: {
         queries: {
-          refetchOnMount : false,
+          refetchOnMount : true,
           refetchOnWindowFocus : false,
-          staleTime: 1000 * 60 * 5, // 5 dakika
+          staleTime: 1000 *  5, // 5 saniye
         }
       }
     }))
