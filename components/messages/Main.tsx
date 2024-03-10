@@ -7,20 +7,18 @@ import axios, { AxiosResponse } from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGeneral } from "@/contexts/GeneralContext";
 
-interface MainProps {
-
-}
+interface MainProps {}
 
 const Main: React.FC<MainProps> = () => {
   //! States
-  const {avatar} = useGeneral()
-  const queryClient = useQueryClient()
-  const { values, handleChange, handleReset, handleSubmit,  } = useFormik({
+  const { avatar } = useGeneral();
+  const queryClient = useQueryClient();
+  const { values, handleChange, handleReset, handleSubmit } = useFormik({
     initialValues: {
       inputValue: "",
     },
     onSubmit: (values) => {
-      mutate({me:true, message:values.inputValue})
+      mutate({ me: true, message: values.inputValue });
       handleReset(values);
     },
   });
@@ -28,30 +26,29 @@ const Main: React.FC<MainProps> = () => {
   const { error, data, isLoading } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
-      const response = await axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/messages");
-     
+      const response = await axios.get(
+        "https://65cbe2afefec34d9ed883ace.mockapi.io/messages"
+      );
+
       return response.data.reverse();
-    }
-  })
-
-
-
-  const {  mutate, isPending} = useMutation({
-    mutationKey: ['messages'],
-    mutationFn: (postMessage: any) => {
-      return axios.post("https://65cbe2afefec34d9ed883ace.mockapi.io/messages", { postMessage })
-        .then(response => response.data);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['messages'] });
     },
   });
 
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["messages"],
+    mutationFn: (messages: any) => {
+      return axios
+        .post("https://65cbe2afefec34d9ed883ace.mockapi.io/messages", {
+          messages,
+        })
+        .then((response) => response.data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["messages"] });
+    },
+  });
 
- 
-
-  
-  const {değer} = useGeneral()
+  const { değer } = useGeneral();
   //!
   //todo Functions
 
@@ -63,9 +60,9 @@ const Main: React.FC<MainProps> = () => {
   // console.log("messages", messages);
   // if(data) {console.log("data", data)}
   // console.log('pending', isPending)
-  console.log("message", data)
+  console.log("message", data);
   //*
-// 
+  //
   return (
     <Box
       className="w-[73%] h-full p-4 pt-0  bg-white "
@@ -87,18 +84,23 @@ const Main: React.FC<MainProps> = () => {
                 key={i}
               >
                 <figure className="absolute -left-4 top-2">
-                  {!item.messages.me && array[i + 1]?.messages.me !== item.messages.me && (
-                    <Avatar alt="user avatar" src="images/avatars/6.png" />
-                  )}
+                  {!item.messages.me &&
+                    array[i + 1]?.messages.me !== item.messages.me && (
+                      <Avatar alt="user avatar" src="images/avatars/6.png" />
+                    )}
                 </figure>
 
                 <Typography
                   style={{
                     //@ts-ignore
                     borderTopLeftRadius:
-                      !item.messages.me && array[i + 1]?.messages.me !== item.messages.me && "3px",
+                      !item.messages.me &&
+                      array[i + 1]?.messages.me !== item.messages.me &&
+                      "3px",
                     borderTopRightRadius:
-                      item.messages.me && array[i + 1]?.messages.me !== item.messages.me && "3px",
+                      item.messages.me &&
+                      array[i + 1]?.messages.me !== item.messages.me &&
+                      "3px",
                   }}
                   className={`flex p-4 rounded-2xl flex-col max-w-[75%] ${
                     item.messages.me
@@ -114,20 +116,28 @@ const Main: React.FC<MainProps> = () => {
 
           <hr className="my-4" />
           <Box className="flex items-center flex-col">
-  <Avatar alt="user avatar" src={avatar} sx={{ width: '100px', height: '100px' }} />
-  <Typography sx={{marginTop:"8px", fontWeight:"bold"}} >Mustafa Turan</Typography>
-  <Typography sx={{fontSize:'12px'}} className=" text-gray-400">Developer Manager</Typography>
-</Box>
+            <Avatar
+              alt="user avatar"
+              src={avatar}
+              sx={{ width: "100px", height: "100px" }}
+            />
+            <Typography sx={{ marginTop: "8px", fontWeight: "bold" }}>
+              Mustafa Turan
+            </Typography>
+            <Typography sx={{ fontSize: "12px" }} className=" text-gray-400">
+              Developer Manager
+            </Typography>
+          </Box>
         </Box>
         <Box className="bg-white absolute bottom-0 w-[97%] h-[80px] mb-4 rounded-2xl">
-          <form  onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <Input
               id="messageInput"
               onKeyDownHandler={undefined}
-              sx = {{'width': '100%', 'padding' : '0 80px', 'marginTop': '16px'}}
+              sx={{ width: "100%", padding: "0 80px", marginTop: "16px" }}
               size="medium"
               className=""
-              disabled = {isPending}
+              disabled={isPending}
               paddingLeft={false}
               autoFocus={false}
               value={values.inputValue}
@@ -136,7 +146,7 @@ const Main: React.FC<MainProps> = () => {
               type="text"
               placeholder="Type here..."
               helperText=""
-              error= {false}
+              error={false}
               handleBlur={null}
             />
           </form>
