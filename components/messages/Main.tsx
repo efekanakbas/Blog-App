@@ -32,6 +32,9 @@ const Main: React.FC<MainProps> = () => {
 
       return response.data.reverse();
     },
+    staleTime: 0, // Verilerin hemen eskimeye geçmesini sağlar
+    //@ts-ignore
+    cacheTime: 0, // Verilerin önbellekte ne kadar süreyle saklanacağını belirler
   });
 
   const { mutate, isPending } = useMutation({
