@@ -4,7 +4,7 @@ import { Avatar, Box, Typography } from "@mui/material";
 import Input from "../Input";
 import { useFormik } from "formik";
 import axios, { AxiosResponse } from "axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGeneral } from "@/contexts/GeneralContext";
 
 interface MainProps {
@@ -35,6 +35,14 @@ const Main: React.FC<MainProps> = ({ messages }) => {
       queryClient.invalidateQueries({ queryKey: ['messages'] });
     },
   });
+
+  const fetchMessages = async () => {
+    const { data } = await axios.get('https://65cbe2afefec34d9ed883ace.mockapi.io/messages');
+    return data;
+   };
+
+   //@ts-ignore
+  const { data: message, isLoading, isError } = useQuery('messages', fetchMessages);
   const {değer} = useGeneral()
   //!
   //todo Functions
@@ -47,6 +55,7 @@ const Main: React.FC<MainProps> = ({ messages }) => {
   // console.log("messages", messages);
   // if(data) {console.log("data", data)}
   // console.log('pending', isPending)
+  console.log("message", message)
   //*
 // 
   return (
