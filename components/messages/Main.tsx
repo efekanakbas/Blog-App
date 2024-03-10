@@ -8,10 +8,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGeneral } from "@/contexts/GeneralContext";
 
 interface MainProps {
-  messages: AxiosResponse<any, any> | undefined | any;
+  
 }
 
-const Main: React.FC<MainProps> = ({ messages }) => {
+const Main: React.FC<MainProps> = () => {
   //! States
   const {avatar} = useGeneral()
   const queryClient = useQueryClient()
@@ -36,13 +36,17 @@ const Main: React.FC<MainProps> = ({ messages }) => {
     },
   });
 
-  const fetchMessages = async () => {
-    const { data } = await axios.get('https://65cbe2afefec34d9ed883ace.mockapi.io/messages');
-    return data;
-   };
 
-   //@ts-ignore
-  const { data: message, isLoading, isError } = useQuery('messages', fetchMessages);
+  const { error, data: myData, isLoading } = useQuery({
+    queryKey: ["messages"],
+    queryFn: async () => {
+      const response = await axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/messages");
+     
+      return response.data.reverse();
+    }
+  })
+
+  
   const {değer} = useGeneral()
   //!
   //todo Functions
@@ -55,7 +59,7 @@ const Main: React.FC<MainProps> = ({ messages }) => {
   // console.log("messages", messages);
   // if(data) {console.log("data", data)}
   // console.log('pending', isPending)
-  console.log("message", message)
+  console.log("message", myData)
   //*
 // 
   return (
