@@ -25,7 +25,7 @@ const Main: React.FC<MainProps> = () => {
     },
   });
 
-  const { error, data: myData, isLoading } = useQuery({
+  const { error, data, isLoading } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
       const response = await axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/messages");
@@ -36,7 +36,7 @@ const Main: React.FC<MainProps> = () => {
 
 
 
-  const { data, mutate, isPending} = useMutation({
+  const {  mutate, isPending} = useMutation({
     mutationKey: ['messages'],
     mutationFn: (postMessage: any) => {
       return axios.post("https://65cbe2afefec34d9ed883ace.mockapi.io/messages", { postMessage })
@@ -63,7 +63,7 @@ const Main: React.FC<MainProps> = () => {
   // console.log("messages", messages);
   // if(data) {console.log("data", data)}
   // console.log('pending', isPending)
-  console.log("message", myData)
+  console.log("message", data)
   //*
 // 
   return (
@@ -79,7 +79,7 @@ const Main: React.FC<MainProps> = () => {
         <Box className="w-full mb-[9.5%] rounded-2xl p-4 pt-[52px] flex flex-col-reverse max-h-full overflow-y-auto gap-4 scrollBarHidden">
           {
             //@ts-ignore
-            postMessage?.map((item, i, array) => (
+            data?.map((item, i, array) => (
               <Box
                 className={`flex px-8 relative ${
                   item.messages.me ? " justify-end" : "justify-start "
