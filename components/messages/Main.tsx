@@ -61,8 +61,18 @@ const Main: React.FC<MainProps> = () => {
   // if(data) {console.log("data", data)}
   // console.log('pending', isPending)
   console.log("message", data);
+  console.log("LOADİNG", isLoading)
   //*
   //
+
+
+
+  if (isLoading) <div>LOADİNG</div>
+
+  if(error) <div>error</div>
+
+
+
   return (
     <Box
       className="w-[73%] h-full p-4 pt-0  bg-white "
