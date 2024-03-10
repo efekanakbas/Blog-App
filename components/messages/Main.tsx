@@ -23,7 +23,7 @@ const Main: React.FC<MainProps> = () => {
     },
   });
 
-  const { error, data, isLoading } = useQuery({
+  const { error, data, isLoading, isFetching } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
       const response = await axios.get(
@@ -61,13 +61,13 @@ const Main: React.FC<MainProps> = () => {
   // if(data) {console.log("data", data)}
   // console.log('pending', isPending)
   console.log("message", data);
-  console.log("LOADİNG", isLoading)
+  console.log("LOADİNG", isFetching)
   //*
   //
 
 
 
-  if (isLoading) <div>LOADİNG</div>
+  if (isFetching) <div>LOADİNG</div>
 
   if(error) <div>error</div>
 
