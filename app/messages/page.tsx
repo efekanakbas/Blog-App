@@ -21,15 +21,15 @@ interface pageProps {
 
 const page: React.FC<pageProps> = async () => {
   //! States
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["messages"],
-    queryFn: async () => {
-      const {data} = await axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/messages");
+  // const queryClient = new QueryClient();
+  // await queryClient.prefetchQuery({
+  //   queryKey: ["messages"],
+  //   queryFn: async () => {
+  //     const {data} = await axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/messages");
      
-      return data.reverse();
-    }
-  });
+  //     return data.reverse();
+  //   }
+  // });
   //!
   //todo Functions
       
@@ -42,9 +42,9 @@ const page: React.FC<pageProps> = async () => {
   //*
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    // <HydrationBoundary state={dehydrate(queryClient)}>
     <MessagesPageLayout/>
-    </HydrationBoundary>
+    // </HydrationBoundary>
   );
 };
 
