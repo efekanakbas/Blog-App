@@ -6,7 +6,6 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import axios from "axios";
 import { getData } from '@/utils/CRUD';
 
 
