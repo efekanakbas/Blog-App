@@ -4,6 +4,7 @@ import axios from "axios";
 const createNetworkClient = () => {
   const network = axios.create({
     baseURL: "https://efekan-akbas-9a21d3a06c36.herokuapp.com/",
+    // baseURL: "http://localhost:5000/",
   });
 
   // İstekleri yakalama ve token ekleme

@@ -145,7 +145,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
                   className="cursor-pointer rounded-2xl"
                   alt="Image"
                   fill
-                  src={"https://efekan-akbas-9a21d3a06c36.herokuapp.com/"+item}
+                  src={`${item}`}
                   style={{objectFit: 'cover'}}
                 />
                 {!onLoad && (
