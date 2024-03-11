@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import axios, { AxiosResponse } from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGeneral } from "@/contexts/GeneralContext";
+import { getData, postData } from "@/utils/CRUD";
 
 interface MainProps {}
 
@@ -26,22 +27,14 @@ const Main: React.FC<MainProps> = () => {
   const { error, data, isFetching } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
-      const response = await axios.get(
-        "https://65cbe2afefec34d9ed883ace.mockapi.io/messages"
-      );
-
-      return response.data.reverse();
+      return getData('messages');
     },
   });
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["messages"],
     mutationFn: (messages: any) => {
-      return axios
-        .post("https://65cbe2afefec34d9ed883ace.mockapi.io/messages", {
-          messages,
-        })
-        .then((response) => response.data);
+      return postData('messages')
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["messages"] });
@@ -125,11 +118,13 @@ const Main: React.FC<MainProps> = () => {
             }`}
             key={i}
           >
-            <figure className="absolute -left-4 top-2">
-              {!item.messages.me &&
+            <figure className={`absolute ${!item.messages.me ? "-left-4" : "-right-4"} top-2`}>
+              {!item.messages.me ?
                 array[i + 1]?.messages.me !== item.messages.me && (
                  <Avatar alt="user avatar" src="images/avatars/6.png" />
-                )}
+                ) : array[i + 1]?.messages.me !== item.messages.me && (
+                  <Avatar alt="user avatar" src="images/avatars/6.png" />
+                 ) }
             </figure>
 
             <Typography
