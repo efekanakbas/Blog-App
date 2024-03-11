@@ -14,9 +14,11 @@ import { useGeneral } from "@/contexts/GeneralContext";
 import { postData } from "@/utils/CRUD";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface ShareProps {}
+interface ShareProps {
+  disabled: boolean
+}
 
-const Share: React.FC<ShareProps> = () => {
+const Share: React.FC<ShareProps> = ({disabled}) => {
   //! States
   const queryClient = useQueryClient();
   const { avatar } = useGeneral();
@@ -69,7 +71,7 @@ const Share: React.FC<ShareProps> = () => {
           <Input
             id="ShareModal"
             onKeyDownHandler={undefined}
-            disabled={isPending}
+            disabled={isPending || disabled}
             sx={null}
             size="small"
             autoFocus={false}
@@ -92,7 +94,7 @@ const Share: React.FC<ShareProps> = () => {
       <Box className="flex justify-evenly">
         <Box
           onClick={() => {
-            setModalOpen(true);
+            !disabled && setModalOpen(true);
           }}
           className="flex gap-2 items-center cursor-pointer"
         >
@@ -116,7 +118,7 @@ const Share: React.FC<ShareProps> = () => {
 
         <Box
           onClick={() => {
-            setModalOpen(true), setInputShow(true), setPos1(true);
+            !disabled && setModalOpen(true), setInputShow(true), setPos1(true);
           }}
           className="flex gap-1 cursor-pointer"
         >
@@ -128,7 +130,7 @@ const Share: React.FC<ShareProps> = () => {
 
         <Box
           onClick={() => {
-            setModalOpen(true), setInputShow(true), setPos2(true);
+            !disabled && setModalOpen(true), setInputShow(true), setPos2(true);
           }}
           className="flex gap-1 cursor-pointer"
         >
@@ -140,7 +142,7 @@ const Share: React.FC<ShareProps> = () => {
 
         <Box
           onClick={() => {
-            setModalOpen(true), setInputShow(true), setPos3(true);
+            !disabled && setModalOpen(true), setInputShow(true), setPos3(true);
           }}
           className="flex gap-1 cursor-pointer"
         >
