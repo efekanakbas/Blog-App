@@ -10,15 +10,20 @@ import { useAuth } from "@/contexts/AuthContext";
 import WestIcon from '@mui/icons-material/West';
 import dynamic from 'next/dynamic'
 import { useRouter } from "next/navigation";
+import { postData } from "@/utils/CRUD";
 
 
 interface RegisterFormProps {
   setToggle: React.Dispatch<React.SetStateAction<boolean>>
+  firstName: String
+  lastName: String
+  email: String
+  username: String
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({setToggle}) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, firstName, lastName, email, username}) => {
   //! States
-  const route = useRouter()
+  const router = useRouter()
   const {
     values,
     handleChange,
@@ -33,18 +38,35 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle}) => {
       confirm: ""
     },
     validationSchema,
-    onSubmit: (values) => {
-      route.push('/confirm')
+    onSubmit: async (values) => {
+      await registerHandler({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        username: username,
+        password: values.password,
+        confirm: values.confirm
+      });
       // handleReset(values);
     },
   });
   const auth = !!errors.password || !!errors.confirm  || values.password.length === 0 || values.confirm.length === 0 
   
 
-  
+  const {signin} = useAuth()
   //!
   //todo Functions
-
+  const registerHandler = async (obj: any) => {
+    try {
+     await postData('register', obj)
+     router.push('/confirm')
+     handleReset(values);
+    } catch (error) {
+       console.log("error", error)
+       //@ts-ignore
+       toast.error(error.response.data.message)
+    }
+ }
   //todo
   //? useEffect
 

@@ -12,27 +12,22 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import Zoom from "@mui/material/Zoom";
 import HomeIcon from "@mui/icons-material/Home";
 import ChatIcon from "@mui/icons-material/Chat";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { InputAdornment, TextField } from "@mui/material";
-import avatar1 from "../../public/images/avatars/6.png";
+import {  TextField } from "@mui/material";
 import { useFormik } from "formik";
 import Link from "next/link";
-import Card from "./Card";
-import SearchIcon from "@mui/icons-material/Search";
-import Image from "next/image";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { useGeneral } from "@/contexts/GeneralContext";
 import { useRouter } from "next/navigation";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useAuth } from "@/contexts/AuthContext";
 import Search from "./Search";
+import Cookies from "js-cookie";
 
 const pages = [
   { icon: HomeIcon, title: "Homepage", link: "/" },
@@ -51,7 +46,6 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = () => {
   //! States
-  const { avatar } = useGeneral();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -70,7 +64,9 @@ const Navbar: React.FC<NavbarProps> = () => {
   });
 
   const router = useRouter();
-  const { logout, signin } = useAuth();
+  const { logout } = useAuth();
+  const avatar = Cookies.get('avatar')
+  const username = Cookies.get('username')
   //!
   //todo Functions
 
@@ -94,7 +90,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 
   //?
   //* consoleLogs
-
+    console.log("AVATAAAAAAAAR", avatar)
   //*
 
   return (
@@ -273,8 +269,9 @@ const Navbar: React.FC<NavbarProps> = () => {
                     gap: "8px",
                   }}
                 >
-                  <Avatar alt="User avatar" src={avatar} />
-                  <Typography color="black">Efekan Akbaş</Typography>
+                  {/*@ts-ignore*/}
+                  <Avatar alt="User avatar" src={avatar === "null" ? null : avatar} />
+                  <Typography color="black">{username}</Typography>
                   <figure>
                     <KeyboardArrowDownIcon sx={{ color: "black" }} />
                   </figure>

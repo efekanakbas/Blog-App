@@ -1,17 +1,16 @@
 'use client'
 import React, { useEffect, useMemo } from 'react';
-import { QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getUser,postUser, putUser} from '@/api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useState, ReactNode } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { getData, postData } from '@/utils/CRUD';
 
 interface AuthContextProps {
   children: ReactNode;
 }
 
 interface AuthContextType {
-  isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
   signin: () => void;
@@ -20,59 +19,62 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
-  const queryClient = useQueryClient()
   const router = useRouter()
 
-  const {data:userData} = useQuery({
-    queryKey:['users'],
-    queryFn: getUser
-  })
-
-
-
-
-  const {mutate: putMutate} = useMutation({
-    mutationFn: putUser,
-    onSuccess: () => {
-      
-      queryClient.invalidateQueries({ queryKey: ['users'] })
+  const {data, error, isLoading} = useQuery({
+    queryKey: ['islogged'],
+    queryFn: async () => {
+      return await getData('islogged')
     },
+    enabled: Cookies.get('token') ? true : false
   })
 
 
 
-  // console.log("dataUser", userData)
+
+  
   // console.log("COOKIE", Cookies.get('loggedIn'))
 
 
 
 
-  const [isLoggedIn, setIsLoggedIn] = useState(userData?.isLogged);
+  
+
+  
+
+
 
   const signin = () => {
-    putMutate({isLogged: true})
-    setIsLoggedIn(true);
-    router.push('/')
+    router.push('/login')
   };
 
   const login = () => {
-    setIsLoggedIn(true);
     router.push('/')
-    putMutate({isLogged: true})
+    
   };
 
-  const logout = () => {
-    putMutate({isLogged: false})
-    setIsLoggedIn(false);
+  const logout = async () => {
+    await getData('logout')
+    Cookies.remove('token')
+    Cookies.remove('isLoggedIn')
+    Cookies.remove('userId')
+    Cookies.remove('email')
+    Cookies.remove('username')
+    Cookies.remove('firstName')
+    Cookies.remove('lastName')
+    Cookies.remove('avatar')
+    Cookies.remove('cover')
     router.push('/login')
   };
 
   const values = {
-    isLoggedIn: isLoggedIn,
     login: login,
     logout: logout,
     signin: signin,
   };
+
+
+  
 
   return (
     

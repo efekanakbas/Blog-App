@@ -10,7 +10,7 @@ import TagIcon from "@mui/icons-material/Tag";
 import Man4Icon from "@mui/icons-material/Man4";
 const ShareModal = React.lazy(() => import("./ShareModal"));
 import PlaceIcon from "@mui/icons-material/Place";
-import { useGeneral } from "@/contexts/GeneralContext";
+import Cookies from "js-cookie";
 import { postData } from "@/utils/CRUD";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -21,7 +21,7 @@ interface ShareProps {
 const Share: React.FC<ShareProps> = ({disabled}) => {
   //! States
   const queryClient = useQueryClient();
-  const { avatar } = useGeneral();
+  const avatar = Cookies.get('avatar')
   const { values, handleChange, handleReset, handleSubmit } = useFormik({
     initialValues: {
       shareValue: "",
@@ -65,7 +65,8 @@ const Share: React.FC<ShareProps> = ({disabled}) => {
     <Card>
       <Box className="flex gap-4">
         <figure>
-          <Avatar alt="user avatar" src={avatar} />
+           {/*@ts-ignore*/}
+        <Avatar style={{width:'45px', height:'45px'}} alt="User avatar" src={avatar === "null" ? null : avatar} />
         </figure>
         <form className="w-full" onSubmit={handleSubmit}>
           <Input

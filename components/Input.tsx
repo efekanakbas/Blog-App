@@ -53,7 +53,7 @@ const Input = forwardRef(({
       sx={sx}
       disabled={disabled}
       name={name}
-      type={type}
+      type='text'
       value={value}
       onChange={handleChange}
       size={size === 'small' ? 'small' : 'small'}

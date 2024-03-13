@@ -1,5 +1,12 @@
 import ConfirmPageLayout from '@/layouts/ConfirmPageLayout';
 import React from 'react';
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: "Confirm",
+  description: "Confirm Page of Blog",
+};
 
 
 interface ConfirmProps {

@@ -16,7 +16,6 @@ import unlikeSound from "../public/audios/unlikeSound.wav";
 import { useFormik } from "formik";
 import Input from "./Input";
 import PlusOneIcon from "@mui/icons-material/PlusOne";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useGeneral } from "@/contexts/GeneralContext";
 const FeedModal = React.lazy(() => import("./feedModal/FeedModal"));
 import moment from "moment";

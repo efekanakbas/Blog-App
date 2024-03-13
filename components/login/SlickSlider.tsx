@@ -5,9 +5,9 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 
 import "slick-carousel/slick/slick-theme.css";
-import login1 from "../public/images/login1.svg";
-import login2 from "../public/images/login2.svg";
-import login3 from "../public/images/login3.svg";
+import login1 from "../../public/images/login1.svg";
+import login2 from "../../public/images/login2.svg";
+import login3 from "../../public/images/login3.svg";
 import Image from "next/image";
 
 const dummy = [login1, login2, login3];

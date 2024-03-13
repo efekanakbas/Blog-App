@@ -1,7 +1,7 @@
 import React from 'react';
-import SlickSlider from "@/components/SlickSlider";
+import SlickSlider from "@/components/login/SlickSlider";
 import { Box } from '@mui/material';
-import LoginForm from '@/components/LoginForm';
+import LoginForm from '@/components/login/LoginForm';
 
 interface LoginPageLayoutProps {
   // Define props here

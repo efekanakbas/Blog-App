@@ -20,8 +20,6 @@ export const GeneralContextProvider = ({
   const [verticalTabvalue, setVerticalTabValue] = useState(0);
   const [profilePage, setProfilePage] = useState(0)
   const [inputFocus, setInputFocus] = useState(null)
-  const isBrowser = typeof window !== 'undefined';
-  const [avatar, setAvatar] = useState(Cookies.get('avatar'))
   const [settingsTabValue, setSettingsTabValue] = useState(0);
   const [searchTabValue, setSearchTabValue] = useState(0)
 
@@ -46,7 +44,6 @@ export const GeneralContextProvider = ({
   };
 
   const values = {
-    avatar: avatar ? avatar : "/images/avatars/6.png",
     name: 'Efekan Akbaş',
     tabValue: tabValue,
     handleChange: handleChange,
@@ -58,7 +55,6 @@ export const GeneralContextProvider = ({
     setProfilePage: setProfilePage,
     inputFocus: inputFocus,
     setInputFocus: setInputFocus,
-    setAvatar: setAvatar,
     settingsTabValue: settingsTabValue,
     setSettingsTabValue: setSettingsTabValue,
     handleChangeSettings: handleChangeSettings,

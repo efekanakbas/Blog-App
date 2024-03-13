@@ -10,9 +10,13 @@ import { useAuth } from "@/contexts/AuthContext";
 
 interface RegisterFormProps {
   setToggle: React.Dispatch<React.SetStateAction<boolean>>
+  setFirstName: React.Dispatch<React.SetStateAction<string>>
+  setLastName: React.Dispatch<React.SetStateAction<string>>
+  setEmail: React.Dispatch<React.SetStateAction<string>>
+  setUsername: React.Dispatch<React.SetStateAction<string>>
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({setToggle}) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, setFirstName, setLastName, setEmail, setUsername}) => {
   //! States
   const {
     values,
@@ -31,6 +35,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle}) => {
     },
     validationSchema,
     onSubmit: (values) => {
+      setFirstName(values.first)
+      setLastName(values.last)
+      setEmail(values.email)
+      setUsername(values.username)
       setToggle(true)
       // handleReset(values);
     },

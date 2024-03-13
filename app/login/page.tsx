@@ -1,8 +1,11 @@
-
-
-
 import React, { useEffect } from 'react';
 import LoginPageLayout from "@/layouts/LoginPageLayout";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Login Page of Blog",
+};
 
 
 interface LoginProps {

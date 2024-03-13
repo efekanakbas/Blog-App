@@ -3,10 +3,14 @@ import React, { useState } from "react";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import { Box, Button, Checkbox, InputLabel, Typography } from "@mui/material";
 import { useFormik } from "formik";
-import Input from "./Input";
+import Input from "../Input";
 import Link from "next/link";
-import validationSchema from '../schemas/loginSchema'
+import validationSchema from '../../schemas/loginSchema'
 import { useAuth } from "@/contexts/AuthContext";
+import { postData } from "@/utils/CRUD";
+import toast from "react-hot-toast";
+import Cookies from 'js-cookie';
+import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
   // Define props here
@@ -14,6 +18,7 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = () => {
   //! States
+  const router = useRouter()
   const { values, handleChange, handleReset, handleSubmit, handleBlur, touched, errors } = useFormik({
     initialValues: {
       email: "",
@@ -21,22 +26,51 @@ const LoginForm: React.FC<LoginFormProps> = () => {
       check: false
     },
     validationSchema,
-    onSubmit: (values) => {
-      login()
-      handleReset(values);
+    onSubmit: async (values) => {
+      console.log("values", values);
+      await loginHandler({
+        email: values.email,
+        password: values.password
+      });
+      console.log("values", values);
     },
   });
+
+
+
   const {login} = useAuth()
   const auth = !!errors.email || !!errors.password || values.email.length === 0 || values.password.length === 0
   //!
   //todo Functions
+    const loginHandler = async (obj: any) => {
+       try {
+        const {token, user} = await postData('login', obj)
 
+        Cookies.set('userId', user._id);
+        Cookies.set('email', user.email);
+        Cookies.set('username', user.username);
+        Cookies.set('firstName', user.firstName);
+        Cookies.set('lastName', user.lastName);
+        Cookies.set('avatar', user.avatar);
+        Cookies.set('cover', user.cover)
+        Cookies.set('token', token)
+        Cookies.set('isLoggedIn', "true")
+
+
+        login()
+        handleReset(values);
+       } catch (error) {
+          console.log("error", error)
+          //@ts-ignore
+          toast.error(error.response.data.message)
+       }
+    }
   //todo
   //? useEffect
 
   //?
   //* consoleLogs
-    console.log("values", values)
+     console.log("token", Cookies.get('token'))
   //*
 
   return (

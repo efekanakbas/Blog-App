@@ -29,9 +29,9 @@ import Input from "./Input";
 import { useFormik } from "formik";
 import PlaceIcon from "@mui/icons-material/Place";
 import toast from "react-hot-toast";
-import { useGeneral } from "@/contexts/GeneralContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postData } from "@/utils/CRUD";
+import Cookies from "js-cookie";
 
 interface ModalProps {
   modalOpen: boolean;
@@ -59,7 +59,8 @@ const ShareModal: React.FC<ModalProps> = ({
   setInputShow,
 }) => {
   //! States
-  const { avatar } = useGeneral();
+  const avatar = Cookies.get('avatar')
+  const username = Cookies.get('username')
   const [imagesPool, setImagesPool] = useState<File[]>([]);
   const [hashtagPool, setHashtagPool] = useState<string[]>([]);
   const [mentionPool, setMentionPool] = useState<string[]>([]);
@@ -263,10 +264,11 @@ const ShareModal: React.FC<ModalProps> = ({
       >
         <Box className="flex mb-8 gap-6 ml-[14px] items-center">
           <figure>
-            <Avatar alt="user avatar" sx={{ transform: "scale(1.4)" }} src={avatar} />
+             {/*@ts-ignore*/}
+        <Avatar style={{width:'70px', height:'70px'}} alt="User avatar" src={avatar === "null" ? null : avatar} />
           </figure>
           <Box className="flex flex-col">
-            <Typography sx={{ fontWeight: "bold" }}>Efekan Akbaş</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>{username}</Typography>
             <Typography>{location}</Typography>
           </Box>
         </Box>

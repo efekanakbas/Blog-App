@@ -32,4 +32,33 @@ interface FeedsProps {
     name: string
   }
 
+  // Message
+
+  interface Message {
+    message: {
+      createAt: string;
+      isMy: boolean;
+      messageId: string;
+      receiver: {
+        userId: string;
+        username: string;
+        avatar: string;
+      } 
+      text: string;
+    };
+    user: {
+      avatar: string | null;
+      cover: string | null;
+      email: string;
+      firstName: string;
+      lastName: string;
+      userId: string;
+      username: string;
+    };
+  }
+  
+ 
+  
+  
+
 

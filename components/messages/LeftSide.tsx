@@ -1,125 +1,55 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Avatar, Box, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-
-const messages = [
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-  {
-    avatar: "images/avatars/6.png",
-    name: "Efekan Akbaş",
-    date: "05 Jan",
-    message: "Oh okay, thank you!",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { getData } from "@/utils/CRUD";
+import moment from "moment";
 
 interface LeftSideProps {
-  // Define props here
+  setScreen: React.Dispatch<React.SetStateAction<boolean>>
+  setRoom: React.Dispatch<React.SetStateAction<String | null>>
+  socket: any
+  room: null | String
 }
 
-const LeftSide: React.FC<LeftSideProps> = () => {
+const LeftSide: React.FC<LeftSideProps> = ({setScreen, setRoom, socket, room}) => {
   //! States
-
+  const { error, data, isFetching } = useQuery({
+    queryKey: ["messagesAll"],
+    queryFn: async () => {
+      return getData("messages");
+    },
+  });
   //!
   //todo Functions
-
+  const handleClick = async () => {
+    await socket.emit('room', room)
+    setScreen(true)
+  }
   //todo
   //? useEffect
-
+    useEffect(() => {
+      if(data) {
+        setRoom(data[0]?.message?.receiver?.userId)
+      }
+    }, [data, setRoom])
   //?
   //* consoleLogs
-
+  // console.log("data", data);
+  // console.log("room", room)
   //*
 
   return (
     <Box
-    sx={{
-      '@media (max-width: 1000px)': {
-        width: '50% !important',
-      },
-    }}
+      sx={{
+        "@media (max-width: 1000px)": {
+          width: "50% !important",
+        },
+        height: "100%",
+        bgcolor: "white",
+        borderBottomLeftRadius: "16px",
+        borderTopLeftRadius: "16px"
+      }}
       className="w-[27%]  border-r border-gray-200 flex flex-col shrink-0 overflow-hidden"
     >
       <Box
@@ -154,16 +84,14 @@ const LeftSide: React.FC<LeftSideProps> = () => {
       </Box>
       <Box
         className="flex flex-col flex-shrink-0 overflow-x-hidden overflow-y-auto scrollBarHidden"
-        sx={{ borderRadius: "0 0 0 20px", maxHeight:'calc(100vh - 283px)' }}
+        sx={{ maxHeight: "calc(100vh - 283px)" }}
       >
-        {messages.map((message, i) => (
+        {data?.map((message: Message, i: number) => (
           <Box
             key={i}
             className="relative flex flex-shrink-0 hover:bg-gray-100 cursor-pointer "
             sx={{
-              ':not(:last-child)': {
-                borderBottom: '1px solid #eeeeee',
-              },
+              borderBottom: "1px solid #eeeeee",
               height: "100px",
               padding: "20px",
               backgroundColor: "white",
@@ -172,18 +100,24 @@ const LeftSide: React.FC<LeftSideProps> = () => {
               alignItems: "center",
               gap: "12px",
             }}
+            onClick = {handleClick}
           >
             <figure>
-              <Avatar alt="user avatar" src={message.avatar} />
+              <Avatar sx={{width:'55px', height:'55px'}} alt="user avatar" src={message.message.receiver?.avatar ?? null} />
             </figure>
             <Box className="flex flex-col w-full gap-1">
               <Box className="flex items-center justify-between">
-                <Typography>Mustafa Turan</Typography>
-                <Typography sx={{fontSize:"12px"}} className=" text-gray-400">
-                  05 Jan
+                <Typography>{message.message.receiver.username}</Typography>
+                <Typography
+                  sx={{ fontSize: "12px" }}
+                  className=" text-gray-400"
+                >
+                  {
+                    moment(message.message.createAt).format("DD MMM")
+                  }
                 </Typography>
               </Box>
-              <Typography>{message.message}</Typography>
+              <Typography>{message.message.text}</Typography>
             </Box>
           </Box>
         ))}
