@@ -5,95 +5,105 @@ import Input from "../Input";
 import { useFormik } from "formik";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getData, postData } from "@/utils/CRUD";
-
+import Cookies from "js-cookie";
 
 interface MainProps {
   room: String | null;
-  socket: any
+  socket: any;
+  receiverId: String | null
+  setLeftMessage: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Main: React.FC<MainProps> = ({ room, socket }) => {
+const Main: React.FC<MainProps> = ({ room, socket, receiverId, setLeftMessage }) => {
   //! States
-  const queryClient = useQueryClient();
+  const [messageList, setMessageList] = useState([])
+  const username = Cookies.get('username')
+  const avatar = Cookies.get('avatar')
   const { values, handleChange, handleReset, handleSubmit } = useFormik({
     initialValues: {
       inputValue: "",
     },
-    onSubmit: (values) => {
-      mutate({ text: values.inputValue, receiverId: room });
+    onSubmit:  (values) => {
+    sendMessage()
     },
+    
   });
-  const message = {
-    room: room,
-    message: values.inputValue
-  }
+  const replacedRoom = room?.replace('-', "")
 
-  const { error, data, isFetching, isLoading } = useQuery({
+
+
+  const { error, data, isFetching, isLoading, refetch } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
       return getData(`messages/${room}`);
     },
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationKey: ["messages"],
-    mutationFn: (messages : any) => {
-      return postData("messages", messages);
-    },
-    onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ["messages"] });
-      //@ts-ignore
-      setMessageList((prev) => [...prev, message]);
-      await socket.emit('message', message);
-      handleReset(values);
-    },
-  });
 
   // socket
   const live = "https://efekan-akbas-9a21d3a06c36.herokuapp.com";
   const local = "http://localhost:5000";
-  
-  const [messageList, setMessageList] = useState(null)
   //!
   //todo Functions
-  const messageListener = (data: any) => {
-    try {
-      //@ts-ignore
-      setMessageList((prev) => [...prev, data]);
-    } catch (error) {
-      console.error('Error updating message list:', error);
+  const sendMessage = async () => {
+    const messageContent = {
+      room: room,
+      message: {
+        text: values.inputValue
+      },
+      user: {
+        isMy: true
+      }
+    };
+    const postContent = {
+      text: values.inputValue,
+      receiverId: receiverId
     }
-  };
+    await socket.emit("message", messageContent)
+    await postData('messages', postContent)
+    //@ts-ignore
+    // setMessageList((prev) => [...prev, messageContent])
+    handleReset(values)
+  }
   //todo
   //? useEffect
-  
 
   useEffect(() => {
+       //@ts-ignore
+    socket.on("messageReturn", (data) => {
+      data.message.isMy = data.user.username === username ? true : false
+      setLeftMessage(data)
+      //@ts-ignore
+      setMessageList((prev) => [data,...prev])
+    });
 
-    // Socket dinleyicisi
-    
-  
-    socket.on('messageReturn', messageListener);
+    // console.log("deneme")
 
-  
     // Component unmount olduğunda socket dinlemeyi kaldır
     return () => {
-      socket.off('messageReturn', messageListener);
+      socket.off("messageReturn");
     };
-  }, [socket]);
+  }, [socket, username, setLeftMessage]);
 
   useEffect(() => {
-    setMessageList(data)
-  }, [data])
-   
+    setMessageList(data);
+  }, [data]);
+
+  useEffect(() => {
+    refetch()
+  }, [refetch, receiverId])
+
+ 
+
   //?
   //* consoleLogs
   // console.log("messages", messages);
   // console.log("data", data);
-  // console.log('pending', isPending)
   // console.log("selam")
   // console.log("message", message)
-  console.log("messageList", messageList)
+  // console.log("messageList", messageList);
+  // console.log("receiverId", receiverId)
+  // console.log("room", room)
   //*
   //
 
@@ -128,7 +138,7 @@ const Main: React.FC<MainProps> = ({ room, socket }) => {
             sx={{ width: "100%", padding: "0 80px", marginTop: "16px" }}
             size="medium"
             className=""
-            disabled={isFetching || isPending}
+            disabled={isFetching}
             paddingLeft={false}
             autoFocus={false}
             value={values.inputValue}
@@ -179,7 +189,7 @@ const Main: React.FC<MainProps> = ({ room, socket }) => {
       sx={{ borderRadius: "0 20px 20px 0" }}
     >
       <Box className="h-[80px] flex items-center shrink-0">
-        {data[0]?.message?.receiver?.username}
+        {data[0]?.message?.receiver?.username === username ? data[0]?.user?.username : data[0]?.message?.receiver?.username}
       </Box>
       <Box
         sx={{ height: "calc(100% - 80px)" }}
@@ -187,8 +197,8 @@ const Main: React.FC<MainProps> = ({ room, socket }) => {
       >
         <Box className="w-full mb-[9.5%] rounded-2xl p-4 pt-[52px] flex flex-col-reverse max-h-full overflow-y-auto gap-4 scrollBarHidden">
           {
-            //@ts-ignore
-            messageList?.map((item:any, i, array) => (
+            //@ts-ignorex
+            messageList?.map((item: any, i, array) => (
               <Box
                 className={`flex px-8 relative ${
                   item.message.isMy ? " justify-end" : "justify-start "
@@ -201,26 +211,31 @@ const Main: React.FC<MainProps> = ({ room, socket }) => {
                   } top-2`}
                 >
                   {!item.message.isMy
+                      //@ts-ignore
                     ? array[i + 1]?.message.isMy !== item.message.isMy && (
                         <Avatar
                           alt="user avatar"
                           src={item.message.receiver.avatar}
                         />
                       )
+                          //@ts-ignore
                     : array[i + 1]?.message.isMy !== item.message.isMy && (
-                        <Avatar alt="user avatar" src="images/avatars/6.png" />
+                       //@ts-ignore
+                       <Avatar alt="User avatar" src={avatar === "null" ? null : avatar} />
                       )}
                 </figure>
-                  
+
                 <Typography
                   style={{
                     //@ts-ignore
                     borderTopLeftRadius:
                       !item.message.isMy &&
+                          //@ts-ignore
                       array[i + 1]?.message.isMy !== item.message.isMy &&
                       "3px",
                     borderTopRightRadius:
                       item.message.isMy &&
+                          //@ts-ignore
                       array[i + 1]?.message.isMy !== item.message.isMy &&
                       "3px",
                   }}
@@ -244,7 +259,7 @@ const Main: React.FC<MainProps> = ({ room, socket }) => {
               sx={{ width: "100px", height: "100px" }}
             />
             <Typography sx={{ marginTop: "8px", fontWeight: "bold" }}>
-              {data[0]?.message?.receiver?.username}
+              {data[0]?.message?.receiver?.username === username ? data[0]?.user?.username : data[0]?.message?.receiver?.username}
             </Typography>
             {/* <Typography sx={{ fontSize: "12px" }} className="text-gray-400">
           Developer Manager
@@ -259,7 +274,7 @@ const Main: React.FC<MainProps> = ({ room, socket }) => {
               sx={{ width: "100%", padding: "0 80px", marginTop: "16px" }}
               size="medium"
               className=""
-              disabled={isPending}
+              disabled={isFetching}
               paddingLeft={false}
               autoFocus={false}
               value={values.inputValue}

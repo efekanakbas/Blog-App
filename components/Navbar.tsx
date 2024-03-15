@@ -90,7 +90,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 
   //?
   //* consoleLogs
-    console.log("AVATAAAAAAAAR", avatar)
+    // console.log("AVATAAAAAAAAR", avatar)
   //*
 
   return (

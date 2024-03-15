@@ -4,17 +4,22 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useQuery } from "@tanstack/react-query";
 import { getData } from "@/utils/CRUD";
 import moment from "moment";
+import Cookies from "js-cookie";
 
 interface LeftSideProps {
   setScreen: React.Dispatch<React.SetStateAction<boolean>>
   setRoom: React.Dispatch<React.SetStateAction<String | null>>
   socket: any
   room: null | String
+  setReceiverId: React.Dispatch<React.SetStateAction<String | null>>
+  leftMessage : String
 }
 
-const LeftSide: React.FC<LeftSideProps> = ({setScreen, setRoom, socket, room}) => {
+const LeftSide: React.FC<LeftSideProps> = ({setScreen, setRoom, socket, room, setReceiverId, leftMessage}) => {
   //! States
-  const { error, data, isFetching } = useQuery({
+  const username = Cookies.get('username')
+  const userId = Cookies.get('userId')
+  const { error, data, isFetching, refetch } = useQuery({
     queryKey: ["messagesAll"],
     queryFn: async () => {
       return getData("messages");
@@ -22,21 +27,30 @@ const LeftSide: React.FC<LeftSideProps> = ({setScreen, setRoom, socket, room}) =
   });
   //!
   //todo Functions
-  const handleClick = async () => {
-    await socket.emit('room', room)
+  const handleClick = async (obj: any) => {
+    setReceiverId(obj?.user?.userId === userId ? obj?.message?.receiver?.userId : obj?.user?.userId )
+    console.log("obj", obj)
+    setRoom(obj.roomId)
     setScreen(true)
   }
   //todo
   //? useEffect
-    useEffect(() => {
-      if(data) {
-        setRoom(data[0]?.message?.receiver?.userId)
-      }
-    }, [data, setRoom])
+  useEffect(() => {
+    if (room) {
+        socket.emit('room', room);
+    }
+}, [room, socket]);
+
+useEffect(() => {
+  if(leftMessage) {
+    refetch()
+  }
+}, [leftMessage, refetch])
   //?
   //* consoleLogs
-  // console.log("data", data);
+  console.log("data", data);
   // console.log("room", room)
+  console.log("leftMessage", leftMessage)
   //*
 
   return (
@@ -100,14 +114,16 @@ const LeftSide: React.FC<LeftSideProps> = ({setScreen, setRoom, socket, room}) =
               alignItems: "center",
               gap: "12px",
             }}
-            onClick = {handleClick}
+            onClick = {() => {
+              handleClick(message)
+            }}
           >
             <figure>
               <Avatar sx={{width:'55px', height:'55px'}} alt="user avatar" src={message.message.receiver?.avatar ?? null} />
             </figure>
             <Box className="flex flex-col w-full gap-1">
               <Box className="flex items-center justify-between">
-                <Typography>{message.message.receiver.username}</Typography>
+                <Typography>{message.user.username === username ? message.message.receiver.username : message.user.username }</Typography>
                 <Typography
                   sx={{ fontSize: "12px" }}
                   className=" text-gray-400"
@@ -117,7 +133,8 @@ const LeftSide: React.FC<LeftSideProps> = ({setScreen, setRoom, socket, room}) =
                   }
                 </Typography>
               </Box>
-              <Typography>{message.message.text}</Typography>
+              {/*@ts-ignore*/}
+              <Typography>{!leftMessage ? message.message.text : leftMessage.roomId === message.roomId ? leftMessage.message.text : message.message.text}</Typography>
             </Box>
           </Box>
         ))}
