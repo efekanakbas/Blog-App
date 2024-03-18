@@ -5,9 +5,10 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import axios from "axios";
 import MessagesPageLayout from '@/layouts/MessagesPageLayout';
 import { getData } from '@/utils/CRUD';
+
+console.log("token", )
 
 
 export const metadata: Metadata = {
@@ -22,10 +23,13 @@ interface pageProps {
 
 const page: React.FC<pageProps> = async () => {
   //! States
+
   const queryClient = new QueryClient();
+
   await queryClient.prefetchQuery({
     queryKey: ["messagesAll"],
     queryFn: async () => {
+  
       return getData('messages')
     }
   });

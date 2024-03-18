@@ -40,9 +40,7 @@ const Main: React.FC<MainProps> = ({ room, socket, receiverId, setLeftMessage })
   });
 
 
-  // socket
-  const live = "https://efekan-akbas-9a21d3a06c36.herokuapp.com";
-  const local = "http://localhost:5000";
+ 
   //!
   //todo Functions
   const sendMessage = async () => {

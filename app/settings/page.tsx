@@ -6,7 +6,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import axios from "axios";
+import { getData } from '@/utils/CRUD';
 
 
 
@@ -26,9 +26,7 @@ const page: React.FC<pageProps> = async() => {
   await queryClient.prefetchQuery({
     queryKey: ["blocked"],
     queryFn: async () => {
-      const {data} = await axios.get("https://65cbe2afefec34d9ed883ace.mockapi.io/blocked");
-     
-      return data;
+      return getData('blocked')
     }
   });
   //!
@@ -39,13 +37,13 @@ const page: React.FC<pageProps> = async() => {
       
   //?
   //* consoleLogs
-      
+     
   //*
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    // <HydrationBoundary state={dehydrate(queryClient)}>
     <SettingsPageLayout/>
-    </HydrationBoundary>
+    // </HydrationBoundary>
   );
 };
 

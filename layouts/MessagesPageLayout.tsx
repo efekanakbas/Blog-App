@@ -6,8 +6,12 @@ import { Box } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import io from "socket.io-client";
 
+ // socket
+ const live = "https://efekan-akbas-9a21d3a06c36.herokuapp.com";
+ const local = "http://localhost:5000";
+
 //@ts-ignore
-const socket = io.connect("https://efekan-akbas-9a21d3a06c36.herokuapp.com");
+const socket = io.connect(local);
 socket.on('connect', () => {
   console.log("Connected to the server");
  });

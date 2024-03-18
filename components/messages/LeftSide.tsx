@@ -21,9 +21,9 @@ const LeftSide: React.FC<LeftSideProps> = ({setScreen, setRoom, socket, room, se
   const userId = Cookies.get('userId')
   const { error, data, isFetching, refetch } = useQuery({
     queryKey: ["messagesAll"],
-    queryFn: async () => {
-      return getData("messages");
-    },
+    // queryFn: async () => {
+    //   return getData("messages");
+    // },
   });
   //!
   //todo Functions
@@ -50,7 +50,7 @@ useEffect(() => {
   //* consoleLogs
   console.log("data", data);
   // console.log("room", room)
-  console.log("leftMessage", leftMessage)
+  // console.log("leftMessage", leftMessage)
   //*
 
   return (
@@ -134,7 +134,7 @@ useEffect(() => {
                 </Typography>
               </Box>
               {/*@ts-ignore*/}
-              <Typography>{!leftMessage ? message.message.text : leftMessage.roomId === message.roomId ? leftMessage.message.text : message.message.text}</Typography>
+              <Typography>{!leftMessage ?  message.message.text.length > 75 ? message.message.text.slice(0,75) +  "..." : message.message.text : leftMessage.roomId === message.roomId ?  leftMessage.message.text.length > 75 ? leftMessage.message.text.slice(0,75) +  "..." : leftMessage.message.text :  message.message.text.length > 75 ? message.message.text.slice(0,75) +  "..." : message.message.text}</Typography>
             </Box>
           </Box>
         ))}

@@ -21,7 +21,7 @@ const Main: React.FC<MainProps> = () => {
     queryKey: ["notifications"],
     queryFn: async () => {
       const response = await axios.get(
-        "https://65cbe2afefec34d9ed883ace.mockapi.io/notifications"
+        "https://65f8a9eedf151452460fdfd4.mockapi.io/notifications"
       );
 
       return response.data;
@@ -35,7 +35,7 @@ const Main: React.FC<MainProps> = () => {
 
   //?
   //* consoleLogs
-    console.log("data", data)
+    // console.log("data", data)
   //*
 
   return (

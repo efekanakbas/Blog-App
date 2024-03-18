@@ -1,12 +1,9 @@
-import Card from "@/components/Card";
 import { Avatar, Box, InputLabel, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import { useFormik } from "formik";
 import validationSchema from "../../../schemas/settingsEmailSchema";
-import Input from "@/components/Input";
-import Button from "@/components/Button";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { getData } from '@/utils/CRUD';
 
 interface BlockedList {
   id: string;
@@ -44,11 +41,7 @@ const BlockList: React.FC<BlockListProps> = () => {
   const { error, data, isLoading } = useQuery({
     queryKey: ["blocked"],
     queryFn: async () => {
-      const response = await axios.get(
-        "https://65cbe2afefec34d9ed883ace.mockapi.io/blocked"
-      );
-
-      return response.data;
+      return getData('blocked')
     },
   });
 
@@ -65,7 +58,7 @@ const BlockList: React.FC<BlockListProps> = () => {
 
   return (
     <Box sx={{borderRadius:'15px', backgroundColor:'white', padding:'20px', pb:'0'}}>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      {/* <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         <Typography variant="h6">See people that I blocked</Typography>
         <Typography sx={{ color: "gray" }}>
           You can select who can see your connections, your followers and your
@@ -110,7 +103,7 @@ const BlockList: React.FC<BlockListProps> = () => {
             </Box>
           ))}
         </Box>
-      )}
+      )} */}
     </Box>
   );
 };
