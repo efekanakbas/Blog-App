@@ -5,6 +5,9 @@ import { useFormik } from "formik";
 import validationSchema from "../../../schemas/settingsEmailSchema";
 import Input from '@/components/Input';
 import Button from '@/components/Button';
+import Cookies from 'js-cookie';
+import { patchData } from '@/utils/CRUD';
+import toast from 'react-hot-toast';
 
 interface EmailProps {
   // Define props here
@@ -12,6 +15,7 @@ interface EmailProps {
 
 const Email: React.FC<EmailProps> = () => {
   //! States
+  const Iemail = Cookies.get('email')
   const {
     values,
     handleChange,
@@ -27,14 +31,26 @@ const Email: React.FC<EmailProps> = () => {
     },
     validationSchema,
     onSubmit: (values) => {
-      // handleReset(values);
+      console.log("deneme")
+      handlePatch({
+        email: values.email
+      })
     },
   });
 
   const auth = !!errors.email || !!errors.confirm || values.email.length === 0 || values.confirm.length === 0 
   //!
   //todo Functions
-      
+      const handlePatch = async(obj: any) => {
+        try {
+          await patchData('email', obj)
+        Cookies.set('email', values.email)
+        handleReset(values);
+        toast.success('You have successfully changed your email!')
+        } catch (error) {
+          console.log("error:", error)
+        }
+      }
   //todo
   //? useEffect
       
@@ -50,7 +66,7 @@ const Email: React.FC<EmailProps> = () => {
       Update Email Address
       </Typography>
       <Typography>
-      Your current email address is: efekanakbas98@gmail.com
+      Your current email address is: {Iemail}
       </Typography>
       <Typography sx={{color:'gray'}} >
       Updating your email will be effective immediatly. You will have to confirm your new address mail.
@@ -92,7 +108,7 @@ const Email: React.FC<EmailProps> = () => {
             name="email"
             placeholder="Email"
             helperText={touched.email && errors.email && errors.email}
-            error={touched.email && errors.email}
+            error={!!touched.email && !!errors.email}
             handleBlur={handleBlur}
           />
         </Box>
@@ -119,7 +135,7 @@ const Email: React.FC<EmailProps> = () => {
             name="confirm"
             placeholder="Confirm"
             helperText={touched.confirm && errors.confirm && errors.confirm}
-            error={touched.confirm && errors.confirm}
+            error={!!touched.confirm && !!errors.confirm}
             handleBlur={handleBlur}
           />
         </Box>

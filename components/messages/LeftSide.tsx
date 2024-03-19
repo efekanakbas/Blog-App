@@ -21,9 +21,9 @@ const LeftSide: React.FC<LeftSideProps> = ({setScreen, setRoom, socket, room, se
   const userId = Cookies.get('userId')
   const { error, data, isFetching, refetch } = useQuery({
     queryKey: ["messagesAll"],
-    // queryFn: async () => {
-    //   return getData("messages");
-    // },
+    queryFn: async () => {
+      return getData("messages");
+    },
   });
   //!
   //todo Functions

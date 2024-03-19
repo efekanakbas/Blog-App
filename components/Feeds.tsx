@@ -12,14 +12,16 @@ import { getData } from "../utils/CRUD";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useParams } from 'next/navigation'
 
 interface Feeds {
   shareShow: boolean;
+  profile: boolean
 }
 
-const Feeds: React.FC<Feeds> = ({ shareShow }) => {
+const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
   //! States
-
+  const params = useParams().username
   const {
     status,
     fetchNextPage,
@@ -29,9 +31,9 @@ const Feeds: React.FC<Feeds> = ({ shareShow }) => {
     error,
     data,
   } = useInfiniteQuery({
-    queryKey: ["feeds"],
+    queryKey: !profile ? ["feeds"] : ["feedsOne"],
     queryFn: ({ pageParam }) => {
-      return getData(`feeds?page=${pageParam}&limit=10`);
+      return !profile ? getData(`feeds?page=${pageParam}&limit=10`) : getData(`feeds/${params}?page=${pageParam}&limit=10`);
     },
     staleTime: 5000,
     initialPageParam: 1,
@@ -65,7 +67,9 @@ const Feeds: React.FC<Feeds> = ({ shareShow }) => {
   // console.log("ref", ref);
   // console.log("inView", inView);
   // console.log("data", data.pages[0].feeds[0])
-  console.log("data", data);
+  // console.log("data", data);
+  // console.log("profile", profile)
+  console.log("params", params)
   //*
 
   if (status === "pending")

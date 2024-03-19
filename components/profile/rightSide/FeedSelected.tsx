@@ -22,7 +22,7 @@ const FeedSelected: React.FC<FeedSelectedProps> = () => {
 
   return (
     <>
-          <Feeds shareShow={false} />
+          <Feeds profile = {true} shareShow={false} />
     </>
   );
 };

@@ -5,53 +5,24 @@ import { Avatar, Box, Icon, Typography } from '@mui/material';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 
 import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
+import { getData } from '@/utils/CRUD';
 
 interface RightSideProps {
-   
+    
 }
-
-const persons = [
-    {
-        avatar: "/images/avatars/24.png",
-        name: "Enes Doğan",
-        title: "Product Manager"
-    },
-    {
-        avatar: "/images/avatars/25.png",
-        name: "Uğur Öztürk",
-        title: "Sales Manager"
-    },
-    {
-        avatar: "/images/avatars/28.png",
-        name: "Ayşe Yılmaz",
-        title: "CEO"
-    },
-    {
-        avatar: "/images/avatars/28.png",
-        name: "Ayşe Yılmaz",
-        title: "CEO"
-    },
-    {
-        avatar: "/images/avatars/28.png",
-        name: "Ayşe Yılmaz",
-        title: "CEO"
-    },
-    {
-        avatar: "/images/avatars/28.png",
-        name: "Ayşe Yılmaz",
-        title: "CEO"
-    },
-    {
-        avatar: "/images/avatars/28.png",
-        name: "Ayşe Yılmaz",
-        title: "CEO"
-    },
-]
 
 const RightSide: React.FC<RightSideProps> = () => {
   //! States
       const [showAll, setShowAll] = useState<boolean>(true)
       const [textToggle, setTextToggle] = useState<boolean>(true)
+
+      const {data, isLoading, error} = useQuery({
+        queryKey: ['suggestions'],
+        queryFn: async () => {
+            return getData('suggestions')
+        }
+      })
   //!
   //todo Functions
       const clickHandler = () => {
@@ -63,7 +34,7 @@ const RightSide: React.FC<RightSideProps> = () => {
       
   //?
   //* consoleLogs
-      
+      console.log("dataAAA", data)
   //*
 
   return (
@@ -74,15 +45,18 @@ const RightSide: React.FC<RightSideProps> = () => {
       <Box className="flex flex-col gap-4 mt-4">
       {
         
-        persons.slice(0,showAll ? 3 : persons.length).map((person, i) => (
+        data.slice(0,showAll ? 3 : data.length).map((person: any, i: number) => (
             <Box className="flex justify-between items-center"  key={i} >
                 <Box className="flex gap-2 items-center">
                     <figure>
-                        <Avatar alt="user avatar" src={person.avatar} />
+                        <Avatar sx={{width:'45px', height:'45px'}} alt="user avatar" src={person.avatar} />
                     </figure>
-                    <Box>
-                        <Typography>
-                            {person.name}
+                    <Box sx={{display:'flex', flexDirection:'column', justifyContent:'center'}}>
+                    <Typography>
+                            {person.firstName}  {person.lastName}
+                        </Typography>
+                        <Typography sx={{fontSize:'13px', color:'gray'}}>
+                            {person.username}
                         </Typography>
                     </Box>
                 </Box>
@@ -94,7 +68,7 @@ const RightSide: React.FC<RightSideProps> = () => {
         
       }
       {
-        persons.length > 3 && <Typography onClick={clickHandler} className='cursor-pointer' textAlign='center' color='primary'>
+        data.length > 3 && <Typography onClick={clickHandler} className='cursor-pointer' textAlign='center' color='primary'>
         {textToggle ? "Show All" : "Show Less"}
       </Typography>
       }

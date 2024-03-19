@@ -1,6 +1,12 @@
 import HomePageLayout from "../layouts/HomePageLayout";
 import Feeds from "../components/Feeds";
 import type { Metadata } from "next";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { getData } from '@/utils/CRUD';
 
 export const metadata: Metadata = {
   title: "Home",
@@ -9,12 +15,23 @@ export const metadata: Metadata = {
 
 export default async function Home() {
  
+  //! States
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["suggestions"],
+    queryFn: async () => {
+    return getData('suggestions')
+  },
+  });
+  //!
 
   return (
     <main className="">
+      <HydrationBoundary state={dehydrate(queryClient)}>
       <HomePageLayout>
-          <Feeds shareShow={true} />
+          <Feeds profile = {false} shareShow={true} />
       </HomePageLayout>
+      </HydrationBoundary>
     </main>
   );
 }

@@ -41,9 +41,9 @@ const page: React.FC<pageProps> = async() => {
   //*
 
   return (
-    // <HydrationBoundary state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydrate(queryClient)}>
     <SettingsPageLayout/>
-    // </HydrationBoundary>
+    </HydrationBoundary>
   );
 };
 

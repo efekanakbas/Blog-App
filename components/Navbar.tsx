@@ -312,7 +312,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                     onClick={() => {
                       handleCloseUserMenu();
                       setting.title === "Profile" &&
-                        router.push("/profile/efekan");
+                        router.push(`/profile/${username}`);
                       setting.title === "Logout" && logout();
                       setting.title === 'Settings' && router.push("/settings");
                     }}

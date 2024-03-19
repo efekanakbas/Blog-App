@@ -5,6 +5,7 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { getData, postData } from '@/utils/CRUD';
+import toast from 'react-hot-toast';
 
 interface AuthContextProps {
   children: ReactNode;
@@ -50,6 +51,9 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
 
   const login = () => {
     router.push('/')
+    setTimeout(() => {
+      toast.success('Welcome!')
+    }, 500);
     
   };
 

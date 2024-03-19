@@ -2,9 +2,11 @@ import Card from '@/components/Card';
 import { Box, InputLabel, Typography } from '@mui/material';
 import React from 'react';
 import { useFormik } from "formik";
-import validationSchema from "../../../schemas/settingsEmailSchema";
+import validationSchema from "../../../schemas/settingsPasswordSchema";
 import Input from '@/components/Input';
 import Button from '@/components/Button';
+import { patchData } from '@/utils/CRUD';
+import toast from 'react-hot-toast';
 
 interface PasswordProps {
   // Define props here
@@ -28,14 +30,35 @@ const Password: React.FC<PasswordProps> = () => {
     },
     validationSchema,
     onSubmit: (values) => {
-      // handleReset(values);
+      handlePatch({
+        current: values.current,
+        newP: values.new,
+        confirm: values.confirm
+      })
     },
   });
 
   const auth = !!errors.current || !!errors.new || !!errors.confirm || values.current.length === 0 || values.new.length === 0 || values.confirm.length === 0
   //!
   //todo Functions
-      
+      const handlePatch = async (obj: any) => {
+        try {
+          await patchData('password', obj)
+          handleReset(values);
+          toast.success('You have successfully changed your password!')
+        } catch (error) {
+          //@ts-ignore
+          if(error.message.endsWith(400)) {
+            toast.error("Passwords do not match")
+            //@ts-ignore
+          } else if(error.message.endsWith(401)) {
+            toast.error("Wrong password")
+            //@ts-ignore
+          } else if(error.message.endsWith(402)) {
+            toast.error("Password must be 8 characters or longer")
+          }
+        }
+      }
   //todo
   //? useEffect
       
@@ -90,7 +113,7 @@ const Password: React.FC<PasswordProps> = () => {
             name="current"
             placeholder="Password"
             helperText={touched.current && errors.current && errors.current}
-            error={touched.current && errors.current}
+            error={!!touched.current && !!errors.current}
             handleBlur={handleBlur}
           />
         </Box>
@@ -117,7 +140,7 @@ const Password: React.FC<PasswordProps> = () => {
             name="new"
             placeholder="Password"
             helperText={touched.new && errors.new && errors.new}
-            error={touched.new && errors.new}
+            error={!!touched.new && !!errors.new}
             handleBlur={handleBlur}
           />
         </Box>
@@ -144,7 +167,7 @@ const Password: React.FC<PasswordProps> = () => {
             name="confirm"
             placeholder="Confirm"
             helperText={touched.confirm && errors.confirm && errors.confirm}
-            error={touched.confirm && errors.confirm}
+            error={!!touched.confirm && !!errors.confirm}
             handleBlur={handleBlur}
           />
         </Box>

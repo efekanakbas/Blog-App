@@ -5,11 +5,11 @@ import { Box, Button, Checkbox, InputLabel, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import Input from "../Input";
 import Link from "next/link";
-import validationSchema from '../../schemas/loginSchema'
+import validationSchema from "../../schemas/loginSchema";
 import { useAuth } from "@/contexts/AuthContext";
 import { postData } from "@/utils/CRUD";
 import toast from "react-hot-toast";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
@@ -18,59 +18,75 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = () => {
   //! States
-  const router = useRouter()
-  const { values, handleChange, handleReset, handleSubmit, handleBlur, touched, errors } = useFormik({
+  const router = useRouter();
+  const {
+    values,
+    handleChange,
+    handleReset,
+    handleSubmit,
+    handleBlur,
+    touched,
+    errors,
+  } = useFormik({
     initialValues: {
       email: "",
       password: "",
-      check: false
+      check: false,
     },
     validationSchema,
     onSubmit: async (values) => {
       console.log("values", values);
       await loginHandler({
         email: values.email,
-        password: values.password
+        password: values.password,
       });
       console.log("values", values);
     },
   });
 
-
-
-  const {login} = useAuth()
-  const auth = !!errors.email || !!errors.password || values.email.length === 0 || values.password.length === 0
+  const { login } = useAuth();
+  const auth =
+    !!errors.email ||
+    !!errors.password ||
+    values.email.length === 0 ||
+    values.password.length === 0;
   //!
   //todo Functions
-    const loginHandler = async (obj: any) => {
-       try {
-        const {token, user} = await postData('login', obj)
+  const loginHandler = async (obj: any) => {
+    try {
+      const { token, user } = await postData("login", obj);
+      console.log("token", token);
 
-        Cookies.set('userId', user._id);
-        Cookies.set('email', user.email);
-        Cookies.set('username', user.username);
-        Cookies.set('firstName', user.firstName);
-        Cookies.set('lastName', user.lastName);
-        Cookies.set('avatar', user.avatar);
-        Cookies.set('cover', user.cover)
-        Cookies.set('token', token)
-        Cookies.set('isLoggedIn', "true")
+      Cookies.set("userId", user._id);
+      Cookies.set("email", user.email);
+      Cookies.set("username", user.username);
+      Cookies.set("firstName", user.firstName);
+      Cookies.set("lastName", user.lastName);
+      Cookies.set("avatar", user.avatar);
+      Cookies.set("cover", user.cover);
+      Cookies.set("token", token);
+      Cookies.set("isLoggedIn", "true");
 
-
-        login()
-        handleReset(values);
-       } catch (error) {
-          console.log("error", error)
-          //@ts-ignore
-          toast.error(error.response.data.message)
-       }
+      login();
+      handleReset(values);
+    } catch (error) {
+      //@ts-ignore
+      if (error.message.endsWith(401)) {
+        toast.error("Password not match.");
+        
+         //@ts-ignore
+      } else if (error.message.endsWith(404)) {
+        toast.error("User not found.");
+      }
     }
+  };
   //todo
   //? useEffect
 
   //?
   //* consoleLogs
-     console.log("token", Cookies.get('token'))
+  //  console.log("token", Cookies.get('token'))
+  console.log("values", values);
   //*
 
   return (
@@ -104,7 +120,6 @@ const LoginForm: React.FC<LoginFormProps> = () => {
           handleSubmit();
         }}
       >
-        
         <Box>
           <InputLabel
             sx={{ marginBottom: "8px", color: "black" }}
@@ -127,7 +142,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
             name="email"
             placeholder="Email"
             helperText={touched.email && errors.email && errors.email}
-            error= {touched.email && errors.email}
+            error={!!touched.email && !!errors.email}
             handleBlur={handleBlur}
           />
         </Box>
@@ -154,7 +169,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
             name="password"
             placeholder="Password"
             helperText={touched.password && errors.password && errors.password}
-            error= {touched.password && errors.password}
+            error={!!touched.password && !!errors.password}
             handleBlur={handleBlur}
           />
         </Box>
@@ -167,7 +182,12 @@ const LoginForm: React.FC<LoginFormProps> = () => {
           }}
         >
           <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
-            <Checkbox name="check" checked = {values.check} onChange={handleChange} inputProps={{ "aria-label": "Checkbox" }} />
+            <Checkbox
+              name="check"
+              checked={values.check}
+              onChange={handleChange}
+              inputProps={{ "aria-label": "Checkbox" }}
+            />
             <Typography>Keep me logged in</Typography>
           </Box>
           <Box>
@@ -180,7 +200,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
           type="submit"
           disabled={auth}
           style={{
-            backgroundColor: auth  ? "" : "#1976D2",
+            backgroundColor: auth ? "" : "#1976D2",
             padding: "13px 0",
             borderRadius: "100px",
           }}
@@ -189,9 +209,12 @@ const LoginForm: React.FC<LoginFormProps> = () => {
           Login
         </Button>
       </form>
-      <Box sx={{marginTop:'40px'}} >
-        <Typography sx={{textAlign:'center'}} >
-            Don&apos;t have an account? <Link className="text-blue-600" href='/register' >Register</Link>
+      <Box sx={{ marginTop: "40px" }}>
+        <Typography sx={{ textAlign: "center" }}>
+          Don&apos;t have an account?{" "}
+          <Link className="text-blue-600" href="/register">
+            Register
+          </Link>
         </Typography>
       </Box>
     </Box>

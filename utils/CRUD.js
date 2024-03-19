@@ -1,16 +1,10 @@
 'use server'
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import Cookies from 'js-cookie';
-import { cookies } from 'next/headers';
-
-
-
-
+import { cookies } from 'next/headers'
 
 // Axios istemcisini oluştur ve yapılandır
 const createNetworkClient = () => {
- 
   const network = axios.create({
     // baseURL: "https://efekan-akbas-9a21d3a06c36.herokuapp.com/",
     baseURL: "http://localhost:5000/",
@@ -18,24 +12,22 @@ const createNetworkClient = () => {
 
   // İstekleri yakalama ve token ekleme
   network.interceptors.request.use(async (config) => {
-   
-    const {value} = cookies().get('token')
-    
-    
-    if (value) {
-      config.headers.authorization = `Bearer ${value}`;
+    const token = Cookies.get('token') ;
+    const response = cookies().get('token')
+    if (response ? response.value : token) {
+      config.headers.authorization = `Bearer ${response ? response.value : token}`;
     }
     return config;
   });
 
-  // Yanıtları yakalama ve 403 durumunda yönlendirme
+  // Yanıtları yakalama ve 401 durumunda yönlendirme
   network.interceptors.response.use(null, (error) => {
     if (error.response.status === 403) {
-      Cookies.remove('token')
-      location.href = "/login";
+       Cookies.remove('token');
+       location.href = "/login";
     }
     return Promise.reject(error);
-  });
+   });
 
   return network;
 };

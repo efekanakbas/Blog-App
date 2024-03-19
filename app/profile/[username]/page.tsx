@@ -23,9 +23,9 @@ const page: React.FC<pageProps> = async ({params}) => {
   //! States
   const queryClient = new QueryClient();
   await queryClient.prefetchInfiniteQuery({
-    queryKey: ["feeds"],
+    queryKey: ["feedsOne"],
     queryFn: ({pageParam}) => {
-    return getData(`feeds?page=${pageParam}&limit=10`);
+    return getData(`feeds/${params.username}?page=${pageParam}&limit=10`);
   },
   staleTime: 5000,
   initialPageParam: 1,
@@ -38,6 +38,13 @@ const page: React.FC<pageProps> = async ({params}) => {
     },
     pages: 1,
   });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["suggestions"],
+    queryFn: async () => {
+    return getData('suggestions')
+  }
+  });
   //!
   //todo Functions
       
@@ -46,7 +53,8 @@ const page: React.FC<pageProps> = async ({params}) => {
       
   //?
   //* consoleLogs
-      
+
+      console.log("params", params.username)
   //*
 
   return (

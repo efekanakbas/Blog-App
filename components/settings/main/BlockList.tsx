@@ -58,7 +58,7 @@ const BlockList: React.FC<BlockListProps> = () => {
 
   return (
     <Box sx={{borderRadius:'15px', backgroundColor:'white', padding:'20px', pb:'0'}}>
-      {/* <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         <Typography variant="h6">See people that I blocked</Typography>
         <Typography sx={{ color: "gray" }}>
           You can select who can see your connections, your followers and your
@@ -103,7 +103,7 @@ const BlockList: React.FC<BlockListProps> = () => {
             </Box>
           ))}
         </Box>
-      )} */}
+      )}
     </Box>
   );
 };

@@ -224,9 +224,9 @@ const ShareModal: React.FC<ModalProps> = ({
   //* consoleLogs
     // console.log("values", values)
     // console.log("images", imagesPool)
-    console.log("HAshtag", hashtagPool)
-    console.log("mention", mentionPool)
-    console.log("local", location)
+    // console.log("HAshtag", hashtagPool)
+    // console.log("mention", mentionPool)
+    // console.log("local", location)
   //*
 
   return (
