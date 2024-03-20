@@ -11,7 +11,7 @@ import io from "socket.io-client";
  const local = "http://localhost:5000";
 
 //@ts-ignore
-const socket = io.connect(local);
+const socket = io.connect(live);
 socket.on('connect', () => {
   console.log("Connected to the server");
  });
