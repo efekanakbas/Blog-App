@@ -1,12 +1,13 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Card from './Card';
 import { Avatar, Box, Icon, Typography } from '@mui/material';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 
-import Image from 'next/image';
+
 import { useQuery } from '@tanstack/react-query';
 import { getData } from '@/utils/CRUD';
+import { useRouter } from 'next/navigation';
 
 interface RightSideProps {
     
@@ -14,6 +15,7 @@ interface RightSideProps {
 
 const RightSide: React.FC<RightSideProps> = () => {
   //! States
+      const router = useRouter()
       const [showAll, setShowAll] = useState<boolean>(true)
       const [textToggle, setTextToggle] = useState<boolean>(true)
 
@@ -34,7 +36,7 @@ const RightSide: React.FC<RightSideProps> = () => {
       
   //?
   //* consoleLogs
-      console.log("dataAAA", data)
+      // console.log("dataAAA", data)
   //*
 
   return (
@@ -45,8 +47,8 @@ const RightSide: React.FC<RightSideProps> = () => {
       <Box className="flex flex-col gap-4 mt-4">
       {
         
-        data.slice(0,showAll ? 3 : data.length).map((person: any, i: number) => (
-            <Box className="flex justify-between items-center"  key={i} >
+        data?.slice(0,showAll ? 3 : data?.length).map((person: any, i: number) => (
+            <Box onClick= {() => {router.push(`/profile/${person.username}`)}} className="flex justify-between items-center cursor-pointer"  key={i} >
                 <Box className="flex gap-2 items-center">
                     <figure>
                         <Avatar sx={{width:'45px', height:'45px'}} alt="user avatar" src={person.avatar} />
@@ -68,7 +70,7 @@ const RightSide: React.FC<RightSideProps> = () => {
         
       }
       {
-        data.length > 3 && <Typography onClick={clickHandler} className='cursor-pointer' textAlign='center' color='primary'>
+        data?.length > 3 && <Typography onClick={clickHandler} className='cursor-pointer' textAlign='center' color='primary'>
         {textToggle ? "Show All" : "Show Less"}
       </Typography>
       }

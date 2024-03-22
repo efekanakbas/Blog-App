@@ -22,13 +22,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const router = useRouter()
 
-  const {data, error, isLoading} = useQuery({
-    queryKey: ['islogged'],
-    queryFn: async () => {
-      return await getData('islogged')
-    },
-    enabled: Cookies.get('token') ? true : false
-  })
+  // const {data, error, isLoading} = useQuery({
+  //   queryKey: ['islogged'],
+  //   queryFn: async () => {
+  //     return await getData('islogged')
+  //   },
+  //   enabled: Cookies.get('token') ? true : false
+  // })
 
 
 

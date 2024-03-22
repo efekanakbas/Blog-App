@@ -13,6 +13,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useParams } from 'next/navigation'
+import { useGeneral } from "@/contexts/GeneralContext";
 
 interface Feeds {
   shareShow: boolean;
@@ -30,12 +31,13 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
     isFetchingNextPage,
     error,
     data,
+    isLoading
   } = useInfiniteQuery({
     queryKey: !profile ? ["feeds"] : ["feedsOne"],
     queryFn: ({ pageParam }) => {
       return !profile ? getData(`feeds?page=${pageParam}&limit=10`) : getData(`feeds/${params}?page=${pageParam}&limit=10`);
     },
-    staleTime: 5000,
+    staleTime: 0,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
       const morePageExist = lastPage.length === 10;
@@ -48,6 +50,7 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
 
   const { ref, inView } = useInView();
   const skeletonItems = Array(4).fill(null);
+  const {profileLoading} = useGeneral()
   //!
   //todo Functions
 
@@ -60,8 +63,10 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
   }, [inView, fetchNextPage, hasNextPage]);
 
   useEffect(() => {
-    scroll.scrollToTop();
-  }, []);
+    if(!profile) {
+      scroll.scrollToTop();
+    }
+  }, [profile]);
   //?
   //* consoleLogs
   // console.log("ref", ref);
@@ -69,13 +74,13 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
   // console.log("data", data.pages[0].feeds[0])
   // console.log("data", data);
   // console.log("profile", profile)
-  console.log("params", params)
+  // console.log("params", params)
   //*
 
-  if (status === "pending")
+  if (status === "pending" || isLoading || profileLoading )
     return (
       <Box sx={{ display: "flex", flexDirection: "column", gap: "28px" }}>
-        <Share disabled={true} />
+        {!profile && <Share disabled={true} />}
         <Box
           sx={{
             width: "100%",

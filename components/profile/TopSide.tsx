@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Button,
+  Skeleton,
   Tab,
   Tabs,
   TextField,
@@ -14,22 +15,40 @@ import { useGeneral } from "@/contexts/GeneralContext";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { useFormik } from "formik";
 import { useDebounce } from "usehooks-ts";
-const PhotoModal = React.lazy(() => import(/* webpackChunkName: "PhotoModal" */ "../PhotoModal"));
-const CropModal = React.lazy(() => import(/* webpackChunkName: "CropModal" */ "../CropModal"));
+const PhotoModal = React.lazy(() =>
+  import(/* webpackChunkName: "PhotoModal" */ "../PhotoModal")
+);
+const CropModal = React.lazy(() =>
+  import(/* webpackChunkName: "CropModal" */ "../CropModal")
+);
 import Image from "next/image";
 import grayBg from "../../public/images/grayBG.svg";
 import ImageIcon from "@mui/icons-material/Image";
-
+import Cookies from "js-cookie";
+import { useUserDetail } from "@/contexts/UserDetailContext";
+import IButton from "../Button";
+import SettingsIcon from '@mui/icons-material/Settings';
+import { useRouter } from "next/navigation";
 
 interface TopSideProps {
-  // Define props here
+  isLoading: Boolean;
 }
 
-const TopSide: React.FC<TopSideProps> = () => {
+const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
   //! States
+  const router = useRouter()
   const {
-    avatar,
-    name,
+    followersCount,
+    followingsCount,
+    firstName,
+    lastName,
+    intro,
+  } = useUserDetail();
+  const { profileLoading } = useGeneral();
+
+  const name = firstName + " " + lastName;
+  const avatar = Cookies.get("avatar");
+  const {
     tabValue,
     handleChange: handleChange2,
     setProfilePage,
@@ -38,11 +57,11 @@ const TopSide: React.FC<TopSideProps> = () => {
   const [formToggle, setFormToggle] = useState(false);
   const [textToggle, setTextToggle] = useState(false);
   const [inputWidth, setInpıtWidth] = useState(75);
-  const [sizeType, setSizeType] = useState<'cover' | 'avatar' | null>(null)
+  const [sizeType, setSizeType] = useState<"cover" | "avatar" | null>(null);
 
-  const { values, handleChange, handleSubmit, handleReset } = useFormik({
+  const formik = useFormik({
     initialValues: {
-      inputValue: "",
+      inputValue: "deneme",
     },
     onSubmit: (values) => {
       console.log("selaaaaaam");
@@ -52,10 +71,10 @@ const TopSide: React.FC<TopSideProps> = () => {
     },
   });
 
-  const debouncedValue = useDebounce<string>(values.inputValue, 500);
+  const debouncedValue = useDebounce<string>(formik.values.inputValue, 500);
   const [modalOpen, setModalOpen] = useState(false);
-  const [cropOpen, setCropOpen] = useState(false)
-  const [sizeToggle, setSizeToggle] = useState<'avatar' | 'cover' |  null>(null)
+  const [cropOpen, setCropOpen] = useState(false);
+  const [sizeToggle, setSizeToggle] = useState<"avatar" | "cover" | null>(null);
 
   const { isMe } = useGeneral();
   //!
@@ -67,59 +86,106 @@ const TopSide: React.FC<TopSideProps> = () => {
     };
   }
 
+  const handlerSettingsClick = () => {
+    router.push('/settings')
+  }
+
   //todo
   //? useEffect
   useEffect(() => {
-    const calculatedWidth = values.inputValue.length * 10;
+    const calculatedWidth = formik?.values?.inputValue?.length * 10;
     const finalWidth = calculatedWidth > 250 ? 250 : calculatedWidth;
 
     setInpıtWidth(finalWidth);
-  }, [values.inputValue]);
+  }, [formik.values.inputValue]);
+
+  useEffect(() => {
+    formik.setValues({
+      ...formik.values,
+      inputValue: intro,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [intro]);
   //?
   //* consoleLogs
- 
+  // console.log("isMEMEMEME", isMe);
+  // console.log("ers", followersCount)
+  // console.log("ing", followingsCount)
+  // console.log("İSLOADING", isLoading);
+  console.log("intro", intro);
+  console.log("values", formik.values);
   //*
 
   return (
     <Box sx={{ borderRadius: "15px", backgroundColor: "white" }}>
-      <Box
-        sx={{
-          // backgroundColor: "#eeeeee",
-          borderRadius: "10px",
-          margin: "4px",
-          height: "250px",
-          position: "relative",
-        }}
-      >
-        {isMe && (
-          <button  onClick={() => {setCropOpen(true); setSizeType('cover')}} className="absolute bottom-3 right-3 z-10 bg-white shadow-lg px-4 py-2 rounded-full flex items-center gap-2">
-            <ImageIcon color="primary" /> Add Cover Image
-          </button>
-        )}
-        <Image
-          onClick={() => {setModalOpen(true); setSizeToggle('cover')}}
-          className="rounded-lg object-cover cursor-pointer"
-          src={grayBg}
-          alt="cover photo"
-          fill
+      {isLoading || profileLoading ? (
+        <Skeleton
+          variant="rounded"
+          sx={{ margin: "4px", borderRadius: "10px" }}
+          height={250}
         />
-      </Box>
+      ) : (
+        <Box
+          sx={{
+            // backgroundColor: "#eeeeee",
+            borderRadius: "10px",
+            margin: "4px",
+            height: "250px",
+            position: "relative",
+          }}
+        >
+          {isMe && (
+            <button
+              onClick={() => {
+                setCropOpen(true);
+                setSizeType("cover");
+              }}
+              className="absolute bottom-3 right-3 z-10 bg-white shadow-lg px-4 py-2 rounded-full flex items-center gap-2"
+            >
+              <ImageIcon color="primary" /> Add Cover Image
+            </button>
+          )}
+          <Image
+            onClick={() => {
+              setModalOpen(true);
+              setSizeToggle("cover");
+            }}
+            className="rounded-lg object-cover cursor-pointer"
+            src={grayBg}
+            alt="cover photo"
+            fill
+          />
+        </Box>
+      )}
       <Box sx={{ padding: "26px" }}>
         <Box sx={{ display: "flex", gap: "16px" }}>
-          <figure className="relative inline-flex">
-            <button onClick={() => {setCropOpen(true); setSizeType('avatar')}} className="absolute bottom-0 right-0 z-10 p-1 bg-white rounded-full shadow-xl">
-              <PhotoCameraIcon />
-            </button>
-            <Avatar
-              alt="user avatar"
-              onClick={() => {
-                setModalOpen(true);
-                setSizeToggle('avatar')
-              }}
-              sx={{ width: "100px", height: "100px", cursor: "pointer" }}
-              src={avatar}
-            />
-          </figure>
+          {isLoading || profileLoading ? (
+            <Skeleton variant="circular" width={100} height={100} />
+          ) : (
+            <figure className="relative inline-flex">
+              {isMe && (
+                <button
+                  onClick={() => {
+                    setCropOpen(true);
+                    setSizeType("avatar");
+                  }}
+                  className="absolute bottom-0 right-0 z-10 p-1 bg-white rounded-full shadow-xl"
+                >
+                  <PhotoCameraIcon />
+                </button>
+              )}
+              <Avatar
+                alt="user avatar"
+                onClick={() => {
+                  setModalOpen(true);
+                  setSizeToggle("avatar");
+                }}
+                sx={{ width: "100px", height: "100px", cursor: "pointer" }}
+                //@ts-ignore
+                src={avatar === "null" ? null : avatar}
+              />
+            </figure>
+          )}
           <Box
             sx={{
               display: "flex",
@@ -128,84 +194,225 @@ const TopSide: React.FC<TopSideProps> = () => {
               gap: "12px",
             }}
           >
-            <Typography sx={{ fontWeight: "bold", fontSize: "20px" }}>
-              {name}
-            </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                gap: "12px",
-                height: "20px",
-                alignItems: "center",
-              }}
-            >
-              {!formToggle ? (
-                !textToggle ? (
-                  <Typography
-                    onClick={() => {
-                      setFormToggle(true);
-                    }}
-                    sx={{
-                      color: "#0071d8",
-                      fontWeight: "bold",
-                      textDecoration: "underline 2px",
-                      textUnderlineOffset: "3px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Add Intro
-                  </Typography>
+            {isLoading || profileLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: "20px", width: "8rem" }}
+              />
+            ) : (
+              <Typography sx={{ fontWeight: "bold", fontSize: "20px" }}>
+                {name}
+              </Typography>
+            )}
+
+            {isLoading || profileLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: "14px", width: "6rem" }}
+              />
+            ) : (
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: "12px",
+                  height: "20px",
+                  alignItems: "center",
+                }}
+              >
+                {!formToggle ? (
+                  !textToggle ? (
+                    isMe ? (
+                      !intro ? (
+                        <Typography
+                          onClick={() => {
+                            setFormToggle(true);
+                          }}
+                          sx={{
+                            color: "#0071d8",
+                            fontWeight: "bold",
+                            textDecoration: "underline 2px",
+                            textUnderlineOffset: "3px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Add Intro
+                        </Typography>
+                      ) : (
+                        <Box sx={{ display: "flex", gap: "16px" }}>
+                          <Typography>{intro}</Typography>
+                          <Button
+                            type="button"
+                            onClick={() => {
+                              setFormToggle(false);
+                              setFormToggle(true);
+                            }}
+                            sx={{
+                              margin: "0",
+                              padding: "0",
+                              marginLeft: "16px",
+                            }}
+                          >
+                            Edit
+                          </Button>
+                        </Box>
+                      )
+                    ) : !intro ? (
+                      <Typography sx={{ color: "gray" }}>
+                        There is no intro
+                      </Typography>
+                    ) : (
+                      <Typography>{intro}</Typography>
+                    )
+                  ) : (
+                    <Box sx={{ display: "flex" }}>
+                      <Typography
+                        sx={{
+                          minWidth: "75px",
+                        }}
+                      >
+                        {formik.values.inputValue}
+                      </Typography>
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          setFormToggle(false);
+                          setFormToggle(true);
+                        }}
+                        sx={{ margin: "0", padding: "0", marginLeft: "16px" }}
+                      >
+                        Edit
+                      </Button>
+                    </Box>
+                  )
                 ) : (
-                  <Box sx={{ display: "flex" }}>
-                    <Typography
-                      sx={{
-                        minWidth: "75px",
-                      }}
-                    >
-                      {values.inputValue}
-                    </Typography>
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        setFormToggle(false);
-                        setFormToggle(true);
-                      }}
-                      sx={{ margin: "0", padding: "0", marginLeft: "16px" }}
-                    >
-                      Edit
-                    </Button>
-                  </Box>
-                )
-              ) : (
-                <form onSubmit={handleSubmit}>
-                  <input
-                    maxLength={27}
-                    name="inputValue"
-                    className="min-w-[75px] m-0 p-0 outline-0"
-                    value={values.inputValue}
-                    onChange={handleChange}
-                    style={{ width: inputWidth }}
-                  />
-                  {debouncedValue.length > 0 && (
-                    <Button
-                      type="submit"
-                      sx={{ margin: "0", padding: "0", marginLeft: "10px" }}
-                    >
-                      Save
-                    </Button>
-                  )}
-                </form>
-              )}
-            </Box>
+                  <form onSubmit={formik.handleSubmit}>
+                    <input
+                      maxLength={27}
+                      name="inputValue"
+                      className="min-w-[75px] m-0 p-0 outline-0"
+                      value={formik.values.inputValue}
+                      onChange={formik.handleChange}
+                      style={{ width: inputWidth }}
+                    />
+                    {debouncedValue.length > 0 && (
+                      <Button
+                        type="submit"
+                        sx={{ margin: "0", padding: "0", marginLeft: "10px" }}
+                      >
+                        Save
+                      </Button>
+                    )}
+                  </form>
+                )}
+              </Box>
+            )}
           </Box>
         </Box>
 
         <hr className="my-8" />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            height: "40px",
+          }}
+        >
+          <Box
+            sx={{
+              color: "gray",
+              display: "flex",
+              gap: "20px",
+              alignItems: "center",
+            }}
+          >
+            {isLoading || profileLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: "1rem", width: "6.1rem" }}
+              />
+            ) : (
+              <Typography>
+                <span className="font-bold text-gray-900">
+                  {followersCount}
+                </span>{" "}
+                Followers{" "}
+              </Typography>
+            )}
+            {isLoading || profileLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: "1rem", width: "6.1rem" }}
+              />
+            ) : (
+              <Typography>
+                <span className="font-bold text-gray-900">
+                  {followingsCount}
+                </span>{" "}
+                Followers{" "}
+              </Typography>
+            )}
+          </Box>
 
-        <Box sx={{ color: "gray" }}>
-          <span className="font-bold text-gray-900">100+</span> Conndetions{" "}
-          <span className="font-bold text-gray-900">852 </span> Followers{" "}
-          <span className="font-bold text-gray-900">156</span> Following
+          {!isMe ? (
+            <Box sx={{ display: "flex", gap: "20px", alignItems: "center" }}>
+              {isLoading || profileLoading ? (
+                <Skeleton
+                  variant="rounded"
+                  width={120}
+                  height={48}
+                  sx={{ borderRadius: "100px" }}
+                />
+              ) : (
+                <IButton
+                  text="Follow"
+                  type="outlined"
+                  buttonType="button"
+                  disabled={!!isLoading || !!profileLoading}
+                  handleClick={null}
+                />
+              )}
+
+              {isLoading || profileLoading ? (
+                <Skeleton
+                  variant="rounded"
+                  width={120}
+                  height={48}
+                  sx={{ borderRadius: "100px" }}
+                />
+              ) : (
+                <IButton
+                  text="Message"
+                  type="outlined"
+                  buttonType="button"
+                  disabled={!!isLoading || !!profileLoading}
+                  handleClick={null}
+                />
+              )}
+            </Box>
+          ) : isLoading || profileLoading ? (
+            <Skeleton
+              variant="rounded"
+              width={140}
+              height={48}
+              sx={{ borderRadius: "100px" }}
+            />
+          ) : (
+            <Button
+              disabled={!!isLoading || !!profileLoading}
+              variant="outlined"
+              style={{
+                borderRadius: "100px",
+                height: "48px",
+                width: "140px",
+                display:'flex',
+                gap:'4px'
+              }}
+              onClick={handlerSettingsClick}
+            >
+              <SettingsIcon/>
+              Settings
+            </Button>
+          )}
         </Box>
 
         <hr className="my-8" />
@@ -226,6 +433,7 @@ const TopSide: React.FC<TopSideProps> = () => {
               }}
               label="Feed"
               {...a11yProps(0)}
+              disabled={!!isLoading || !!profileLoading}
             />
             <Tab
               onClick={() => {
@@ -240,15 +448,20 @@ const TopSide: React.FC<TopSideProps> = () => {
               }}
               label="Profile"
               {...a11yProps(1)}
+              disabled={!!isLoading || !!profileLoading}
             />
           </Tabs>
         </Box>
       </Box>
-      <React.Suspense >
-        <PhotoModal sizeToggle={sizeToggle} open={modalOpen} setOpen={setModalOpen} />
+      <React.Suspense>
+        <PhotoModal
+          sizeToggle={sizeToggle}
+          open={modalOpen}
+          setOpen={setModalOpen}
+        />
       </React.Suspense>
 
-      <React.Suspense >
+      <React.Suspense>
         <CropModal sizeType={sizeType} open={cropOpen} setOpen={setCropOpen} />
       </React.Suspense>
     </Box>

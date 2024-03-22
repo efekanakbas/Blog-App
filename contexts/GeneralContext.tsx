@@ -22,6 +22,8 @@ export const GeneralContextProvider = ({
   const [inputFocus, setInputFocus] = useState(null)
   const [settingsTabValue, setSettingsTabValue] = useState(0);
   const [searchTabValue, setSearchTabValue] = useState(0)
+  const [isMe, setIsMe] = useState<null | Boolean>(null)
+  const [profileLoading, setProfileLoading] = useState<null | Boolean>(true)
 
  
 
@@ -44,13 +46,13 @@ export const GeneralContextProvider = ({
   };
 
   const values = {
-    name: 'Efekan Akbaş',
     tabValue: tabValue,
     handleChange: handleChange,
     verticalTabvalue: verticalTabvalue,
     setVerticalTabValue: setVerticalTabValue,
     handleChangeVertical: handleChangeVertical,
-    isMe: true,
+    isMe: isMe,
+    setIsMe: setIsMe,
     profilePage: profilePage,
     setProfilePage: setProfilePage,
     inputFocus: inputFocus,
@@ -60,7 +62,9 @@ export const GeneralContextProvider = ({
     handleChangeSettings: handleChangeSettings,
     searchTabValue: searchTabValue,
     setSearchTabValue:setSearchTabValue,
-    handleChangeSearch:handleChangeSearch
+    handleChangeSearch:handleChangeSearch,
+    profileLoading: profileLoading,
+    setProfileLoading: setProfileLoading
 }
 
 

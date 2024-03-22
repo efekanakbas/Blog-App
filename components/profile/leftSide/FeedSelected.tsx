@@ -1,7 +1,8 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Skeleton, Typography } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import PlaceIcon from '@mui/icons-material/Place';
 import WorkIcon from '@mui/icons-material/Work';
+import { useGeneral } from '@/contexts/GeneralContext';
 
 const dummy = [
     {
@@ -15,12 +16,12 @@ const dummy = [
 ]
 
 interface FeedSelectedProps {
-  // Define props here
+  isLoading: Boolean
 }
 
-const FeedSelected: React.FC<FeedSelectedProps> = () => {
+const FeedSelected: React.FC<FeedSelectedProps> = ({isLoading}) => {
   //! States
-      
+      const {profileLoading} = useGeneral()
   //!
   //todo Functions
       
@@ -37,6 +38,10 @@ const FeedSelected: React.FC<FeedSelectedProps> = () => {
       Overview
       <Box sx={{display:'flex', flexDirection:'column', gap:'20px', marginTop:'24px'}}>
         {
+          isLoading || profileLoading ? <Box sx={{display:'flex', flexDirection:'column', gap:'20px'}}>
+            <Skeleton variant="text" sx={{ fontSize: '1rem' }} /> 
+            <Skeleton variant="text" sx={{ fontSize: '1rem', width:'75%' }} /> 
+          </Box> : 
             dummy.map((item, i) => (
                 <Box sx={{display:'flex', gap:'8px'}} key={i} >
                     <item.icon color='primary'/>
@@ -45,6 +50,7 @@ const FeedSelected: React.FC<FeedSelectedProps> = () => {
                     </Typography>
                 </Box>
             ))
+        
         }
       </Box>
     </>
