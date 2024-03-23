@@ -1,13 +1,10 @@
 import { useGeneral } from "@/contexts/GeneralContext";
 import { Box, Typography } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import AddIcon from "@mui/icons-material/Add";
-import HomeIcon from '@mui/icons-material/Home';
-import BungalowIcon from '@mui/icons-material/Bungalow';
 import PublicIcon from '@mui/icons-material/Public';
-
-const dummy: Array<string> = [];
+import { useUserDetail } from "@/contexts/UserDetailContext";
 
 interface LanguageProps {
   // Define props here
@@ -16,6 +13,7 @@ interface LanguageProps {
 const Language: React.FC<LanguageProps> = () => {
   //! States
   const { isMe, setProfilePage, setVerticalTabValue} = useGeneral();
+  const {languages} = useUserDetail()
   //!
   //todo Functions
 
@@ -30,7 +28,7 @@ const Language: React.FC<LanguageProps> = () => {
   return (
     <Box id='language' sx={{ marginTop: "48px" }}>
       <Typography sx={{ fontWeight: "bold", fontSize: "20px" }}>
-      Language
+      Languages
       </Typography>
 
       <Box
@@ -41,8 +39,8 @@ const Language: React.FC<LanguageProps> = () => {
           marginTop: "24px",
         }}
       >
-        {dummy.length > 0 ? (
-          dummy.map((item, i) => (
+        {languages?.length > 0 ? (
+          languages?.map((item: any, i: number) => (
             <Box
               sx={{ display: "flex", justifyContent: "space-between", alignItems:'center' }}
               key={i}
@@ -54,17 +52,18 @@ const Language: React.FC<LanguageProps> = () => {
                 <Box
                   sx={{ display: "flex", flexDirection: "column", gap: "0px" }}
                 >
-                  <Typography sx={{ fontSize: "16px" }}>{item}</Typography>
+                  <Typography sx={{ fontSize: "13px" }}>{item.language}</Typography>
+                  <Typography className="text-gray-600" sx={{ fontSize: "12px" }}>{item.level}</Typography>
                 </Box>
               </Box>
               {isMe && <ModeEditIcon sx={{ color: "lightgray", cursor:'pointer' }} />}
             </Box>
           ))
         ) : (
-          <Typography onClick={() => {setProfilePage(4); setVerticalTabValue(3)}} sx={{cursor:'pointer'}} color="primary" fontWeight="bold">
-            <AddIcon sx={{ transform: "translateY(-2px)" }} color="primary" />{" "}
-            Add Language{" "}
-          </Typography>
+          isMe ? <Typography onClick={() => {setProfilePage(4); setVerticalTabValue(3)}} sx={{cursor:'pointer'}} color="primary" fontWeight="bold">
+          <AddIcon sx={{ transform: "translateY(-2px)" }} color="primary" />{" "}
+          Add Language{" "}
+        </Typography> : <Typography sx={{color:'gray'}} >- No Language</Typography>
         )}
       </Box>
     </Box>

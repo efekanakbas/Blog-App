@@ -19,12 +19,12 @@ interface ProfilePageLayoutProps {
 
 const ProfilePageLayout: React.FC<ProfilePageLayoutProps> = ({ children }) => {
   //! States
-  const router = useRouter()
+  const router = useRouter();
   const params = useParams().username;
   const username = Cookies.get("username");
-  const [isError, setIsError] = useState(false)
-  const { setIsMe, setProfileLoading, profileLoading } = useGeneral();
- 
+  const [isError, setIsError] = useState(false);
+  const { setIsMe, setProfileLoading } = useGeneral();
+
   const {
     setFollowers,
     setFollowersCount,
@@ -44,20 +44,23 @@ const ProfilePageLayout: React.FC<ProfilePageLayoutProps> = ({ children }) => {
     setAvatar,
     setCover,
     setUserId,
+    setIsFollowed,
+    setLocation,
+    setJob
   } = useUserDetail();
 
-  const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ["details"],
+  const { data, isLoading, error, isFetchedAfterMount } = useQuery({
+    queryKey: ["details", params],
     queryFn: async () => {
       return getData(`details/${params}`);
     },
     retry: false,
-    staleTime: 1000 * 60
+    staleTime: 0,
   });
 
   //!
   //todo Functions
-  
+
   //todo
   //? useEffect
   useEffect(
@@ -67,44 +70,47 @@ const ProfilePageLayout: React.FC<ProfilePageLayoutProps> = ({ children }) => {
       } else if (username !== params) {
         setIsMe(false);
       }
-      if(!error) {
+      if (!error) {
         setFollowers(data?.userDetails.followers);
-      setFollowersCount(data?.userDetails.followersCount);
-      setFollowings(data?.userDetails.followings);
-      setFollowingsCount(data?.userDetails.followingsCount);
-      setIntro(data?.userDetails.intro);
-      setMainSkills(data?.userDetails.mainSkills);
-      setComplementarySkills(data?.userDetails.complementarySkills);
-      setInterests(data?.userDetails.interests);
-      setExperiences(data?.userDetails.experiences);
-      setEducations(data?.userDetails.educations);
-      setLanguages(data?.userDetails.languages);
-      setFirstName(data?.firstName);
-      setLastName(data?.lastName);
-      setEmail(data?.email);
-      setUsername(data?.username);
-      setAvatar(data?.avatar);
-      setCover(data?.cover);
-      setUserId(data?.userId);
+        setFollowersCount(data?.userDetails.followersCount);
+        setFollowings(data?.userDetails.followings);
+        setFollowingsCount(data?.userDetails.followingsCount);
+        setIntro(data?.userDetails.intro);
+        setMainSkills(data?.userDetails.mainSkills);
+        setComplementarySkills(data?.userDetails.complementarySkills);
+        setInterests(data?.userDetails.interests);
+        setExperiences(data?.userDetails.experiences);
+        setEducations(data?.userDetails.educations);
+        setLanguages(data?.userDetails.languages);
+        setLocation(data?.userDetails.location);
+        setJob(data?.userDetails.job);
+        setFirstName(data?.firstName);
+        setLastName(data?.lastName);
+        setEmail(data?.email);
+        setUsername(data?.username);
+        setAvatar(data?.avatar);
+        setCover(data?.cover);
+        setUserId(data?.userId);
+        setIsFollowed(data?.isFollowed);
       }
-      const refo = async () => {
-      
-        setProfileLoading(true)
-     
-      await refetch();
-      setProfileLoading(false)
-      }
-      refo()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [params, data]
   );
 
   useEffect(() => {
-    if(error) {
-      setIsError(true)
+    if (error) {
+      setIsError(true);
     }
-  }, [error])
+  }, [error]);
+
+  useEffect(() => {
+    if (isFetchedAfterMount) {
+      setProfileLoading(isLoading);
+    } else {
+      setProfileLoading(true);
+    }
+  }, [isLoading, isFetchedAfterMount, setProfileLoading]);
 
   //?
   //* consoleLogs
@@ -112,15 +118,16 @@ const ProfilePageLayout: React.FC<ProfilePageLayoutProps> = ({ children }) => {
   // console.log("params", params)
   // console.log("data", data);
   // console.log("isLoading", isLoading);
-  console.log("loading", profileLoading)
+  // console.log("loading", profileLoading)
+  // console.log("isFetchedafterMount", isFetchedAfterMount)
   //*
 
   if (error) {
-    if(error && isError) {
-      toast.error(`There is not user match with ${params}`)
+    if (error && isError) {
+      toast.error(`There is not user match with ${params}`);
       setTimeout(() => {
-        router.push('/')
-        setIsError(false)
+        router.push("/");
+        setIsError(false);
       }, 3000);
     }
     return (
@@ -129,8 +136,8 @@ const ProfilePageLayout: React.FC<ProfilePageLayoutProps> = ({ children }) => {
           margin: "95px 0 28px 0",
           height: "100%",
           width: "100%",
-          display:'flex',
-          justifyContent:'center'
+          display: "flex",
+          justifyContent: "center",
         }}
       >
         <Typography
@@ -144,7 +151,7 @@ const ProfilePageLayout: React.FC<ProfilePageLayoutProps> = ({ children }) => {
             textAlign: "center",
           }}
         >
-          You are directed to the home page 
+          You are directed to the home page
         </Typography>
       </Box>
     );
@@ -170,9 +177,9 @@ const ProfilePageLayout: React.FC<ProfilePageLayoutProps> = ({ children }) => {
           gap: "25px",
         }}
       >
-        <TopSide isLoading={isLoading}  />
+        <TopSide isLoading={isLoading} />
         <Box sx={{ display: { xs: "grid", md: "flex" }, gap: "25px" }}>
-          <LeftSide isLoading = {isLoading}  />
+          <LeftSide isLoading={isLoading} />
           <RightBottom />
         </Box>
       </Box>

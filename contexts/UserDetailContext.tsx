@@ -29,6 +29,9 @@ export const UserDetailProvider = ({
   const [avatar, setAvatar] = useState("");
   const [cover, setCover] = useState("");
   const [userId, setUserId] = useState("")
+  const [isFollowed, setIsFollowed] = useState<null | Boolean>(null)
+  const [location, setLocation] = useState("")
+  const [job, setJob] = useState("")
 
   const values = {
     followers: followers,
@@ -66,7 +69,13 @@ export const UserDetailProvider = ({
     cover: cover,
     setCover: setCover,
     userId: userId,
-    setUserId: setUserId
+    setUserId: setUserId,
+    isFollowed: isFollowed,
+    setIsFollowed: setIsFollowed,
+    location: location,
+    setLocation: setLocation,
+    job: job,
+    setJob: setJob
   };
 
   return (

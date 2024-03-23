@@ -4,34 +4,7 @@ import React, { useState, useEffect } from "react";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import AddIcon from "@mui/icons-material/Add";
 import SchoolIcon from '@mui/icons-material/School';
-import HomeIcon from '@mui/icons-material/Home';
-import BungalowIcon from '@mui/icons-material/Bungalow';
-
-const dummy: Array<{
-  icon: any;
-  role: string;
-  at: string;
-  date: string;
-}> = [
-  // {
-  //   icon: BungalowIcon,
-  //   role: 'Bachelor Degree',
-  //   at: 'Oxford',
-  //   date: 'January 2016 - March 2020'
-  // },
-  // {
-  //   icon: HomeIcon,
-  //   role: 'Master Degree',
-  //   at: 'Harward',
-  //   date: 'January 2020 - March 2022'
-  // },
-  // {
-  //   icon: null,
-  //   role: 'Master Degree',
-  //   at: 'MIT',
-  //   date: 'January 2022 - March 2023'
-  // },
-];
+import { useUserDetail } from "@/contexts/UserDetailContext";
 
 interface EducationProps {
   // Define props here
@@ -40,6 +13,7 @@ interface EducationProps {
 const Education: React.FC<EducationProps> = () => {
   //! States
   const { isMe, setProfilePage, setVerticalTabValue } = useGeneral();
+  const {educations} = useUserDetail()
   //!
   //todo Functions
 
@@ -54,7 +28,7 @@ const Education: React.FC<EducationProps> = () => {
   return (
     <Box id='education' sx={{ marginTop: "48px" }}>
       <Typography sx={{ fontWeight: "bold", fontSize: "20px" }}>
-        Education
+        Educations
       </Typography>
 
       <Box
@@ -65,8 +39,8 @@ const Education: React.FC<EducationProps> = () => {
           marginTop: "24px",
         }}
       >
-        {dummy.length > 0 ? (
-          dummy.map((item, i) => (
+        {educations?.length > 0 ? (
+          educations?.map((item: any, i: number) => (
             <Box
               sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
               key={i}
@@ -86,10 +60,10 @@ const Education: React.FC<EducationProps> = () => {
                 <Box
                   sx={{ display: "flex", flexDirection: "column", gap: "0px" }}
                 >
-                  <Typography sx={{ fontSize: "13px" }}>{item.at}</Typography>
-                  <Typography sx={{ fontSize: "13px" }}>{item.role}</Typography>
+                  <Typography sx={{ fontSize: "13px" }}>{item.school}</Typography>
+                  <Typography className="text-gray-600"  sx={{ fontSize: "12px" }}>{item.degree}</Typography>
                   <Typography sx={{ fontSize: "11px", color: "gray" }}>
-                    {item.date}
+                    {item.startDate} - {item.current ? "Continue" : item.endDate}
                   </Typography>
                 </Box>
               </Box>
@@ -97,10 +71,10 @@ const Education: React.FC<EducationProps> = () => {
             </Box>
           ))
         ) : (
-          <Typography onClick={() => {setProfilePage(3); setVerticalTabValue(2)}} sx={{cursor:'pointer'}} color="primary" fontWeight="bold">
-            <AddIcon sx={{ transform: "translateY(-2px)" }} color="primary" />{" "}
-            Add Education{" "}
-          </Typography>
+         isMe ?  <Typography onClick={() => {setProfilePage(3); setVerticalTabValue(2)}} sx={{cursor:'pointer'}} color="primary" fontWeight="bold">
+         <AddIcon sx={{ transform: "translateY(-2px)" }} color="primary" />{" "}
+         Add Education{" "}
+       </Typography> : <Typography sx={{color:'gray'}} >- No Education</Typography>
         )}
       </Box>
     </Box>

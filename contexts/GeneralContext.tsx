@@ -23,7 +23,7 @@ export const GeneralContextProvider = ({
   const [settingsTabValue, setSettingsTabValue] = useState(0);
   const [searchTabValue, setSearchTabValue] = useState(0)
   const [isMe, setIsMe] = useState<null | Boolean>(null)
-  const [profileLoading, setProfileLoading] = useState<null | Boolean>(true)
+  const [profileLoading, setProfileLoading] = useState<null | Boolean>(null)
 
  
 
@@ -47,6 +47,7 @@ export const GeneralContextProvider = ({
 
   const values = {
     tabValue: tabValue,
+    setTabValue: setTabValue,
     handleChange: handleChange,
     verticalTabvalue: verticalTabvalue,
     setVerticalTabValue: setVerticalTabValue,

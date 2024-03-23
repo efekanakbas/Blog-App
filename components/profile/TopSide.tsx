@@ -27,8 +27,9 @@ import ImageIcon from "@mui/icons-material/Image";
 import Cookies from "js-cookie";
 import { useUserDetail } from "@/contexts/UserDetailContext";
 import IButton from "../Button";
-import SettingsIcon from '@mui/icons-material/Settings';
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useRouter } from "next/navigation";
+import { patchData, postData } from "@/utils/CRUD";
 
 interface TopSideProps {
   isLoading: Boolean;
@@ -36,13 +37,15 @@ interface TopSideProps {
 
 const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
   //! States
-  const router = useRouter()
+  const router = useRouter();
   const {
     followersCount,
     followingsCount,
     firstName,
     lastName,
     intro,
+    isFollowed,
+    username,
   } = useUserDetail();
   const { profileLoading } = useGeneral();
 
@@ -61,13 +64,12 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
 
   const formik = useFormik({
     initialValues: {
-      inputValue: "deneme",
+      inputValue: intro ? intro : "",
     },
-    onSubmit: (values) => {
-      console.log("selaaaaaam");
+    onSubmit: async (values) => {
+      await patchData('intro', {intro: formik.values.inputValue})
       setFormToggle(false);
       setTextToggle(true);
-      // handleReset(values);
     },
   });
 
@@ -77,6 +79,8 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
   const [sizeToggle, setSizeToggle] = useState<"avatar" | "cover" | null>(null);
 
   const { isMe } = useGeneral();
+  const [followed, setFollowed] = useState(isFollowed)
+  const [count, setCount] = useState(followersCount)
   //!
   //todo Functions
   function a11yProps(index: number) {
@@ -87,8 +91,28 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
   }
 
   const handlerSettingsClick = () => {
-    router.push('/settings')
-  }
+    router.push("/settings");
+  };
+
+  const handlerFollow = async () => {
+    if (followed) {
+      try {
+        setFollowed(false)
+        setCount(Number(count) - 1)
+        await postData("unFollow", { username: username });
+      } catch (error) {
+        console.log("error:", error);
+      }
+    } else {
+      try {
+        setFollowed(true)
+        setCount(Number(count) + 1)
+        await postData("follow", { username: username });
+      } catch (error) {
+        console.log("error:", error);
+      }
+    }
+  };
 
   //todo
   //? useEffect
@@ -102,18 +126,30 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
   useEffect(() => {
     formik.setValues({
       ...formik.values,
-      inputValue: intro,
+      inputValue: intro ? intro : "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intro]);
+
+  useEffect(() => {
+      setFollowed(isFollowed == true ? true : false)
+  }, [isFollowed])
+
+  useEffect(() => {
+      setCount(followersCount)
+  }, [followersCount])
+
   //?
   //* consoleLogs
   // console.log("isMEMEMEME", isMe);
   // console.log("ers", followersCount)
   // console.log("ing", followingsCount)
   // console.log("İSLOADING", isLoading);
-  console.log("intro", intro);
-  console.log("values", formik.values);
+  // console.log("intro", intro);
+  // console.log("values", formik.values);
+  // console.log("isFollowed", isFollowed);
+  // console.log("followed", followed)
+  // console.log("formik", formik.values.inputValue)
   //*
 
   return (
@@ -287,14 +323,17 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
                 ) : (
                   <form onSubmit={formik.handleSubmit}>
                     <input
+                      type="text"
+                      autoComplete="off"
                       maxLength={27}
                       name="inputValue"
                       className="min-w-[75px] m-0 p-0 outline-0"
                       value={formik.values.inputValue}
                       onChange={formik.handleChange}
                       style={{ width: inputWidth }}
+                      placeholder="Write..."
                     />
-                    {debouncedValue.length > 0 && (
+                    {(debouncedValue) && (
                       <Button
                         type="submit"
                         sx={{ margin: "0", padding: "0", marginLeft: "10px" }}
@@ -333,7 +372,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
             ) : (
               <Typography>
                 <span className="font-bold text-gray-900">
-                  {followersCount}
+                  {count}
                 </span>{" "}
                 Followers{" "}
               </Typography>
@@ -364,11 +403,11 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
                 />
               ) : (
                 <IButton
-                  text="Follow"
-                  type="outlined"
+                  text={followed ? "Unfollow" : "Follow"}
+                  type={followed ? "contained" : "outlined"}
                   buttonType="button"
                   disabled={!!isLoading || !!profileLoading}
-                  handleClick={null}
+                  handleClick={handlerFollow}
                 />
               )}
 
@@ -404,12 +443,12 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
                 borderRadius: "100px",
                 height: "48px",
                 width: "140px",
-                display:'flex',
-                gap:'4px'
+                display: "flex",
+                gap: "4px",
               }}
               onClick={handlerSettingsClick}
             >
-              <SettingsIcon/>
+              <SettingsIcon />
               Settings
             </Button>
           )}

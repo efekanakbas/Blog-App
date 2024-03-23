@@ -1,37 +1,10 @@
 import { useGeneral } from "@/contexts/GeneralContext";
 import { Box, Typography } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import AddIcon from "@mui/icons-material/Add";
 import WorkIcon from "@mui/icons-material/Work";
-import AppleIcon from "@mui/icons-material/Apple";
-import GoogleIcon from "@mui/icons-material/Google";
-
-const dummy: Array<{
-  icon: any;
-  role: string;
-  at: string;
-  date: string;
-}> = [
-  // {
-  //   icon: AppleIcon,
-  //   role: 'Business Manager',
-  //   at: 'Apple',
-  //   date: 'January 2018 - March 2018'
-  // },
-  // {
-  //   icon: GoogleIcon,
-  //   role: 'Web Developer',
-  //   at: 'Google',
-  //   date: 'January 2018 - March 2018'
-  // },
-  // {
-  //   icon: null,
-  //   role: 'Business Manager',
-  //   at: 'Apple',
-  //   date: 'January 2018 - March 2018'
-  // },
-];
+import { useUserDetail } from "@/contexts/UserDetailContext";
 
 interface ExperienceProps {
   // Define props here
@@ -40,6 +13,7 @@ interface ExperienceProps {
 const Experience: React.FC<ExperienceProps> = () => {
   //! States
   const { isMe, setProfilePage, setVerticalTabValue } = useGeneral();
+  const {experiences} = useUserDetail()
   //!
   //todo Functions
 
@@ -52,9 +26,9 @@ const Experience: React.FC<ExperienceProps> = () => {
   //*
 
   return (
-    <Box id='experience' sx={{ marginTop: "48px" }}>
+    <Box id="experience" sx={{ marginTop: "48px" }}>
       <Typography sx={{ fontWeight: "bold", fontSize: "20px" }}>
-        Experience
+        Experiences
       </Typography>
 
       <Box
@@ -65,10 +39,14 @@ const Experience: React.FC<ExperienceProps> = () => {
           marginTop: "24px",
         }}
       >
-        {dummy.length > 0 ? (
-          dummy.map((item, i) => (
+        {experiences?.length > 0 ? (
+          experiences?.map((item: any, i: number) => (
             <Box
-              sx={{ display: "flex", justifyContent: "space-between" , alignItems: "center" }}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
               key={i}
             >
               <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
@@ -86,21 +64,33 @@ const Experience: React.FC<ExperienceProps> = () => {
                 <Box
                   sx={{ display: "flex", flexDirection: "column", gap: "0px" }}
                 >
-                  <Typography sx={{ fontSize: "13px" }}>{item.role}</Typography>
-                  <Typography sx={{ fontSize: "13px" }}>{item.at}</Typography>
+                  <Typography sx={{ fontSize: "13px" }}>{item.title}</Typography>
+                  <Typography className="text-gray-600" sx={{ fontSize: "12px" }}>{item.company}</Typography>
                   <Typography sx={{ fontSize: "11px", color: "gray" }}>
-                    {item.date}
+                  {item.startDate} - {item.current ? "Continue" : item.endDate}
                   </Typography>
                 </Box>
               </Box>
-              {isMe && <ModeEditIcon sx={{ color: "lightgray", cursor:'pointer' }} />}
+              {isMe && (
+                <ModeEditIcon sx={{ color: "lightgray", cursor: "pointer" }} />
+              )}
             </Box>
           ))
-        ) : (
-          <Typography onClick={() => {setProfilePage(2); setVerticalTabValue(1)}} sx={{cursor:'pointer'}} color="primary" fontWeight="bold">
+        ) : isMe ? (
+          <Typography
+            onClick={() => {
+              setProfilePage(2);
+              setVerticalTabValue(1);
+            }}
+            sx={{ cursor: "pointer" }}
+            color="primary"
+            fontWeight="bold"
+          >
             <AddIcon sx={{ transform: "translateY(-2px)" }} color="primary" />{" "}
             Add Experience{" "}
           </Typography>
+        ) : (
+          <Typography sx={{ color: "gray" }}>- No Experience</Typography>
         )}
       </Box>
     </Box>

@@ -75,9 +75,11 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
   // console.log("data", data);
   // console.log("profile", profile)
   // console.log("params", params)
+  // console.log("isLoading", isLoading)
+  // console.log("profileLoading", profileLoading)
   //*
 
-  if (status === "pending" || isLoading || profileLoading )
+  if (status === "pending" || profile ? (isLoading || profileLoading)  : null)
     return (
       <Box sx={{ display: "flex", flexDirection: "column", gap: "28px" }}>
         {!profile && <Share disabled={true} />}
