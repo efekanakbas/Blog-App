@@ -32,31 +32,34 @@ const ProfileSelected: React.FC<ProfileSelectedProps> = () => {
       location: "",
     },
     onSubmit: async (values) => {
-      setLocationValue(values.location)
-      setLocation(values.location)
-      setToggle1(false)
-      await patchData("location", {location: values.location})
+      setLocationValue(values.location);
+      setLocation(values.location);
+      setToggle1(false);
+      await patchData("location", { location: values.location });
       formik1.resetForm();
     },
- });
+  });
 
- const formik2 = useFormik({
-  initialValues: {
-    job: "",
-  },
-  onSubmit: async (values) => {
-    setJobValue(values.job)
-    setJob(values.job)
-    setToggle2(false)
-    await patchData("job", {job: values.job})
-    formik2.resetForm();
-  },
-});
+  const formik2 = useFormik({
+    initialValues: {
+      job: "",
+    },
+    onSubmit: async (values) => {
+      setJobValue(values.job);
+      setJob(values.job);
+      setToggle2(false);
+      await patchData("job", { job: values.job });
+      formik2.resetForm();
+    },
+  });
 
   const [toggle1, setToggle1] = useState(false);
   const [toggle2, setToggle2] = useState(false);
-  const [locationValue, setLocationValue] = useState(location)
-  const [jobValue, setJobValue] = useState(job)
+  const [locationValue, setLocationValue] = useState(location);
+  const [jobValue, setJobValue] = useState(job);
+  const [expEdit, setExpEdit] = useState<null | number>(null);
+  const [eduEdit, setEduEdit] = useState<null | number>(null);
+  const [lanEdit, setLanEdit] = useState<null | number>(null);
   //!
   //todo Functions
   const handlerClick1 = () => {
@@ -68,15 +71,15 @@ const ProfileSelected: React.FC<ProfileSelectedProps> = () => {
   };
   //todo
   //? useEffect
-    useEffect(() => {
-      if(location && job) {
-        setLocationValue(location);
-        setJobValue(job)
-      }
-    }, [location, job])
+  useEffect(() => {
+    if (location && job) {
+      setLocationValue(location);
+      setJobValue(job);
+    }
+  }, [location, job]);
   //?
   //* consoleLogs
-    
+
   //*
 
   return (
@@ -222,19 +225,19 @@ const ProfileSelected: React.FC<ProfileSelectedProps> = () => {
                 </Box>
 
                 <Skills />
-                <Experience />
-                <Education />
-                <Language />
+                <Experience setExpEdit={setExpEdit} />
+                <Education setEduEdit={setEduEdit} />
+                <Language setLanEdit={setLanEdit} />
               </Box>
             );
           case 1:
             return <SkillsForm />;
           case 2:
-            return <ExperienceForm />;
+            return <ExperienceForm expEdit={expEdit} />;
           case 3:
-            return <EducationForm />;
+            return <EducationForm eduEdit={eduEdit} />;
           case 4:
-            return <LanguageForm />;
+            return <LanguageForm lanEdit={lanEdit} />;
         }
       })()}
     </Box>

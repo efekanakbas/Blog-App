@@ -62,7 +62,14 @@ const Skills: React.FC<SkillsProps> = () => {
               Main Skills
             </Box>
             {isMe && mainSkills?.length > 0 && (
-              <ModeEditIcon sx={{ color: "lightgray", cursor: "pointer" }} />
+              <ModeEditIcon
+                onClick={() => {
+                  setProfilePage(1);
+                  setInputFocus(0);
+                  setVerticalTabValue(0);
+                }}
+                sx={{ color: "lightgray", cursor: "pointer" }}
+              />
             )}
           </Box>
           <Box
@@ -129,7 +136,14 @@ const Skills: React.FC<SkillsProps> = () => {
               Complementary Skills
             </Box>
             {isMe && complementarySkills?.length > 0 && (
-              <ModeEditIcon sx={{ color: "lightgray", cursor: "pointer" }} />
+              <ModeEditIcon
+                onClick={() => {
+                  setProfilePage(1);
+                  setInputFocus(1);
+                  setVerticalTabValue(0);
+                }}
+                sx={{ color: "lightgray", cursor: "pointer" }}
+              />
             )}
           </Box>
           <Box
@@ -198,7 +212,14 @@ const Skills: React.FC<SkillsProps> = () => {
               Interest
             </Box>
             {isMe && interests?.length > 0 && (
-              <ModeEditIcon sx={{ color: "lightgray", cursor: "pointer" }} />
+              <ModeEditIcon
+                onClick={() => {
+                  setProfilePage(1);
+                  setInputFocus(2);
+                  setVerticalTabValue(0);
+                }}
+                sx={{ color: "lightgray", cursor: "pointer" }}
+              />
             )}
           </Box>
           <Box

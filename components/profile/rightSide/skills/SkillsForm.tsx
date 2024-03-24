@@ -6,6 +6,8 @@ import { useGeneral } from "@/contexts/GeneralContext";
 import Button from "@/components/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import toast from "react-hot-toast";
+import { useUserDetail } from "@/contexts/UserDetailContext";
+import { patchData } from "@/utils/CRUD";
 
 interface SkillsFormProps {
   // Define props here
@@ -19,17 +21,25 @@ const SkillsForm: React.FC<SkillsFormProps> = () => {
       comp: "",
       int: "",
     },
-    onSubmit: (values) => {
-      console.log("selam");
+    onSubmit: async (values) => {
+      setMainSkills([...mainPool])
+      setComplementarySkills([...compPool])
+      setInterests([...intPool])
+      await patchData('skills', {
+        main: mainPool,
+        complementary: compPool,
+        interest: intPool
+      })
       handleReset(values);
     },
   });
 
   const { inputFocus, setProfilePage, setVerticalTabValue } = useGeneral();
+  const {mainSkills, setMainSkills, complementarySkills, setComplementarySkills, interests, setInterests} = useUserDetail();
 
-  const [mainPool, setMainPool] = useState<Array<string>>([]);
-  const [compPool, setCompPool] = useState<Array<string>>([]);
-  const [intPool, setIntPool] = useState<Array<string>>([]);
+  const [mainPool, setMainPool] = useState<Array<string>>([...mainSkills]);
+  const [compPool, setCompPool] = useState<Array<string>>([...complementarySkills]);
+  const [intPool, setIntPool] = useState<Array<string>>([...interests]);
   //!
   //todo Functions
   const handleMainFilter = (main: string) => {
@@ -52,7 +62,8 @@ const SkillsForm: React.FC<SkillsFormProps> = () => {
 
   //?
   //* consoleLogs
-
+console.log("main", mainSkills)
+console.log("mainPool", mainPool)
   //*
 
   return (

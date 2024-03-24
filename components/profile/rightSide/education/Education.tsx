@@ -1,19 +1,19 @@
 import { useGeneral } from "@/contexts/GeneralContext";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import AddIcon from "@mui/icons-material/Add";
-import SchoolIcon from '@mui/icons-material/School';
+import SchoolIcon from "@mui/icons-material/School";
 import { useUserDetail } from "@/contexts/UserDetailContext";
 
 interface EducationProps {
-  // Define props here
+  setEduEdit: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
-const Education: React.FC<EducationProps> = () => {
+const Education: React.FC<EducationProps> = ({ setEduEdit }) => {
   //! States
   const { isMe, setProfilePage, setVerticalTabValue } = useGeneral();
-  const {educations} = useUserDetail()
+  const { educations } = useUserDetail();
   //!
   //todo Functions
 
@@ -26,10 +26,26 @@ const Education: React.FC<EducationProps> = () => {
   //*
 
   return (
-    <Box id='education' sx={{ marginTop: "48px" }}>
-      <Typography sx={{ fontWeight: "bold", fontSize: "20px" }}>
-        Educations
-      </Typography>
+    <Box id="education" sx={{ marginTop: "48px" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography sx={{ fontWeight: "bold", fontSize: "20px" }}>
+          Education
+        </Typography>
+
+        {isMe && educations.length > 0 && (
+          <Button
+            onClick={() => {
+              setProfilePage(3);
+              setVerticalTabValue(2);
+              setEduEdit(null);
+            }}
+            sx={{}}
+          >
+            <AddIcon sx={{ transform: "translateY(-2px)" }} color="primary" />{" "}
+            New
+          </Button>
+        )}
+      </Box>
 
       <Box
         sx={{
@@ -42,7 +58,11 @@ const Education: React.FC<EducationProps> = () => {
         {educations?.length > 0 ? (
           educations?.map((item: any, i: number) => (
             <Box
-              sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
               key={i}
             >
               <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
@@ -60,21 +80,48 @@ const Education: React.FC<EducationProps> = () => {
                 <Box
                   sx={{ display: "flex", flexDirection: "column", gap: "0px" }}
                 >
-                  <Typography sx={{ fontSize: "13px" }}>{item.school}</Typography>
-                  <Typography className="text-gray-600"  sx={{ fontSize: "12px" }}>{item.degree}</Typography>
+                  <Typography sx={{ fontSize: "13px" }}>
+                    {item.school}
+                  </Typography>
+                  <Typography
+                    className="text-gray-600"
+                    sx={{ fontSize: "12px" }}
+                  >
+                    {item.degree}
+                  </Typography>
                   <Typography sx={{ fontSize: "11px", color: "gray" }}>
-                    {item.startDate} - {item.current ? "Continue" : item.endDate}
+                    {item.startDate} -{" "}
+                    {item.current ? "Continue" : item.endDate}
                   </Typography>
                 </Box>
               </Box>
-              {isMe && <ModeEditIcon sx={{ color: "lightgray", cursor:'pointer' }} />}
+              {isMe && (
+                <ModeEditIcon
+                  onClick={() => {
+                    setProfilePage(3);
+                    setVerticalTabValue(2);
+                    setEduEdit(item.itemId);
+                  }}
+                  sx={{ color: "lightgray", cursor: "pointer" }}
+                />
+              )}
             </Box>
           ))
+        ) : isMe ? (
+          <Typography
+            onClick={() => {
+              setProfilePage(3);
+              setVerticalTabValue(2);
+            }}
+            sx={{ cursor: "pointer" }}
+            color="primary"
+            fontWeight="bold"
+          >
+            <AddIcon sx={{ transform: "translateY(-2px)" }} color="primary" />{" "}
+            Add Education{" "}
+          </Typography>
         ) : (
-         isMe ?  <Typography onClick={() => {setProfilePage(3); setVerticalTabValue(2)}} sx={{cursor:'pointer'}} color="primary" fontWeight="bold">
-         <AddIcon sx={{ transform: "translateY(-2px)" }} color="primary" />{" "}
-         Add Education{" "}
-       </Typography> : <Typography sx={{color:'gray'}} >- No Education</Typography>
+          <Typography sx={{ color: "gray" }}>- No Education</Typography>
         )}
       </Box>
     </Box>

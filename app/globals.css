@@ -53,7 +53,14 @@ body::-webkit-scrollbar {
 									   color-stop(0.86, rgb(28,58,148)));
 }
 
+.border-radius-15 {
+  border-radius: 15px;
+}
 
+.swalButton {
+  height: 48px;
+  width: 120px;
+}
 
 
 
