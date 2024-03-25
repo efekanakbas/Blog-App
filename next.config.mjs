@@ -2,8 +2,8 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
-   
-  },
+    domains: ["res.cloudinary.com"], 
+ },
   webpack: (config, { isServer }) => {
     config.module.rules.push({
       test: /\.(wav|mp3)$/i,

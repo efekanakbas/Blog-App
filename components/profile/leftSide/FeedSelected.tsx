@@ -21,7 +21,7 @@ const FeedSelected: React.FC<FeedSelectedProps> = ({ isLoading }) => {
 
   //?
   //* consoleLogs
-    console.log("location", location)
+    // console.log("location", location)
   //*
 
   return (

@@ -16,6 +16,8 @@ export const GeneralContextProvider = ({
   children: ReactNode;
 }) => {
 
+  const avatar = Cookies.get('avatar')
+
   const [tabValue, setTabValue] = useState(0);
   const [verticalTabvalue, setVerticalTabValue] = useState(0);
   const [profilePage, setProfilePage] = useState(0)
@@ -24,6 +26,7 @@ export const GeneralContextProvider = ({
   const [searchTabValue, setSearchTabValue] = useState(0)
   const [isMe, setIsMe] = useState<null | Boolean>(null)
   const [profileLoading, setProfileLoading] = useState<null | Boolean>(null)
+  const [useAvatar, setUseAvatar] = useState(avatar)
 
  
 
@@ -65,7 +68,9 @@ export const GeneralContextProvider = ({
     setSearchTabValue:setSearchTabValue,
     handleChangeSearch:handleChangeSearch,
     profileLoading: profileLoading,
-    setProfileLoading: setProfileLoading
+    setProfileLoading: setProfileLoading,
+    useAvatar: useAvatar,
+    setUseAvatar: setUseAvatar
 }
 
 

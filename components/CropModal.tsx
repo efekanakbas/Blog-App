@@ -4,38 +4,61 @@ import CloseIcon from "@mui/icons-material/Close";
 import ImageIcon from "@mui/icons-material/Image";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Cropper from "react-easy-crop";
+import Cookies from "js-cookie";
+import { getData, patchData } from "@/utils/CRUD";
 import { useGeneral } from "@/contexts/GeneralContext";
-import Cookies from 'js-cookie'
+import NextImage from "next/image";
+import grayBg from "../public/images/grayBG.svg";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 interface CropModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  sizeType: 'avatar' | 'cover' | null
+  sizeType: "avatar" | "cover" | null;
 }
 
 const CropModal: React.FC<CropModalProps> = ({ open, setOpen, sizeType }) => {
   //! States
+  const params = useParams().username;
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     bgcolor: "background.paper",
-    width: sizeType === 'avatar' ? "50vw" : "70vw",
+    width: sizeType === "avatar" ? "50vw" : "70vw",
     height: "60vh",
     borderRadius: "16px",
   };
 
-  const [image, setImage] = useState< null | string>(null);
+  const [image, setImage] = useState<null | string>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-
-  const { avatar, setAvatar } = useGeneral();
-
-  const [croppedImage, setCroppedImage] = useState<HTMLImageElement | null>(null);
-  const [croppedArea, setCroppedArea] = useState<any>(null); 
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null); 
-  
+  const [croppedImage, setCroppedImage] = useState<HTMLImageElement | null>(
+    null
+  );
+  const [croppedArea, setCroppedArea] = useState<any>(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+  const avatar = Cookies.get("avatar");
+  const cover = Cookies.get("cover");
+  const formData = new FormData();
+  const { setUseAvatar } = useGeneral();
+  const { refetch } = useInfiniteQuery({
+    queryKey: ["feedsOne"],
+    queryFn: ({ pageParam }) => {
+      return getData(`feeds/${params}?page=${pageParam}&limit=10`);
+    },
+    staleTime: 0,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => {
+      const morePageExist = lastPage.length === 10;
+      if (!morePageExist) {
+        return;
+      }
+      return pages.length + 1;
+    },
+  });
   //!
   //todo Functions
   const uploadImageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,8 +67,8 @@ const CropModal: React.FC<CropModalProps> = ({ open, setOpen, sizeType }) => {
       // Seçilen dosyayı burada işleyebilirsiniz.
       const selectedImage = files[0];
       const imageUrl = URL.createObjectURL(selectedImage);
-      setCroppedImage(null)
-      setImage(imageUrl); 
+      setCroppedImage(null);
+      setImage(imageUrl);
     }
   };
 
@@ -57,8 +80,8 @@ const CropModal: React.FC<CropModalProps> = ({ open, setOpen, sizeType }) => {
   const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => {
     setCroppedArea(croppedArea);
     setCroppedAreaPixels(croppedAreaPixels);
-  }
-   
+  };
+
   const handleChange = () => {
     if (image && croppedArea && croppedAreaPixels) {
       const canvas = document.createElement("canvas");
@@ -86,42 +109,49 @@ const CropModal: React.FC<CropModalProps> = ({ open, setOpen, sizeType }) => {
           croppedAreaPixels.height
         );
 
-        const croppedImageUrl = canvas.toDataURL("image/jpeg"); 
-        const newPreviewImage = new Image();
-        newPreviewImage.src = croppedImageUrl;
-        setCroppedImage(newPreviewImage);
+        canvas.toBlob(async (blob) => {
+          if (blob) {
+            if (sizeType === "avatar") {
+              formData.append("avatar", blob, "avatar.jpg");
+              const response = await patchData("avatar", formData);
+              Cookies.set("avatar", response.images[0]);
+              setUseAvatar(response.images[0]);
+              refetch();
+              handleClose();
+            } else {
+              formData.append("cover", blob, "cover.jpg");
+              const response = await patchData("cover", formData);
+              Cookies.set("cover", response.images[0]);
+              handleClose();
+            }
+          }
+        }, "image/jpeg");
       }
-     
-      handleClose()
+
+      handleClose();
     }
   };
 
   const handleClose = () => {
-    setOpen(false)
-      setCroppedArea(null)
-      setCroppedAreaPixels(null)
+    setOpen(false);
+    setCroppedArea(null);
+    setCroppedAreaPixels(null);
     //   setCroppedImage(null)
-      setImage(null)
-  }
+    setImage(null);
+  };
 
   const onCropChangeMemo = useMemo(() => {
     return (newCrop: any) => {
       setCrop(newCrop);
     };
   }, []);
-  
+
   //todo
   //? useEffect
-  useEffect(() => {
-    if (croppedImage && croppedImage.src) {
-        Cookies.set('avatar',  croppedImage.src)
-        
-        setAvatar(croppedImage.src)
-      }
-  }, [croppedImage, setAvatar]);
+
   //?
   //* consoleLogs
-  
+  console.log("params", params);
   //*
 
   return (
@@ -162,16 +192,31 @@ const CropModal: React.FC<CropModalProps> = ({ open, setOpen, sizeType }) => {
                   image={image}
                   crop={crop}
                   zoom={zoom}
-                  aspect={1}
+                  aspect={sizeType === "avatar" ? 1 : 1098.5 / 250}
                   onCropChange={onCropChangeMemo}
                   onCropComplete={onCropComplete}
                   onZoomChange={setZoom}
                 />
-              ) : (
+              ) : sizeType === "avatar" ? (
                 <Avatar
                   sx={{ width: "250px", height: "250px" }}
                   alt="avatar"
                   src={croppedImage ? croppedImage.src : avatar}
+                />
+              ) : (
+                <NextImage
+                  className={`rounded-lg object-cover ${
+                    cover === "null" ? "cursor-default" : "cursor-pointer"
+                  }`}
+                  src={
+                    croppedImage
+                      ? croppedImage.src
+                      : cover === "null"
+                      ? grayBg
+                      : cover
+                  }
+                  alt="cover photo"
+                  fill
                 />
               )}
             </Box>
@@ -186,7 +231,9 @@ const CropModal: React.FC<CropModalProps> = ({ open, setOpen, sizeType }) => {
             }}
           >
             <Button
-              onClick={() => {inputClick()}}
+              onClick={() => {
+                inputClick();
+              }}
               color="error"
               variant="outlined"
               style={{ borderRadius: "100px", height: "50px", width: "152px" }}
@@ -207,7 +254,6 @@ const CropModal: React.FC<CropModalProps> = ({ open, setOpen, sizeType }) => {
             >
               <CloudUploadIcon sx={{ marginRight: "8px" }} /> Change
             </Button>
-            
           </Box>
         </Box>
         <button className="absolute top-5 right-5 cursor-pointer">

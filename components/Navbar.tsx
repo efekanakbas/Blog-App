@@ -28,6 +28,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useAuth } from "@/contexts/AuthContext";
 import Search from "./Search";
 import Cookies from "js-cookie";
+import { useGeneral } from "@/contexts/GeneralContext";
 
 const pages = [
   { icon: HomeIcon, title: "Homepage", link: "/" },
@@ -65,8 +66,8 @@ const Navbar: React.FC<NavbarProps> = () => {
 
   const router = useRouter();
   const { logout } = useAuth();
-  const avatar = Cookies.get('avatar')
   const username = Cookies.get('username')
+  const {useAvatar} = useGeneral()
   //!
   //todo Functions
 
@@ -87,7 +88,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 
   //todo
   //? useEffect
-
+    
   //?
   //* consoleLogs
     // console.log("AVATAAAAAAAAR", avatar)
@@ -270,7 +271,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                   }}
                 >
                   {/*@ts-ignore*/}
-                  <Avatar alt="User avatar" src={avatar === "null" ? null : avatar} />
+                  <Avatar alt="User avatar" src={useAvatar === "null" ? null : useAvatar} />
                   <Typography color="black">{username}</Typography>
                   <figure>
                     <KeyboardArrowDownIcon sx={{ color: "black" }} />

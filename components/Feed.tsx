@@ -20,6 +20,7 @@ import { useGeneral } from "@/contexts/GeneralContext";
 const FeedModal = React.lazy(() => import("./feedModal/FeedModal"));
 import moment from "moment";
 import Skeleton from "@mui/material/Skeleton";
+import Cookies from "js-cookie";
 
 interface FeedsProps {
   feed: any;
@@ -33,8 +34,8 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
   const [commentShow, setCommentShow] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const { avatar } = useGeneral();
   const [Imoment, setIMoment] = useState<null | string>(null);
+  const avatar = Cookies.get("avatar")
 
   const { handleChange, handleReset, handleSubmit, values } = useFormik({
     initialValues: {

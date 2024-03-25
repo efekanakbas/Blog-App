@@ -51,6 +51,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
 
   const name = firstName + " " + lastName;
   const avatar = Cookies.get("avatar");
+  const cover = Cookies.get("cover");
   const {
     tabValue,
     handleChange: handleChange2,
@@ -67,7 +68,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
       inputValue: intro ? intro : "",
     },
     onSubmit: async (values) => {
-      await patchData('intro', {intro: formik.values.inputValue})
+      await patchData("intro", { intro: formik.values.inputValue });
       setFormToggle(false);
       setTextToggle(true);
     },
@@ -79,8 +80,8 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
   const [sizeToggle, setSizeToggle] = useState<"avatar" | "cover" | null>(null);
 
   const { isMe } = useGeneral();
-  const [followed, setFollowed] = useState(isFollowed)
-  const [count, setCount] = useState(followersCount)
+  const [followed, setFollowed] = useState(isFollowed);
+  const [count, setCount] = useState(followersCount);
   //!
   //todo Functions
   function a11yProps(index: number) {
@@ -97,16 +98,16 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
   const handlerFollow = async () => {
     if (followed) {
       try {
-        setFollowed(false)
-        setCount(Number(count) - 1)
+        setFollowed(false);
+        setCount(Number(count) - 1);
         await postData("unFollow", { username: username });
       } catch (error) {
         console.log("error:", error);
       }
     } else {
       try {
-        setFollowed(true)
-        setCount(Number(count) + 1)
+        setFollowed(true);
+        setCount(Number(count) + 1);
         await postData("follow", { username: username });
       } catch (error) {
         console.log("error:", error);
@@ -132,12 +133,12 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
   }, [intro]);
 
   useEffect(() => {
-      setFollowed(isFollowed == true ? true : false)
-  }, [isFollowed])
+    setFollowed(isFollowed == true ? true : false);
+  }, [isFollowed]);
 
   useEffect(() => {
-      setCount(followersCount)
-  }, [followersCount])
+    setCount(followersCount);
+  }, [followersCount]);
 
   //?
   //* consoleLogs
@@ -183,11 +184,13 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
           )}
           <Image
             onClick={() => {
-              setModalOpen(true);
-              setSizeToggle("cover");
+              if (cover !== "null") {
+                setModalOpen(true);
+                setSizeToggle("cover");
+              }
             }}
-            className="rounded-lg object-cover cursor-pointer"
-            src={grayBg}
+            className={`rounded-lg object-cover ${cover === "null" ? "cursor-default" : "cursor-pointer"}`}
+            src={cover === "null" ? grayBg : cover}
             alt="cover photo"
             fill
           />
@@ -213,10 +216,16 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
               <Avatar
                 alt="user avatar"
                 onClick={() => {
-                  setModalOpen(true);
-                  setSizeToggle("avatar");
+                  if (avatar !== "null") {
+                    setModalOpen(true);
+                    setSizeToggle("avatar");
+                  }
                 }}
-                sx={{ width: "100px", height: "100px", cursor: "pointer" }}
+                sx={{
+                  width: "100px",
+                  height: "100px",
+                  cursor: avatar === "null" ? "default" : "pointer",
+                }}
                 //@ts-ignore
                 src={avatar === "null" ? null : avatar}
               />
@@ -333,7 +342,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
                       style={{ width: inputWidth }}
                       placeholder="Write..."
                     />
-                    {(debouncedValue) && (
+                    {debouncedValue && (
                       <Button
                         type="submit"
                         sx={{ margin: "0", padding: "0", marginLeft: "10px" }}
@@ -371,9 +380,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
               />
             ) : (
               <Typography>
-                <span className="font-bold text-gray-900">
-                  {count}
-                </span>{" "}
+                <span className="font-bold text-gray-900">{count}</span>{" "}
                 Followers{" "}
               </Typography>
             )}
