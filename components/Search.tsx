@@ -5,9 +5,9 @@ import { useFormik } from "formik";
 import SearchIcon from "@mui/icons-material/Search";
 import { useDebounce } from "usehooks-ts";
 import { useQuery } from "@tanstack/react-query";
-import { getSearch } from "@/api";
 import { useRouter } from "next/navigation";
 import SearchBox from "./SearchBox";
+import { getData } from "@/utils/CRUD";
 
 interface dataProps {
   avatar: string;
@@ -37,18 +37,24 @@ const Search: React.FC<SearchProps> = () => {
   const [debouncedValue, setDebouncedValue] = useState(debouncedValueFirst);
 
   const debouncedValueText = useDebounce(values.searchValue, 600);
+
   const open = debouncedValue;
   const id = open ? "popper" : undefined;
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isFetching, error, refetch, isFetched, isLoading } = useQuery<
+    any
+  >({
     queryKey: ["search"],
-    queryFn: getSearch,
-    enabled: debouncedValue,
+    queryFn: async () => {
+      return await getData(`search?params=${debouncedValueText}`);
+    }
   });
 
   const [isTextFieldDisabled, setIsTextFieldDisabled] = useState(true);
 
   const router = useRouter();
+  const [myData, setMyData] = useState([]);
+  const [myFetched, setMyFetched] = useState(isFetched);
   //!
 
   //todo Functions
@@ -66,14 +72,40 @@ const Search: React.FC<SearchProps> = () => {
   useEffect(() => {
     if (debouncedValueFirst) {
       setDebouncedValue(debouncedValueFirst);
+      if (debouncedValueText.length > 0) {
+        refetch();
+      }
     } else {
       setDebouncedValue(false);
+      setTimeout(() => {
+        setMyData([]);
+      }, 500);
     }
-  }, [debouncedValueFirst]);
+  }, [debouncedValueFirst, refetch, debouncedValueText]);
+
+  useEffect(() => {
+    if (isFetching) {
+      setMyFetched(false);
+    } else {
+      setMyFetched(isFetched);
+    }
+  }, [isFetched, isFetching]);
+
+  useEffect(() => {
+    if (data && myFetched) {
+      setMyData(data);
+    }
+  }, [data, myFetched]);
+
   //?
 
   //* consoleLogs
   // console.log("dede", debouncedValue)
+  // console.log("data", data);
+  // console.log("isFetching", isFetching);
+  // console.log("debouncedValueFirst", debouncedValueFirst)
+  // console.log("myFetched", myFetched);
+  // console.log("myData", myData);
   //*
 
   return (
@@ -135,44 +167,47 @@ const Search: React.FC<SearchProps> = () => {
               onMouseLeave={() => {
                 setDebouncedValue(false);
                 handleReset(values);
+                setTimeout(() => {
+                  setMyData([]);
+                }, 500);
               }}
               sx={{
                 marginTop: "15.4px",
                 backgroundColor: "white",
                 boxShadow:
                   "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
-                width: "69rem",
-                transform: "translateX(215px)",
+                width: "20rem",
+                transform: "translateX(-18px)",
                 borderRadius: "0 0 15px 15px",
                 display: "flex",
               }}
             >
               <SearchBox
-                data={data?.users}
-                isLoading={isLoading}
+                data={myData}
+                isLoading={isFetching}
                 setDebouncedValue={setDebouncedValue}
                 handleReset={handleReset}
                 values={values}
                 debouncedValueText={debouncedValueText}
               />
 
-              <SearchBox
-                data={data?.projects}
+              {/* <SearchBox
+                data={data}
                 isLoading={isLoading}
                 setDebouncedValue={setDebouncedValue}
                 handleReset={handleReset}
                 values={values}
                 debouncedValueText={debouncedValueText}
-              />
-
+              /> */}
+              {/* 
               <SearchBox
-                data={data?.companies}
+                data={data}
                 isLoading={isLoading}
                 setDebouncedValue={setDebouncedValue}
                 handleReset={handleReset}
                 values={values}
                 debouncedValueText={debouncedValueText}
-              />
+              /> */}
             </Box>
           </Fade>
         )}

@@ -67,7 +67,8 @@ const Navbar: React.FC<NavbarProps> = () => {
   const router = useRouter();
   const { logout } = useAuth();
   const username = Cookies.get('username')
-  const {useAvatar} = useGeneral()
+  const avatar = Cookies.get('avatar')
+  const {useAvatar, setUseAvatar} = useGeneral()
   //!
   //todo Functions
 
@@ -88,7 +89,9 @@ const Navbar: React.FC<NavbarProps> = () => {
 
   //todo
   //? useEffect
-    
+useEffect(() => {
+  setUseAvatar(avatar)
+}, [avatar, setUseAvatar])
   //?
   //* consoleLogs
     // console.log("AVATAAAAAAAAR", avatar)

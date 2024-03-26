@@ -6,6 +6,7 @@ import Image from "next/image";
 import grayBg from "../public/images/grayBG.svg";
 import CloseIcon from "@mui/icons-material/Close";
 import Cookies from "js-cookie";
+import { useUserDetail } from "@/contexts/UserDetailContext";
 
 interface PhotoModalProps {
   open: boolean;
@@ -19,15 +20,17 @@ const PhotoModal: React.FC<PhotoModalProps> = ({
   sizeToggle,
 }) => {
   //! States
-  const avatar = Cookies.get("avatar");
-  const cover = Cookies.get("cover");
+  const { isMe } = useGeneral();
+  const { avatar, cover } = useUserDetail();
+  const Iavatar = Cookies.get("avatar");
+  const Icover = Cookies.get("cover");
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: sizeToggle === "avatar" ? "300px" : "75%" ,
-    height: sizeToggle === "avatar" ?  "300px" : "42.329%" 
+    width: sizeToggle === "avatar" ? "300px" : "75%",
+    height: sizeToggle === "avatar" ? "300px" : "42.329%",
   };
   //!
   //todo Functions
@@ -56,21 +59,35 @@ const PhotoModal: React.FC<PhotoModalProps> = ({
         }}
         sx={{ position: "relative", width: "100%", height: "100%" }}
       >
-        <Box  onClick={(e) => e.stopPropagation()} sx={style}>
+        <Box onClick={(e) => e.stopPropagation()} sx={style}>
           <figure
-            // style={{
-            //   width: sizeToggle === "avatar" ? 300 : 1600,
-            //   height: sizeToggle === "avatar" ? 300 : 400,
-            // }}
+          // style={{
+          //   width: sizeToggle === "avatar" ? 300 : 1600,
+          //   height: sizeToggle === "avatar" ? 300 : 400,
+          // }}
           >
             <Image
               className={`${
                 sizeToggle === "avatar" ? "rounded-full" : "rounded-xl"
               }`}
               fill
-              src={sizeToggle === "avatar" ? avatar : cover === "null"
-              ? grayBg
-              : cover}
+              src={
+                sizeToggle === "avatar"
+                  ? isMe
+                    ? Iavatar === "null"
+                      ? null
+                      : Iavatar
+                    : avatar === null
+                    ? null
+                    : avatar
+                  : isMe
+                  ? Icover === "null"
+                    ? grayBg
+                    : Icover
+                  : cover === null
+                  ? grayBg
+                  : cover
+              }
               alt="avatar"
             />
           </figure>

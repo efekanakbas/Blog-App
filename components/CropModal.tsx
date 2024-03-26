@@ -201,7 +201,8 @@ const CropModal: React.FC<CropModalProps> = ({ open, setOpen, sizeType }) => {
                 <Avatar
                   sx={{ width: "250px", height: "250px" }}
                   alt="avatar"
-                  src={croppedImage ? croppedImage.src : avatar}
+                  //@ts-ignore
+                  src={croppedImage ? croppedImage.src : avatar === "null" ? null : avatar}
                 />
               ) : (
                 <NextImage

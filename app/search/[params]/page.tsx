@@ -6,8 +6,8 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import axios from "axios";
-import { getSearch } from '@/api';
+import { getData } from '@/utils/CRUD';
+
 
 export const metadata: Metadata = {
     title: "Search",
@@ -15,15 +15,18 @@ export const metadata: Metadata = {
   };
 
 interface pageProps {
-  // Define props here
+  params: any
 }
 
-const page: React.FC<pageProps> = async () => {
+const page: React.FC<pageProps> = async ({params}) => {
   //! States
   const queryClient = new QueryClient();
+ 
   await queryClient.prefetchQuery({
     queryKey: ["searchData"],
-    queryFn: getSearch
+    queryFn: async () => {
+    return getData(`searchData/${params.params}`)
+  }
   });
   //!
   //todo Functions
@@ -33,7 +36,7 @@ const page: React.FC<pageProps> = async () => {
       
   //?
   //* consoleLogs
-      
+    // console.log("params11", params)
   //*
 
   return (

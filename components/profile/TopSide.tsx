@@ -46,12 +46,14 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
     intro,
     isFollowed,
     username,
+    cover,
+    avatar,
   } = useUserDetail();
   const { profileLoading } = useGeneral();
 
   const name = firstName + " " + lastName;
-  const avatar = Cookies.get("avatar");
-  const cover = Cookies.get("cover");
+  const Iavatar = Cookies.get("avatar");
+  const Icover = Cookies.get("cover");
   const {
     tabValue,
     handleChange: handleChange2,
@@ -151,6 +153,8 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
   // console.log("isFollowed", isFollowed);
   // console.log("followed", followed)
   // console.log("formik", formik.values.inputValue)
+  console.log("isMe", isMe);
+  console.log("cover", cover)
   //*
 
   return (
@@ -184,13 +188,23 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
           )}
           <Image
             onClick={() => {
-              if (cover !== "null") {
+              if ( isMe ? Icover !== "null" : cover !== null ) {
                 setModalOpen(true);
                 setSizeToggle("cover");
               }
             }}
-            className={`rounded-lg object-cover ${cover === "null" ? "cursor-default" : "cursor-pointer"}`}
-            src={cover === "null" ? grayBg : cover}
+            className={`rounded-lg object-cover ${
+              isMe ? Icover === "null" ? "cursor-default" : "cursor-pointer" : cover === null ? "cursor-default" : "cursor-pointer"
+            }`}
+            src={
+              isMe
+                ? Icover === "null"
+                  ? grayBg
+                  : Icover
+                : cover === null
+                ? grayBg
+                : cover
+            }
             alt="cover photo"
             fill
           />
@@ -216,7 +230,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
               <Avatar
                 alt="user avatar"
                 onClick={() => {
-                  if (avatar !== "null") {
+                  if (isMe ? Iavatar !== "null" : avatar !== null) {
                     setModalOpen(true);
                     setSizeToggle("avatar");
                   }
@@ -224,10 +238,10 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
                 sx={{
                   width: "100px",
                   height: "100px",
-                  cursor: avatar === "null" ? "default" : "pointer",
+                  cursor: isMe ? Iavatar === "null" ? "default" : "pointer" : avatar === null ? "default" : "pointer",
                 }}
                 //@ts-ignore
-                src={avatar === "null" ? null : avatar}
+                src={isMe ? Iavatar === "null" ? null : Iavatar : avatar === null ? null : avatar}
               />
             </figure>
           )}

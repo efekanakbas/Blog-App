@@ -3,8 +3,17 @@ import { Avatar, Box, Typography } from '@mui/material';
 
 
 
+interface dataProps {
+  avatar: string;
+  cover: String;
+  email: String;
+  firstName: String;
+  lastName: String;
+  username: String;
+}
+
 interface UsersProps {
-  data: Data[]
+  data: dataProps[];
 }
 
 const Users: React.FC<UsersProps> = ({data}) => {
@@ -30,13 +39,13 @@ const Users: React.FC<UsersProps> = ({data}) => {
 
       <Box className='scrollBarHidden'  sx={{display:'flex', flexDirection:'column', gap:'24px', py:3, overflowY:'auto', maxHeight:'calc(100vh - 190px)', }}>
         {
-          data?.map((item: Data, i: number) => (
+          data?.map((item: dataProps, i: number) => (
 
             <Box sx={{display:'flex', gap:'12px'}} key={i}>
                 <Avatar sx={{width:'60px', height:'60px'}} alt='user avatar' src={item.avatar} />
                 <Box sx={{display:'flex', flexDirection:'column', justifyContent:'center'}}>
                   <Typography>
-                    {item.name}
+                    {item.firstName} + {item.lastName}
                   </Typography>
 
                   <Typography sx={{fontSize:'14px', color:'gray'}}>

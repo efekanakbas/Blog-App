@@ -21,7 +21,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
   setDebouncedValue,
   handleReset,
   values,
-  debouncedValueText,
+  debouncedValueText
 }) => {
   //! States
   const myArray = [1, 2, 3, 4];
@@ -34,11 +34,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
   //?
   //* consoleLogs
-  console.log("data", data);
+  // console.log("data", data);
   //*
 
   return (
-    <Box sx={{ width: "calc(100% / 3)" }}>
+    <Box sx={{ width: "calc(100%)" }}>
       <Box
         sx={{
           borderRight: "1px solid white",
@@ -72,6 +72,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
                   display: "flex",
                   gap: "12px",
                   alignItems: "center",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  router.push(`/profile/${item.username}`);
+                  setDebouncedValue(false), handleReset(values);
                 }}
               >
                 <Avatar
@@ -108,7 +113,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
       >
         <button
           onClick={() => {
-            router.push("/search");
+            console.log("debo", debouncedValueText)
+            router.push(`/search/${debouncedValueText}`);
             setDebouncedValue(false), handleReset(values);
           }}
           style={{

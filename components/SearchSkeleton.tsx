@@ -5,7 +5,7 @@ interface SearchSkeletonProps {
   key: number;
 }
 
-const SearchSkeleton: React.FC<SearchSkeletonProps> = ({ key }) => {
+const SearchSkeleton: React.FC<SearchSkeletonProps> = () => {
   //! States
 
   //!
@@ -21,7 +21,6 @@ const SearchSkeleton: React.FC<SearchSkeletonProps> = ({ key }) => {
 
   return (
     <Box
-      key={key}
       sx={{
         display: "flex",
         gap: "12px",

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../Card';
 import { useGeneral } from '@/contexts/GeneralContext';
 import Top from './Main/Top';
@@ -6,27 +6,33 @@ import Users from './Main/Users';
 import Projects from './Main/Projects';
 import Companies from './Main/Companies';
 import { useQuery } from '@tanstack/react-query';
-import { getSearch } from '@/api';
+import { getData } from '@/utils/CRUD';
+import { useParams } from 'next/navigation'
 
 
 interface dataProps {
-  id: string;
-  users: Data[];
-  projects: Data[];
-  companies: Data[];
+  avatar: String,
+  cover: String,
+  email: String,
+  firstName: String,
+  lastName: String,
+  username: String
 }
 
 
 interface MainProps {
-  data: dataProps
+  data: dataProps[]
 }
 
 const Main: React.FC<MainProps> = () => {
   //! States
+      const params = useParams().params
       const {searchTabValue} = useGeneral()
-      const {data, isLoading, error} = useQuery({
+      const {data, isLoading, error, refetch} = useQuery({
         queryKey:['searchData'],
-        queryFn: getSearch
+        queryFn: async () => {
+          return await getData(`searchData/${params}`);
+        }
       })
 
     
@@ -35,19 +41,22 @@ const Main: React.FC<MainProps> = () => {
       
   //todo
   //? useEffect
-      
+  
+  
   //?
   //* consoleLogs
-  // console.log("data", data)
+  console.log("data", data)
+  console.log("params", params)
   //*
 
   switch (searchTabValue) {
     case 0:
-        return <Top data={data} />
+      return  <Top data={data} />;
+
         break;
 
     case 1:
-        return <Users  data={data.users}/>
+        return <Users  data={data}/>
         break;
     
     case 2:
