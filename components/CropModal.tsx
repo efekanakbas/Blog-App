@@ -151,7 +151,7 @@ const CropModal: React.FC<CropModalProps> = ({ open, setOpen, sizeType }) => {
 
   //?
   //* consoleLogs
-  console.log("params", params);
+  // console.log("params", params);
   //*
 
   return (

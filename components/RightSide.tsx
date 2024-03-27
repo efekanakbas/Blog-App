@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getData } from "@/utils/CRUD";
 import { useRouter } from "next/navigation";
 import { useGeneral } from "@/contexts/GeneralContext";
+import { useUserDetail } from "@/contexts/UserDetailContext";
 
 interface RightSideProps {}
 
@@ -15,6 +16,7 @@ const RightSide: React.FC<RightSideProps> = () => {
   //! States
   const router = useRouter();
   const { profileLoading, setProfileLoading, setProfilePage, setTabValue } = useGeneral();
+  const {userId} = useUserDetail()
   const [showAll, setShowAll] = useState<boolean>(true);
   const [textToggle, setTextToggle] = useState<boolean>(true);
 
@@ -39,7 +41,7 @@ const RightSide: React.FC<RightSideProps> = () => {
   // }, [profileLoading, setTabValue]);
   //?
   //* consoleLogs
-  // console.log("dataAAA", data)
+  console.log("dataAAA", data)
   // console.log("profileLoading", profileLoading);
   //*
 
@@ -54,10 +56,12 @@ const RightSide: React.FC<RightSideProps> = () => {
           .map((person: any, i: number) => (
             <Box
               onClick={() => {
-                !profileLoading && router.push(`/profile/${person.username}`);
-                setProfilePage(0);
-                setTabValue(0);
-                setProfileLoading(true)
+                if (!profileLoading && person.userId !== userId) {
+                  router.push(`/profile/${person.username}`);
+                  setProfilePage(0);
+                  setTabValue(0);
+                  setProfileLoading(true);
+                }
               }}
               className={`flex justify-between items-center ${
                 !profileLoading ? "cursor-pointer" : "cursor-default"

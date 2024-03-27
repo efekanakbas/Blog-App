@@ -6,73 +6,92 @@ import { useFormik } from "formik";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getData, postData } from "@/utils/CRUD";
 import Cookies from "js-cookie";
+import { useGeneral } from "@/contexts/GeneralContext";
+import SkeletonChatInput from "../SkeletonChatInput";
 
 interface MainProps {
   room: String | null;
   socket: any;
-  receiverId: String | null
-  setLeftMessage: React.Dispatch<React.SetStateAction<string>>
+  receiverId: String | null;
+  setLeftMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Main: React.FC<MainProps> = ({ room, socket, receiverId, setLeftMessage }) => {
+const Main: React.FC<MainProps> = ({
+  room,
+  socket,
+  receiverId,
+  setLeftMessage,
+}) => {
   //! States
-  const [messageList, setMessageList] = useState([])
-  const username = Cookies.get('username')
-  const avatar = Cookies.get('avatar')
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["messagesAll"],
+    mutationFn: (obj: any) => {
+      return postData("messages", obj);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["messagesAll"] });
+      // setTimeout(() => {
+      //   setMessageLoading(false)
+      // }, 500);
+    },
+  });
+
+
+  const {messageLoading, setMessageLoading} = useGeneral()
+  const [messageList, setMessageList] = useState([]);
+  const username = Cookies.get("username");
+  const avatar = Cookies.get("avatar");
   const { values, handleChange, handleReset, handleSubmit } = useFormik({
     initialValues: {
       inputValue: "",
     },
-    onSubmit:  (values) => {
-    sendMessage()
+    onSubmit: (values) => {
+      if(values.inputValue.trim().length > 0) {
+        sendMessage();
+      }
     },
-    
   });
-  const replacedRoom = room?.replace('-', "")
 
-
-
-  const { error, data, isFetching, isLoading, refetch } = useQuery({
+  const { error, data, isFetching, isLoading, refetch, isRefetching } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
       return getData(`messages/${room}`);
     },
   });
 
-
- 
   //!
   //todo Functions
   const sendMessage = async () => {
     const messageContent = {
       room: room,
       message: {
-        text: values.inputValue
+        text: values.inputValue,
       },
       user: {
-        isMy: true
-      }
+        isMy: true,
+      },
     };
     const postContent = {
       text: values.inputValue,
-      receiverId: receiverId
-    }
-    await socket.emit("message", messageContent)
-    await postData('messages', postContent)
+      receiverId: receiverId,
+    };
+    await socket.emit("message", messageContent);
+    mutate(postContent)
     //@ts-ignore
     // setMessageList((prev) => [...prev, messageContent])
-    handleReset(values)
-  }
+    handleReset(values);
+  };
   //todo
   //? useEffect
 
   useEffect(() => {
-       //@ts-ignore
+    //@ts-ignore
     socket.on("messageReturn", (data) => {
-      data.message.isMy = data.user.username === username ? true : false
-      setLeftMessage(data)
+      data.message.isMy = data.user.username === username ? true : false;
+      setLeftMessage(data);
       //@ts-ignore
-      setMessageList((prev) => [data,...prev])
+      setMessageList((prev) => [data, ...prev]);
     });
 
     // console.log("deneme")
@@ -85,13 +104,20 @@ const Main: React.FC<MainProps> = ({ room, socket, receiverId, setLeftMessage })
 
   useEffect(() => {
     setMessageList(data);
-  }, [data]);
+    
+    if(!isFetching ) {
+      setMessageLoading(false)
+    }
+    
+    
+    return () => {
+      setMessageLoading(true)
+    }
+  }, [data, setMessageLoading, isFetching]);
 
   useEffect(() => {
-    refetch()
-  }, [refetch, receiverId])
-
- 
+    refetch();
+  }, [refetch, receiverId]);
 
   //?
   //* consoleLogs
@@ -102,81 +128,15 @@ const Main: React.FC<MainProps> = ({ room, socket, receiverId, setLeftMessage })
   // console.log("messageList", messageList);
   // console.log("receiverId", receiverId)
   // console.log("room", room)
+  // console.log("isFEtching", isFetching)
+  // console.log("isLoading", isLoading)
+  console.log("messageLoading", messageLoading)
   //*
   //
 
-  if (isLoading)
+  if (isLoading || messageLoading)
     return (
-      <Box
-        sx={{
-          borderRadius: "0 20px 20px 0",
-          width: "73%",
-          height: "100%",
-          padding: "16px",
-          pt: "0",
-          backgroundColor: "white",
-          position: "relative",
-        }}
-      >
-        <Box
-          sx={{
-            backgroundColor: "white",
-            position: "absolute",
-            bottom: "16px",
-            left: "32px",
-            width: "94%",
-            height: "80px",
-            marginBottom: "16px",
-            borderRadius: "1rem",
-          }}
-        >
-          <Input
-            id="messageInput"
-            onKeyDownHandler={undefined}
-            sx={{ width: "100%", padding: "0 80px", marginTop: "16px" }}
-            size="medium"
-            className=""
-            disabled={isFetching}
-            paddingLeft={false}
-            autoFocus={false}
-            value={values.inputValue}
-            handleChange={handleChange}
-            name="inputValue"
-            type="text"
-            placeholder="Type here..."
-            helperText=""
-            error={false}
-            handleBlur={null}
-          />
-        </Box>
-        <Box
-          sx={{
-            height: "80px",
-            display: "flex",
-            alignItems: "center",
-            flexShrink: "0",
-          }}
-        >
-          <Skeleton
-            variant="text"
-            sx={{
-              fontSize: "1rem",
-              backgroundColor: "rgb(243 244 246)",
-              width: "8rem",
-            }}
-          />
-        </Box>
-        <Skeleton
-          sx={{
-            height: "calc(100% - 80px)",
-            backgroundColor: "rgb(243 244 246)",
-            borderRadius: "1rem",
-            padding: "16px",
-            width: "100%",
-          }}
-          variant="rounded"
-        />
-      </Box>
+      <SkeletonChatInput  />
     );
 
   if (error) return <div>error</div>;
@@ -187,7 +147,9 @@ const Main: React.FC<MainProps> = ({ room, socket, receiverId, setLeftMessage })
       sx={{ borderRadius: "0 20px 20px 0" }}
     >
       <Box className="h-[80px] flex items-center shrink-0">
-        {data[0]?.message?.receiver?.username === username ? data[0]?.user?.username : data[0]?.message?.receiver?.username}
+        {data[0]?.message?.receiver?.username === username
+          ? data[0]?.user?.username
+          : data[0]?.message?.receiver?.username}
       </Box>
       <Box
         sx={{ height: "calc(100% - 80px)" }}
@@ -196,57 +158,62 @@ const Main: React.FC<MainProps> = ({ room, socket, receiverId, setLeftMessage })
         <Box className="w-full mb-[9.5%] rounded-2xl p-4 pt-[52px] flex flex-col-reverse max-h-full overflow-y-auto gap-4 scrollBarHidden">
           {
             //@ts-ignorex
-            messageList?.map((item: any, i, array) => (
-              <Box
-                className={`flex px-8 relative ${
-                  item.message.isMy ? " justify-end" : "justify-start "
-                }`}
-                key={i}
-              >
-                <figure
-                  className={`absolute ${
-                    !item.message.isMy ? "-left-4" : "-right-4"
-                  } top-2`}
-                >
-                  {!item.message.isMy
-                      //@ts-ignore
-                    ? array[i + 1]?.message.isMy !== item.message.isMy && (
-                        <Avatar
-                          alt="user avatar"
-                          src={item.message.receiver.avatar}
-                        />
-                      )
-                          //@ts-ignore
-                    : array[i + 1]?.message.isMy !== item.message.isMy && (
-                       //@ts-ignore
-                       <Avatar alt="User avatar" src={avatar === "null" ? null : avatar} />
-                      )}
-                </figure>
-
-                <Typography
-                  style={{
-                    //@ts-ignore
-                    borderTopLeftRadius:
-                      !item.message.isMy &&
-                          //@ts-ignore
-                      array[i + 1]?.message.isMy !== item.message.isMy &&
-                      "3px",
-                    borderTopRightRadius:
-                      item.message.isMy &&
-                          //@ts-ignore
-                      array[i + 1]?.message.isMy !== item.message.isMy &&
-                      "3px",
-                  }}
-                  className={`flex p-4 rounded-2xl flex-col max-w-[75%] ${
-                    item.message.isMy
-                      ? "bg-blue-600 text-white flex-row-reverse "
-                      : "bg-white "
+            messageList?.filter((item: any) => item.message.text !== "").map(
+              (item: any, i: number, array: any[]) => (
+                <Box
+                  className={`flex px-8 relative ${
+                    item.message.isMy ? "justify-end" : "justify-start"
                   }`}
+                  key={i}
                 >
-                  {item.message.text}
-                </Typography>
-              </Box>
-            ))
+                  <figure
+                    className={`absolute ${
+                      !item.message.isMy ? "-left-4" : "-right-4"
+                    } top-2`}
+                  >
+                    {!item.message.isMy
+                      ? //@ts-ignore
+                        array[i + 1]?.message.isMy !== item.message.isMy && (
+                          <Avatar
+                            alt="user avatar"
+                            src={item.message.receiver.avatar}
+                          />
+                        )
+                      : //@ts-ignore
+                        array[i + 1]?.message.isMy !== item.message.isMy && (
+                          <Avatar
+                            alt="User avatar"
+                            //@ts-ignore
+                            src={avatar === "null" ? null : avatar}
+                          />
+                        )}
+                  </figure>
+            
+                  <Typography
+                    style={{
+                      //@ts-ignore
+                      borderTopLeftRadius:
+                        !item.message.isMy &&
+                        //@ts-ignore
+                        array[i + 1]?.message.isMy !== item.message.isMy &&
+                        "3px",
+                      borderTopRightRadius:
+                        item.message.isMy &&
+                        //@ts-ignore
+                        array[i + 1]?.message.isMy !== item.message.isMy &&
+                        "3px",
+                    }}
+                    className={`flex p-4 rounded-2xl flex-col max-w-[75%] ${
+                      item.message.isMy
+                        ? "bg-blue-600 text-white flex-row-reverse "
+                        : "bg-white "
+                    }`}
+                  >
+                    {item.message.text}
+                  </Typography>
+                </Box>
+              )
+            ) 
           }
 
           <hr className="my-4" />
@@ -257,7 +224,9 @@ const Main: React.FC<MainProps> = ({ room, socket, receiverId, setLeftMessage })
               sx={{ width: "100px", height: "100px" }}
             />
             <Typography sx={{ marginTop: "8px", fontWeight: "bold" }}>
-              {data[0]?.message?.receiver?.username === username ? data[0]?.user?.username : data[0]?.message?.receiver?.username}
+              {data[0]?.message?.receiver?.username === username
+                ? data[0]?.user?.username
+                : data[0]?.message?.receiver?.username}
             </Typography>
             {/* <Typography sx={{ fontSize: "12px" }} className="text-gray-400">
           Developer Manager

@@ -27,6 +27,9 @@ export const GeneralContextProvider = ({
   const [isMe, setIsMe] = useState<null | Boolean>(null)
   const [profileLoading, setProfileLoading] = useState<null | Boolean>(null)
   const [useAvatar, setUseAvatar] = useState(avatar)
+  const [send, setSend] = useState(false)
+  const [messageLoading, setMessageLoading] = useState(true)
+  const [messagesId, setMessagesId] = useState<null | String>(null)
 
  
 
@@ -70,7 +73,13 @@ export const GeneralContextProvider = ({
     profileLoading: profileLoading,
     setProfileLoading: setProfileLoading,
     useAvatar: useAvatar,
-    setUseAvatar: setUseAvatar
+    setUseAvatar: setUseAvatar,
+    send: send,
+    setSend: setSend,
+    messageLoading: messageLoading,
+    setMessageLoading: setMessageLoading,
+    messagesId: messagesId,
+    setMessagesId: setMessagesId
 }
 
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import type { Metadata } from "next";
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
+// import {
+//   dehydrate,
+//   HydrationBoundary,
+//   QueryClient,
+// } from "@tanstack/react-query";
 import MessagesPageLayout from '@/layouts/MessagesPageLayout';
-import { getData } from '@/utils/CRUD';
+// import { getData } from '@/utils/CRUD';
 
 console.log("token", )
 
@@ -24,15 +24,15 @@ interface pageProps {
 const page: React.FC<pageProps> = async () => {
   //! States
 
-  const queryClient = new QueryClient();
+  // const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ["messagesAll"],
-    queryFn: async () => {
+  // await queryClient.prefetchQuery({
+  //   queryKey: ["messagesAll"],
+  //   queryFn: async () => {
   
-      return getData('messages')
-    }
-  });
+  //     return getData('messages')
+  //   }
+  // });
   //!
   //todo Functions
       
@@ -45,9 +45,9 @@ const page: React.FC<pageProps> = async () => {
   //*
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    // <HydrationBoundary state={dehydrate(queryClient)}>
     <MessagesPageLayout/>
-    </HydrationBoundary>
+    // </HydrationBoundary>
   );
 };
 

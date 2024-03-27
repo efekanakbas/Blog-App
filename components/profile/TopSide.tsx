@@ -29,7 +29,8 @@ import { useUserDetail } from "@/contexts/UserDetailContext";
 import IButton from "../Button";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useRouter } from "next/navigation";
-import { patchData, postData } from "@/utils/CRUD";
+import { getData, patchData, postData } from "@/utils/CRUD";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface TopSideProps {
   isLoading: Boolean;
@@ -37,6 +38,26 @@ interface TopSideProps {
 
 const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
   //! States
+
+  const { data } = useQuery({
+    queryKey: ["messagesAll"],
+    queryFn: async () => {
+      return getData("messages");
+    },
+  });
+
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["messagesAll"],
+    mutationFn: (obj: any) => {
+      return postData("messages", obj);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["messagesAll"] });
+      router.push("/messages");
+    },
+  });
+
   const router = useRouter();
   const {
     followersCount,
@@ -48,8 +69,14 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
     username,
     cover,
     avatar,
+    userId,
   } = useUserDetail();
-  const { profileLoading } = useGeneral();
+  const {
+    profileLoading,
+    setSend,
+    setMessageLoading,
+    messageLoading,
+  } = useGeneral();
 
   const name = firstName + " " + lastName;
   const Iavatar = Cookies.get("avatar");
@@ -117,6 +144,21 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
     }
   };
 
+  const handlerMessage = () => {
+    if (!data.some((item: any) => item.message.receiver.userId === userId)) {
+      setMessageLoading(true);
+      setSend(true);
+      mutate({
+        text: "",
+        receiverId: userId,
+      });
+    } else {
+      setMessageLoading(true);
+      setSend(true);
+      router.push("/messages");
+    }
+  };
+
   //todo
   //? useEffect
   useEffect(() => {
@@ -153,8 +195,10 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
   // console.log("isFollowed", isFollowed);
   // console.log("followed", followed)
   // console.log("formik", formik.values.inputValue)
-  console.log("isMe", isMe);
-  console.log("cover", cover)
+  // console.log("isMe", isMe);
+  // console.log("cover", cover)
+  // console.log("data", data)
+  // console.log("messageLoading", messageLoading)
   //*
 
   return (
@@ -188,13 +232,19 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
           )}
           <Image
             onClick={() => {
-              if ( isMe ? Icover !== "null" : cover !== null ) {
+              if (isMe ? Icover !== "null" : cover !== null) {
                 setModalOpen(true);
                 setSizeToggle("cover");
               }
             }}
             className={`rounded-lg object-cover ${
-              isMe ? Icover === "null" ? "cursor-default" : "cursor-pointer" : cover === null ? "cursor-default" : "cursor-pointer"
+              isMe
+                ? Icover === "null"
+                  ? "cursor-default"
+                  : "cursor-pointer"
+                : cover === null
+                ? "cursor-default"
+                : "cursor-pointer"
             }`}
             src={
               isMe
@@ -238,10 +288,24 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
                 sx={{
                   width: "100px",
                   height: "100px",
-                  cursor: isMe ? Iavatar === "null" ? "default" : "pointer" : avatar === null ? "default" : "pointer",
+                  cursor: isMe
+                    ? Iavatar === "null"
+                      ? "default"
+                      : "pointer"
+                    : avatar === null
+                    ? "default"
+                    : "pointer",
                 }}
                 //@ts-ignore
-                src={isMe ? Iavatar === "null" ? null : Iavatar : avatar === null ? null : avatar}
+                src={
+                  isMe
+                    ? Iavatar === "null"
+                      ? null
+                      : Iavatar
+                    : avatar === null
+                    ? null
+                    : avatar
+                }
               />
             </figure>
           )}
@@ -445,7 +509,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
                   type="outlined"
                   buttonType="button"
                   disabled={!!isLoading || !!profileLoading}
-                  handleClick={null}
+                  handleClick={handlerMessage}
                 />
               )}
             </Box>

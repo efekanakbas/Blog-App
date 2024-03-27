@@ -47,7 +47,8 @@ const Search: React.FC<SearchProps> = () => {
     queryKey: ["search"],
     queryFn: async () => {
       return await getData(`search?params=${debouncedValueText}`);
-    }
+    },
+    enabled: debouncedValue
   });
 
   const [isTextFieldDisabled, setIsTextFieldDisabled] = useState(true);
