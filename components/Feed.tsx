@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Card from "./Card";
 import { Avatar, Box, Typography } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Image from "next/image";
@@ -16,11 +15,12 @@ import unlikeSound from "../public/audios/unlikeSound.wav";
 import { useFormik } from "formik";
 import Input from "./Input";
 import PlusOneIcon from "@mui/icons-material/PlusOne";
-import { useGeneral } from "@/contexts/GeneralContext";
 const FeedModal = React.lazy(() => import("./feedModal/FeedModal"));
 import moment from "moment";
 import Skeleton from "@mui/material/Skeleton";
 import Cookies from "js-cookie";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postData } from "@/utils/CRUD";
 
 interface FeedsProps {
   feed: any;
@@ -29,13 +29,15 @@ interface FeedsProps {
 const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
   //! States
   const [isLiked, setIsLiked] = useState(feed.feed.liked);
+  const [likeNumber, setLikeNumber] = useState(feed.feed.likeCount)
   const [play] = useSound(likeSound);
   const [play2] = useSound(unlikeSound);
   const [commentShow, setCommentShow] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [Imoment, setIMoment] = useState<null | string>(null);
-  const avatar = Cookies.get("avatar")
+  const avatar = Cookies.get("avatar");
+  
 
   const { handleChange, handleReset, handleSubmit, values } = useFormik({
     initialValues: {
@@ -46,10 +48,34 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
       handleReset(values);
     },
   });
+
+  const queryClient = useQueryClient();
+  const { data, mutate, isPending } = useMutation({
+    mutationKey: ["feeds"],
+    mutationFn: (obj: any) => {
+      return postData('like', obj) ;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feeds"] });
+    },
+  });
   //!
   //todo Functions
   const likeHandler = () => {
     setIsLiked(!isLiked);
+    if(isLiked) {
+      setLikeNumber(likeNumber - 1)
+      mutate({
+        parentId: feed.feed.feedId,
+        status: 2
+      })
+    } else {
+      setLikeNumber(likeNumber + 1)
+      mutate({
+        parentId: feed.feed.feedId,
+        status: 1
+      })
+    }
   };
 
   const commentsOpenHandler = () => {
@@ -60,6 +86,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
   useEffect(() => {
     setIMoment(moment(feed.feed.createAt).fromNow());
   }, [feed.feed.createAt]);
+
   //?
   //* consoleLogs
   // console.log("selectedIndex", selectedIndex)
@@ -144,7 +171,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
                   alt="Image"
                   fill
                   src={`${item}`}
-                  style={{objectFit: 'cover'}}
+                  style={{ objectFit: "cover" }}
                 />
               </figure>
             ))}
@@ -196,7 +223,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(({ feed }, ref) => {
           </figure>
 
           <Typography className="cursor-pointer">
-            {feed.feed.likeCount}
+            {likeNumber}
           </Typography>
         </Box>
         <Box

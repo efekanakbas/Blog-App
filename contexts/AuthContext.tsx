@@ -20,6 +20,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
+  const queryClient = useQueryClient();
   const router = useRouter()
 
   // const {data, error, isLoading} = useQuery({
@@ -69,6 +70,7 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     Cookies.remove('avatar')
     Cookies.remove('cover')
     router.push('/login')
+    queryClient.clear()
   };
 
   const values = {

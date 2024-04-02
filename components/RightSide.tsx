@@ -41,7 +41,7 @@ const RightSide: React.FC<RightSideProps> = () => {
   // }, [profileLoading, setTabValue]);
   //?
   //* consoleLogs
-  console.log("dataAAA", data)
+  // console.log("dataAAA", data)
   // console.log("profileLoading", profileLoading);
   //*
 
