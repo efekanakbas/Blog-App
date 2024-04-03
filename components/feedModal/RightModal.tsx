@@ -13,6 +13,9 @@ import unlikeSound from "../../public/audios/unlikeSound.wav";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Input from "../Input";
 import { useFormik } from "formik";
+import { UseMutateFunction } from "@tanstack/react-query";
+import FeedComment from "../FeedComment";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 
 interface RightModalProps {
   feed: any;
@@ -20,6 +23,11 @@ interface RightModalProps {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isLiked: boolean;
   setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
+  likeNumber: number;
+  setLikeNumber: React.Dispatch<any>;
+  mutate: UseMutateFunction<any, Error, any, unknown>;
+  commentMutate: UseMutateFunction<any, Error, any, unknown>;
+  profile: Boolean;
 }
 
 const RightModal: React.FC<RightModalProps> = ({
@@ -28,29 +36,79 @@ const RightModal: React.FC<RightModalProps> = ({
   setModalOpen,
   isLiked,
   setIsLiked,
+  likeNumber,
+  setLikeNumber,
+  mutate,
+  commentMutate,
+  profile,
 }) => {
   //! States
+  const [paddingBottom, setPaddingBottom] = useState("24px");
   const [play] = useSound(likeSound);
   const [play2] = useSound(unlikeSound);
+  const [height, setHeight] = useState(window.innerHeight)
 
   const { values, handleChange, handleReset, handleSubmit } = useFormik({
     initialValues: {
       inputValue: "",
     },
     onSubmit: (values) => {
-      console.log(values);
+      commentMutate({
+        parentId: feed.feed.feedId,
+        text: values.inputValue,
+      });
       handleReset(values);
     },
   });
   //!
   //todo Functions
-
+  const handlerClick = () => {
+    setIsLiked(!isLiked);
+    if (isLiked) {
+      play2();
+      setLikeNumber(likeNumber - 1);
+      mutate({
+        parentId: feed.feed.feedId,
+        status: 2,
+        type: "feed",
+      });
+    } else {
+      play();
+      setLikeNumber(likeNumber + 1);
+      mutate({
+        parentId: feed.feed.feedId,
+        status: 1,
+        type: "feed",
+      });
+    }
+  };
   //todo
   //? useEffect
+    
+  useEffect(() => {
+    const handleResize = () => {
+      const innerHeight = window.innerHeight;
+      console.log("indnerSize", innerHeight)
+      if (innerHeight >= 840) {
+        setPaddingBottom("24px");
+      } else if (innerHeight <= 800) {
+        setPaddingBottom("54px");
+      } else {
+        // Dinamik olarak azalan padding hesaplama
+        const dynamicPadding = 24 + ((30 - innerHeight % 100));
+        setPaddingBottom(`${dynamicPadding}px`);
+      }
+    };
 
+    // İlk yüklemede ve pencere boyutu değiştiğinde yeniden hesaplayın
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   //?
   //* consoleLogs
-  console.log("feed", feed);
+  // console.log("feed", feed);
+  // console.log("second", innerHeight)
   //*
 
   return (
@@ -61,7 +119,7 @@ const RightModal: React.FC<RightModalProps> = ({
         display: "flex",
         flexDirection: "column",
         borderLeft: "1px #eeeeee solid",
-        position:'relative'
+        position: "relative",
       }}
     >
       <Box
@@ -104,70 +162,59 @@ const RightModal: React.FC<RightModalProps> = ({
       </Box>
 
       <Typography sx={{ marginTop: "32px" }}>{feed.feed.text}</Typography>
-      <figure
-        onClick={() => {
-          setIsLiked(!isLiked);
-          isLiked ? play2() : play();
-        }}
-        className="mt-5 cursor-pointer"
-      >
-        {isLiked ? (
-          <FavoriteIcon sx={{ color: "#CE3240" }} />
-        ) : (
-          <FavoriteBorderIcon sx={{ color: "#CE3240" }} />
-        )}
-      </figure>
+      <Box className="flex gap-8 mt-6">
+          <Box className="flex gap-1">
+            <figure
+              className="cursor-pointer -translate-y-[2px] "
+              onClick={handlerClick}
+            >
+              {isLiked ? (
+                <FavoriteIcon sx={{ color: "#CE3240" }} onClick={play2} />
+              ) : (
+                <FavoriteBorderIcon sx={{ color: "#CE3240" }} onClick={play} />
+              )}
+            </figure>
+
+            <Typography sx={{ cursor: "pointer", translate: "0 2px" }}>
+              {likeNumber}
+            </Typography>
+          </Box>
+          <Box
+            className="flex gap-1"
+          >
+            <ChatBubbleOutlineIcon />
+            {feed.feed.commentsCount}
+          </Box>
+        </Box>
       <Box
-        className="scrollBarHidden"
+        className="scrollBarStyled2"
         sx={{
           display: "flex",
-          flexDirection: "column",
-          gap: "32px",
-          paddingTop: "32px",
+          flexDirection: "column-reverse",
           overflowY: "auto",
-          paddingBottom: "16px",
+          gap: "2px",
+          maxHeight: "525px",
+          paddingBottom: paddingBottom
         }}
       >
-        {feed.feed.comments.map((item: any, i: number) => (
-          <Box sx={{ position: "relative" }} key={i}>
-            <figure className="absolute top-0 left-0">
-              <Avatar alt="user avatar" src={item.user.avatar} />
-            </figure>
-            <Box
-              sx={{
-                backgroundColor: "#eeeeee",
-                padding: "16px",
-                borderRadius: "16px",
-                marginLeft: "52px",
-              }}
-            >
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Box sx={{ display: "flex", flexDirection: "column" }}>
-                  <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
-                    {item.user.name}
-                  </Typography>
-                  <Typography
-                    sx={{ fontSize: "12px" }}
-                    className="text-gray-500"
-                  >
-                    username
-                  </Typography>
-                </Box>
-                <MoreHorizIcon className="text-gray-400" />
-              </Box>
-              <Typography sx={{ marginTop: "12px" }}>
-                {item.comment.text}
-              </Typography>
-            </Box>
-            <Box sx={{ marginTop: "8px", marginLeft: "52px" }}>
-              Like{" "}
-              <span className="text-blue-500">({item.comment.likesCount})</span>
-              {/* <span className="border-l absolute top-[7px] border-l-gray-300 text-white ms-3 text-[8px]">se</span> */}
-            </Box>
-          </Box>
+        {feed.feed.comments.map((comment: any, i: number) => (
+          <FeedComment
+            comment={comment}
+            key={i}
+            profile={profile}
+            modal={true}
+          />
         ))}
       </Box>
-      <Box sx={{position:'absolute', bottom:'15px', backgroundColor:'white', width:'89.7%', borderRadius:'100px'}}>
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: "15px",
+          backgroundColor: "white",
+          width: "89.7%",
+          borderRadius: "100px",
+        }}
+      >
         <form className="mb-1" onSubmit={handleSubmit}>
           <Input
             id="feedModalInput"
@@ -184,7 +231,7 @@ const RightModal: React.FC<RightModalProps> = ({
             className=""
             placeholder="Type here..."
             helperText=""
-            error= {false}
+            error={false}
             handleBlur={null}
           />
         </form>

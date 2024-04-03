@@ -72,10 +72,9 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
   // console.log("ref", ref);
   // console.log("inView", inView);
   // console.log("data", data.pages[0].feeds[0])
-  console.log("data", data);
+  // console.log("data", data);
   // console.log("profile", profile)
   // console.log("params", params)
-  console.log("isFetching", isFetching)
   // console.log("profileLoading", profileLoading)
   //*
 
@@ -164,9 +163,10 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
                     ref={ref}
                     key={index}
                     feed={feed}
+                    profile= {profile}
                   />
                 ) : (
-                  <Feed key={index} feed={feed} />
+                  <Feed key={index} feed={feed} profile= {profile} />
                 );
               })}
             </React.Fragment>
