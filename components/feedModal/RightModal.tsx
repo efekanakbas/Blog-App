@@ -27,7 +27,8 @@ interface RightModalProps {
   setLikeNumber: React.Dispatch<any>;
   mutate: UseMutateFunction<any, Error, any, unknown>;
   commentMutate: UseMutateFunction<any, Error, any, unknown>;
-  profile: Boolean;
+  profile: boolean;
+  commentDeleteMutate: UseMutateFunction<any, Error, any, unknown>
 }
 
 const RightModal: React.FC<RightModalProps> = ({
@@ -41,6 +42,7 @@ const RightModal: React.FC<RightModalProps> = ({
   mutate,
   commentMutate,
   profile,
+  commentDeleteMutate
 }) => {
   //! States
   const [paddingBottom, setPaddingBottom] = useState("24px");
@@ -203,6 +205,7 @@ const RightModal: React.FC<RightModalProps> = ({
             key={i}
             profile={profile}
             modal={true}
+            commentDeleteMutate={commentDeleteMutate}
           />
         ))}
       </Box>

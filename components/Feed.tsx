@@ -516,6 +516,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
             setLikeNumber={setLikeNumber}
             mutate={mutate}
             commentMutate={commentMutate}
+            commentDeleteMutate = {commentDeleteMutate}
             profile={profile}
           />
         </React.Suspense>

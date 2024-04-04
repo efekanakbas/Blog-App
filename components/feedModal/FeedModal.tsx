@@ -15,7 +15,8 @@ interface FeedModalProps {
   setLikeNumber: React.Dispatch<any>;
   mutate: UseMutateFunction<any, Error, any, unknown>;
   commentMutate: UseMutateFunction<any, Error, any, unknown>;
-  profile: Boolean;
+  profile: boolean;
+  commentDeleteMutate: UseMutateFunction<any, Error, any, unknown>
 }
 
 const FeedModal: React.FC<FeedModalProps> = ({
@@ -30,6 +31,7 @@ const FeedModal: React.FC<FeedModalProps> = ({
   mutate,
   commentMutate,
   profile,
+  commentDeleteMutate
 }) => {
   //! States
 
@@ -82,6 +84,7 @@ const FeedModal: React.FC<FeedModalProps> = ({
           setIsLiked={setIsLiked}
           mutate={mutate}
           commentMutate={commentMutate}
+          commentDeleteMutate = {commentDeleteMutate}
           profile={profile}
         />
       </DialogContent>
