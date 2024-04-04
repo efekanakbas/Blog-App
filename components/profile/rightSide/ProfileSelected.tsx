@@ -160,6 +160,7 @@ const ProfileSelected: React.FC<ProfileSelectedProps> = () => {
                         helperText=""
                         error={false}
                         handleBlur={null}
+                        handleSubmit={undefined}
                       />
                     </form>
                   )}
@@ -219,6 +220,7 @@ const ProfileSelected: React.FC<ProfileSelectedProps> = () => {
                         helperText=""
                         error={false}
                         handleBlur={null}
+                        handleSubmit={undefined}
                       />
                     </form>
                   )}

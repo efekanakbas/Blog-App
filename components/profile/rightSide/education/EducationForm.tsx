@@ -216,6 +216,7 @@ const EducationForm: React.FC<EducationFormProps> = ({ eduEdit }) => {
             helperText=""
             error={false}
             handleBlur={null}
+            handleSubmit={undefined}
           />
         </Box>
 

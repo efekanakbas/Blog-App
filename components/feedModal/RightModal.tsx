@@ -233,6 +233,7 @@ const RightModal: React.FC<RightModalProps> = ({
             helperText=""
             error={false}
             handleBlur={null}
+            handleSubmit={handleSubmit}
           />
         </form>
       </Box>

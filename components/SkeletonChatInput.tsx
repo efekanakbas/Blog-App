@@ -46,6 +46,7 @@ const SkeletonChatInput = () => {
           helperText=""
           error={false}
           handleBlur={null}
+          handleSubmit={undefined}
         />
       </Box>
       <Box

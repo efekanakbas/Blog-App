@@ -86,7 +86,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
   //?
   //* consoleLogs
   //  console.log("token", Cookies.get('token'))
-  console.log("values", values);
+  // console.log("values", values);
   //*
 
   return (
@@ -144,6 +144,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
             helperText={touched.email && errors.email && errors.email}
             error={!!touched.email && !!errors.email}
             handleBlur={handleBlur}
+            handleSubmit={undefined}
           />
         </Box>
 
@@ -171,6 +172,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
             helperText={touched.password && errors.password && errors.password}
             error={!!touched.password && !!errors.password}
             handleBlur={handleBlur}
+            handleSubmit={undefined}
           />
         </Box>
 

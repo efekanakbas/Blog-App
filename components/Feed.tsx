@@ -1,6 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Avatar, Box, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Menu,
+  MenuItem,
+  Popover,
+  Typography,
+} from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Image from "next/image";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -20,12 +27,18 @@ import moment from "moment";
 import Skeleton from "@mui/material/Skeleton";
 import Cookies from "js-cookie";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postData } from "@/utils/CRUD";
+import { deleteData, postData } from "@/utils/CRUD";
 import FeedComment from "./FeedComment";
+import BlockIcon from "@mui/icons-material/Block";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import PersonAddDisabledIcon from "@mui/icons-material/PersonAddDisabled";
+import HandshakeIcon from "@mui/icons-material/Handshake";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Swal from "sweetalert2";
 
 interface FeedsProps {
   feed: any;
-  profile: Boolean;
+  profile: boolean;
 }
 
 const Feed: React.FC<FeedsProps> = React.forwardRef(
@@ -40,6 +53,8 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [Imoment, setIMoment] = useState<null | string>(null);
     const avatar = Cookies.get("avatar");
+    const username = Cookies.get("username");
+    const [isMe, setIsMe] = useState(username === feed.user.username);
 
     const { handleChange, handleReset, handleSubmit, values } = useFormik({
       initialValues: {
@@ -58,11 +73,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
     const { mutate } = useMutation({
       mutationKey: !profile ? ["feeds"] : ["feedsOne"],
       mutationFn: (obj: any) => {
-        if (obj.type === "feed") {
-          return postData("like", obj);
-        } else {
-          return postData("like", obj);
-        }
+        return postData("like", obj);
       },
       onSuccess: () => {
         queryClient.invalidateQueries({
@@ -71,7 +82,54 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
       },
     });
 
-    const { mutate: commentMutate, isPending } = useMutation({
+    const { mutate: mutateDelete } = useMutation({
+      mutationKey: !profile ? ["feeds"] : ["feedsOne"],
+      mutationFn: async (obj: any) => {
+        document.body.style.overflow = "hidden";
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          customClass: {
+            popup: "border-radius-15",
+            confirmButton: "swalButton",
+            cancelButton: "swalButton",
+          },
+          showCancelButton: true,
+          confirmButtonColor: "#1976d2",
+          cancelButtonColor: "#f44336",
+          confirmButtonText: "Delete",
+          backdrop: "rgba(0, 0, 0, 0.5)",
+          didOpen: () => {
+            document.body.style.overflow = "auto";
+          },
+        });
+    
+        if (result.isConfirmed) {
+          document.body.style.overflow = "hidden";
+          await Swal.fire({
+            title: "Deleted!",
+            text: "Your feed has been deleted.",
+            icon: "success",
+            confirmButtonText: "OK!",
+            confirmButtonColor: "#1976d2",
+            didOpen: () => {
+              document.body.style.overflow = "auto";
+            },
+          });
+          // Silme işlemi
+          await deleteData("feeds", obj);
+        }
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: !profile ? ["feeds"] : ["feedsOne"],
+        });
+      },
+    });
+    
+
+    const { mutate: commentMutate } = useMutation({
       mutationKey: !profile ? ["feeds"] : ["feedsOne"],
       mutationFn: (obj: any) => {
         return postData("comment", obj);
@@ -82,6 +140,21 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
         });
       },
     });
+
+    const { mutate: commentDeleteMutate } = useMutation({
+      mutationKey: !profile ? ["feeds"] : ["feedsOne"],
+      mutationFn: (obj: any) => {
+        return deleteData("feeds", obj);
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: !profile ? ["feeds"] : ["feedsOne"],
+        });
+      },
+    });
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
     //!
     //todo Functions
     const likeHandler = () => {
@@ -106,6 +179,14 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
     const commentsOpenHandler = () => {
       setCommentShow(!commentShow);
     };
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+
     //todo
     //? useEffect
     useEffect(() => {
@@ -115,15 +196,18 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
     useEffect(() => {
       setIsLiked(feed.feed.liked);
       setLikeNumber(feed.feed.likeCount);
-    }, [feed]);
+      setIsMe(username === feed.user.username);
+      // setCommentShow(false)
+    }, [feed, username]);
 
     //?
     //* consoleLogs
     // console.log("selectedIndex", selectedIndex)
     // console.log("OPEN", open)
     // console.log("refOOOOO", ref)
-    // console.log("feed", feed)
+    // console.log("feed", feed);
     // console.log("first", feed.feed);
+    // console.log("isMe", isMe);
     //*
 
     return (
@@ -145,7 +229,99 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
               )}
             </Box>
           </Box>
-          <MoreHorizIcon color="primary" />
+          <button
+            id="basic-button"
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+          >
+            <MoreHorizIcon color="primary" />
+          </button>
+          <Menu
+            PaperProps={{
+              style: {
+                borderRadius: "16px",
+                padding: "3px 8px",
+                width: "150px",
+              },
+            }}
+            sx={{ mt: "30px", ml: "20px" }}
+            id="basic-menu"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            // keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            {isMe ? (
+              <Box
+                sx={{ display: "flex", flexDirection: "column", gap: "12px" }}
+              >
+                {/* <MenuItem sx={{ display: "flex", gap: "12px", borderRadius: "16px", color:'gray' }} className="hover:text-gray-900" onClick={handleClose}> <PersonAddIcon/> Follow</MenuItem> */}
+                <MenuItem
+                  sx={{
+                    display: "flex",
+                    gap: "12px",
+                    borderRadius: "16px",
+                    color: "gray",
+                  }}
+                  className="hover:text-gray-900"
+                  onClick={() => {
+                    handleClose();
+                    mutateDelete({
+                      parentId: feed.feed.feedId,
+                      type: "feed",
+                    });
+                  }}
+                >
+                  {" "}
+                  <DeleteIcon /> Delete
+                </MenuItem>
+              </Box>
+            ) : (
+              <Box
+                sx={{ display: "flex", flexDirection: "column", gap: "12px" }}
+              >
+                <MenuItem
+                  sx={{
+                    display: "flex",
+                    gap: "12px",
+                    borderRadius: "16px",
+                    color: "gray",
+                  }}
+                  className="hover:text-gray-900"
+                  onClick={handleClose}
+                >
+                  {" "}
+                  <PersonAddIcon /> Follow
+                </MenuItem>
+                <MenuItem
+                  sx={{
+                    display: "flex",
+                    gap: "12px",
+                    borderRadius: "16px",
+                    color: "gray",
+                  }}
+                  className="hover:text-gray-900"
+                  onClick={handleClose}
+                >
+                  {" "}
+                  <BlockIcon /> Block
+                </MenuItem>
+              </Box>
+            )}
+          </Menu>
         </Box>
 
         <Typography>{feed.feed.text}</Typography>
@@ -292,6 +468,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
                     profile={profile}
                     key={i}
                     modal={false}
+                    commentDeleteMutate = {commentDeleteMutate}
                   />
                 ))}
               </Box>
@@ -319,6 +496,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
                     helperText=""
                     error={false}
                     handleBlur={null}
+                    handleSubmit={handleSubmit}
                   />
                 </form>
               </Box>

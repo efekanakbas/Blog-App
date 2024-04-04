@@ -86,6 +86,7 @@ const Share: React.FC<ShareProps> = ({disabled}) => {
             helperText=""
             error= {false}
             handleBlur={null}
+            handleSubmit={handleSubmit}
           />
         </form>
       </Box>

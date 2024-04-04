@@ -1,8 +1,12 @@
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Menu, MenuItem, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  UseMutateFunction,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { postData } from "@/utils/CRUD";
 //@ts-ignore
 import useSound from "use-sound";
@@ -10,23 +14,33 @@ import useSound from "use-sound";
 import likeSound from "../public/audios/likeSound.wav";
 //@ts-ignore
 import unlikeSound from "../public/audios/unlikeSound.wav";
+import BlockIcon from "@mui/icons-material/Block";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import PersonAddDisabledIcon from "@mui/icons-material/PersonAddDisabled";
+import HandshakeIcon from "@mui/icons-material/Handshake";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Cookies from "js-cookie";
 
 interface FeedCommentProps {
   comment: any;
-  profile: Boolean;
-  modal: Boolean;
+  profile: boolean;
+  modal: boolean;
+  commentDeleteMutate: UseMutateFunction<any, Error, any, unknown>;
 }
 
 const FeedComment: React.FC<FeedCommentProps> = ({
   comment,
   profile,
   modal,
+  commentDeleteMutate,
 }) => {
   //! States
   const [isLiked, setIsLiked] = useState(comment.comment.liked);
   const [likedCount, setLikedCount] = useState(comment.comment.likesCount);
   const [play] = useSound(likeSound);
   const [play2] = useSound(unlikeSound);
+  const username = Cookies.get("username");
+  const [isMe, setIsMe] = useState(username === comment.user.username);
 
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
@@ -44,6 +58,9 @@ const FeedComment: React.FC<FeedCommentProps> = ({
       });
     },
   });
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
   //!
   //todo Functions
   const likeHandler = () => {
@@ -68,16 +85,25 @@ const FeedComment: React.FC<FeedCommentProps> = ({
       });
     }
   };
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   //todo
   //? useEffect
   useEffect(() => {
     setIsLiked(comment.comment.liked);
     setLikedCount(comment.comment.likesCount);
-  }, [comment]);
+    setIsMe(username === comment.user.username);
+  }, [comment, username]);
   //?
   //* consoleLogs
-  //   console.log("comment", comment);
+  console.log("comment", comment);
   //   console.log("isLiked", isLiked);
+  // console.log("isMe", isMe);
   //*
 
   return (
@@ -91,7 +117,7 @@ const FeedComment: React.FC<FeedCommentProps> = ({
       <Box className="flex-1">
         <Box className="bg-gray-100  flex-col p-4  rounded-lg">
           <Box className="flex gap-4 justify-between">
-            <Box sx={{ display: "flex", gap: "8px", alignItems:'center' }}>
+            <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
               {modal && (
                 <figure>
                   <Avatar alt="user avatar" src={comment.user.avatar} />
@@ -107,11 +133,109 @@ const FeedComment: React.FC<FeedCommentProps> = ({
               </Box>
             </Box>
 
-            <Box sx={{ display: "flex", gap: "8px" }}>
+            <Box sx={{ display: "flex", gap: "8px", alignItems: "start" }}>
               <Typography sx={{ color: "gray", fontSize: "13px" }}>
                 {moment(comment.comment.createAt).fromNow()}
               </Typography>
-              <MoreHorizIcon sx={{ color: "gray", translate: "0 -1.5px" }} />
+              <button
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+              >
+                <MoreHorizIcon sx={{ translate: "0px -4px", color: "gray" }} />
+              </button>
+              <Menu
+                PaperProps={{
+                  style: {
+                    borderRadius: "16px",
+                    padding: "3px 8px",
+                    width: "150px",
+                  },
+                }}
+                sx={{ mt: "30px", ml: "15px" }}
+                id="basic-menu"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                // keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                {isMe ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "12px",
+                    }}
+                  >
+                    {/* <MenuItem sx={{ display: "flex", gap: "12px", borderRadius: "16px", color:'gray' }} className="hover:text-gray-900" onClick={handleClose}> <PersonAddIcon/> Follow</MenuItem> */}
+                    <MenuItem
+                      sx={{
+                        display: "flex",
+                        gap: "12px",
+                        borderRadius: "16px",
+                        color: "gray",
+                      }}
+                      className="hover:text-gray-900"
+                      onClick={() => {handleClose(); commentDeleteMutate({
+                        parentId: comment.comment.parentId,
+                        commentId: comment.comment.commentId,
+                        type: "comment"
+                      })}}
+                    >
+                      {" "}
+                      <DeleteIcon /> Delete
+                    </MenuItem>
+                  </Box>
+                ) : (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "12px",
+                    }}
+                  >
+                    <MenuItem
+                      sx={{
+                        display: "flex",
+                        gap: "12px",
+                        borderRadius: "16px",
+                        color: "gray",
+                      }}
+                      className="hover:text-gray-900"
+                      onClick={handleClose}
+                    >
+                      {" "}
+                      <PersonAddIcon /> Follow
+                    </MenuItem>
+                    <MenuItem
+                      sx={{
+                        display: "flex",
+                        gap: "12px",
+                        borderRadius: "16px",
+                        color: "gray",
+                      }}
+                      className="hover:text-gray-900"
+                      onClick={handleClose}
+                    >
+                      {" "}
+                      <BlockIcon /> Block
+                    </MenuItem>
+                  </Box>
+                )}
+              </Menu>
             </Box>
           </Box>
           <Typography className="pt-4">{comment.comment.text}</Typography>

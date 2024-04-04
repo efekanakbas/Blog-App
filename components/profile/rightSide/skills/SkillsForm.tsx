@@ -119,6 +119,7 @@ console.log("mainPool", mainPool)
             helperText=""
             error= {false}
             handleBlur={null}
+            handleSubmit={undefined}
           />
           <Typography
             sx={{ marginTop: "8px", color: "gray", fontSize: "14px" }}
@@ -188,6 +189,7 @@ console.log("mainPool", mainPool)
             helperText=""
             error= {false}
             handleBlur={null}
+            handleSubmit={undefined}
           />
           <Typography
             sx={{ marginTop: "8px", color: "gray", fontSize: "14px" }}
@@ -257,6 +259,7 @@ console.log("mainPool", mainPool)
             helperText=""
             error= {false}
             handleBlur={null}
+            handleSubmit={undefined}
           />
           <Typography
             sx={{ marginTop: "8px", color: "gray", fontSize: "14px" }}

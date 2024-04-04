@@ -133,6 +133,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, firstName, lastNa
             helperText={touched.password && errors.password && errors.password}
             error={!!touched.password && !!errors.password}
             handleBlur={handleBlur}
+            handleSubmit={undefined}
           />
         </Box>
 
@@ -160,6 +161,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, firstName, lastNa
             helperText={touched.confirm && errors.confirm && errors.confirm}
             error={!!touched.confirm && !!errors.confirm}
             handleBlur={handleBlur}
+            handleSubmit={undefined}
           />
         </Box>
 

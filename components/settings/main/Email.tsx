@@ -110,6 +110,7 @@ const Email: React.FC<EmailProps> = () => {
             helperText={touched.email && errors.email && errors.email}
             error={!!touched.email && !!errors.email}
             handleBlur={handleBlur}
+            handleSubmit={undefined}
           />
         </Box>
 
@@ -137,6 +138,7 @@ const Email: React.FC<EmailProps> = () => {
             helperText={touched.confirm && errors.confirm && errors.confirm}
             error={!!touched.confirm && !!errors.confirm}
             handleBlur={handleBlur}
+            handleSubmit={undefined}
           />
         </Box>
 

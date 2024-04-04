@@ -109,6 +109,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, setFirstName, set
               helperText={touched.first && errors.first && errors.first}
               error={!!touched.first && !!errors.first}
               handleBlur={handleBlur}
+              handleSubmit={undefined}
             />
           </Box>
 
@@ -136,6 +137,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, setFirstName, set
               helperText={touched.last && errors.last && errors.last}
               error={!!touched.last && !!errors.last}
               handleBlur={handleBlur}
+              handleSubmit={undefined}
             />
           </Box>
         </Box>
@@ -163,6 +165,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, setFirstName, set
             helperText={touched.email && errors.email && errors.email}
             error={!!touched.email && !!errors.email}
             handleBlur={handleBlur}
+            handleSubmit={undefined}
           />
         </Box>
 
@@ -190,6 +193,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, setFirstName, set
             helperText={touched.username && errors.username && errors.username}
             error={!!touched.username && !!errors.username}
             handleBlur={handleBlur}
+            handleSubmit={undefined}
           />
         </Box>
 

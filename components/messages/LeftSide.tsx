@@ -27,24 +27,39 @@ const LeftSide: React.FC<LeftSideProps> = ({
 }) => {
   //! States
   const Iarray = [1, 2, 3, 4];
-  const { send, setSend, setMessageLoading, setMessagesId, messagesId } = useGeneral();
-  const { userId } = useUserDetail();
-  const username = Cookies.get("username");
+  const {
+    send,
+    setSend,
+    setMessageLoading,
+    setMessagesId,
+    messagesId,
+  } = useGeneral();
+  const { userId, username } = useUserDetail();
+  const Iusername = Cookies.get("username");
   const IuserId = Cookies.get("userId");
-  const { error, data, isFetching, refetch, isLoading } = useQuery({
+  const {
+    error,
+    data,
+    isFetching,
+    refetch,
+    isLoading,
+    isRefetching,
+  } = useQuery({
     queryKey: ["messagesAll"],
     queryFn: async () => {
       return getData("messages");
     },
   });
-  const [selectedMessageIndex, setSelectedMessageIndex] = useState<number | null>(null);
+  const [selectedMessageIndex, setSelectedMessageIndex] = useState<
+    number | null
+  >(null);
   //!
   //todo Functions
   const handleClick = useCallback(
     async (obj: any, i: number) => {
-      setSelectedMessageIndex(i)
-      setMessagesId(obj.message.receiver.userId)
-      setMessageLoading(true)
+      setSelectedMessageIndex(i);
+      setMessagesId(obj.message.receiver.userId);
+      setMessageLoading(true);
       setReceiverId(
         obj?.user?.userId === IuserId
           ? obj?.message?.receiver?.userId
@@ -72,28 +87,42 @@ const LeftSide: React.FC<LeftSideProps> = ({
   }, [leftMessage, refetch]);
 
   useEffect(() => {
+    return () => {
+      setMessagesId("");
+    };
+  }, [setMessagesId]);
+
+  useEffect(() => {
     if (data) {
       // data içindeki mesajları döngüye alarak boş mesajı bul
       data.forEach((message: any, i: number) => {
-        if (message.message.text === "") {
+        console.log("username", username);
+        console.log("receiverUsername", message.message.receiver.username);
+        if (
+          message.message.text === "" &&
+          send &&
+          message.message.receiver.username === username
+        ) {
           // Boş mesajı bulduysak, ona tıklama işlemini gerçekleştir
           handleClick(message, i);
-          return; // İşlemi gerçekleştirdikten sonra döngüyü sonlandır
+          setSend(false);
         } else {
           if (message.message.receiver.userId === userId && send) {
-            messagesId !== message.message.receiver.userId && handleClick(message, i);
+            messagesId !== message.message.receiver.userId &&
+              handleClick(message, i);
             setSend(false);
           }
         }
       });
     }
-  }, [data, handleClick, userId]);
+  }, [data, handleClick, userId, username]);
   //?
   //* consoleLogs
   // console.log("data", data);
   // console.log("room", room)
   // console.log("leftMessage", leftMessage)
   // console.log("messagesId", messagesId)
+  console.log("username", username);
   //*
 
   return (
@@ -183,23 +212,25 @@ const LeftSide: React.FC<LeftSideProps> = ({
           : data?.map((message: Message, i: number) => (
               <Box
                 key={i}
-                className={`relative flex flex-shrink-0 ${
-                  selectedMessageIndex === i ? "" : "cursor-pointer hover:bg-gray-100"
+                className={`relative ${
+                  selectedMessageIndex === i
+                    ? ""
+                    : "cursor-pointer hover:bg-gray-100"
                 } ${selectedMessageIndex === i ? "bg-gray-200" : ""}`}
-                
-  
                 sx={{
                   borderBottom: "1px solid #eeeeee",
                   height: "100px",
                   padding: "20px",
                   backgroundColor: "white",
                   display: "flex",
+                  flexShrink: "0",
                   justifyContent: "start",
                   alignItems: "center",
                   gap: "12px",
                 }}
                 onClick={() => {
-                  messagesId !== message.message.receiver.userId && handleClick(message, i);
+                  messagesId !== message.message.receiver.userId &&
+                    handleClick(message, i);
                 }}
               >
                 <figure>
@@ -212,7 +243,7 @@ const LeftSide: React.FC<LeftSideProps> = ({
                 <Box className="flex flex-col w-full gap-1">
                   <Box className="flex items-center justify-between">
                     <Typography>
-                      {message.user.username === username
+                      {message.user.username === Iusername
                         ? message.message.receiver.username
                         : message.user.username}
                     </Typography>
@@ -242,6 +273,8 @@ const LeftSide: React.FC<LeftSideProps> = ({
                         //@ts-ignore
                         leftMessage.message.text
                       )
+                    ) :  message?.message?.text === "" ? (
+                      <span className="text-bold">Say hello now! 👋</span>
                     ) : message.message.text.length > 75 ? (
                       message.message.text.slice(0, 75) + "..."
                     ) : (

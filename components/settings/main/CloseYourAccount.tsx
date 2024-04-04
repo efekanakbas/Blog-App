@@ -91,6 +91,7 @@ const CloseYourAccount: React.FC<CloseYourAccountProps> = () => {
             helperText={undefined}
             error={undefined}
             handleBlur={handleBlur}
+            handleSubmit={undefined}
           />
         </Box>
 

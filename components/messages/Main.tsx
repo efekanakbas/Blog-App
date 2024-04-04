@@ -252,6 +252,7 @@ const Main: React.FC<MainProps> = ({
               helperText=""
               error={false}
               handleBlur={null}
+              handleSubmit={handleSubmit}
             />
           </form>
         </Box>

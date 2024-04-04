@@ -406,6 +406,7 @@ const ShareModal: React.FC<ModalProps> = ({
                 error= {false}
                 handleBlur={null}
                 ref = {myRef2}
+                handleSubmit={handleSubmit}
               />
             </form>
           </Box>

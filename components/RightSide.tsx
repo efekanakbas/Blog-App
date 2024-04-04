@@ -15,8 +15,13 @@ interface RightSideProps {}
 const RightSide: React.FC<RightSideProps> = () => {
   //! States
   const router = useRouter();
-  const { profileLoading, setProfileLoading, setProfilePage, setTabValue } = useGeneral();
-  const {userId} = useUserDetail()
+  const {
+    profileLoading,
+    setProfileLoading,
+    setProfilePage,
+    setTabValue,
+  } = useGeneral();
+  const { userId, setUserId } = useUserDetail();
   const [showAll, setShowAll] = useState<boolean>(true);
   const [textToggle, setTextToggle] = useState<boolean>(true);
 
@@ -26,6 +31,7 @@ const RightSide: React.FC<RightSideProps> = () => {
       return getData("suggestions");
     },
   });
+  // const [again, setAgain] = useState<boolean | null>(null)
   //!
   //todo Functions
   const clickHandler = () => {
@@ -39,6 +45,16 @@ const RightSide: React.FC<RightSideProps> = () => {
   //     setTabValue(0);
   //   }
   // }, [profileLoading, setTabValue]);
+  
+  useEffect(() => {
+    
+  
+    return () => {
+      setUserId("")
+    }
+  }, [setUserId])
+  
+
   //?
   //* consoleLogs
   // console.log("dataAAA", data)

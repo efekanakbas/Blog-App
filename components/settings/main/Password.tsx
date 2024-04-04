@@ -115,6 +115,7 @@ const Password: React.FC<PasswordProps> = () => {
             helperText={touched.current && errors.current && errors.current}
             error={!!touched.current && !!errors.current}
             handleBlur={handleBlur}
+            handleSubmit={undefined}
           />
         </Box>
 
@@ -142,6 +143,7 @@ const Password: React.FC<PasswordProps> = () => {
             helperText={touched.new && errors.new && errors.new}
             error={!!touched.new && !!errors.new}
             handleBlur={handleBlur}
+            handleSubmit={undefined}
           />
         </Box>
 
@@ -169,6 +171,7 @@ const Password: React.FC<PasswordProps> = () => {
             helperText={touched.confirm && errors.confirm && errors.confirm}
             error={!!touched.confirm && !!errors.confirm}
             handleBlur={handleBlur}
+            handleSubmit={undefined}
           />
         </Box>
         <hr className='mt-2' />

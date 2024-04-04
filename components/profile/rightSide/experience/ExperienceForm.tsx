@@ -219,6 +219,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ expEdit }) => {
             helperText=""
             error={false}
             handleBlur={null}
+            handleSubmit={undefined}
           />
         </Box>
 
@@ -246,6 +247,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ expEdit }) => {
             helperText=""
             error={false}
             handleBlur={null}
+            handleSubmit={undefined}
           />
         </Box>
 
