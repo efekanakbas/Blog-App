@@ -148,7 +148,7 @@ const RightModal: React.FC<RightModalProps> = ({
             }}
           >
             <Typography sx={{ fontWeight: "bold" }}>
-              {feed.user.name}
+              {feed.user.username}
             </Typography>
             <Typography className="text-gray-500" sx={{ fontSize: "14px" }}>
               2 hours ago

@@ -35,6 +35,7 @@ import PersonAddDisabledIcon from "@mui/icons-material/PersonAddDisabled";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 interface FeedsProps {
   feed: any;
@@ -44,6 +45,7 @@ interface FeedsProps {
 const Feed: React.FC<FeedsProps> = React.forwardRef(
   ({ feed, profile }, ref) => {
     //! States
+    const router = useRouter();
     const [isLiked, setIsLiked] = useState(feed.feed.liked);
     const [likeNumber, setLikeNumber] = useState(feed.feed.likeCount);
     const [play] = useSound(likeSound);
@@ -55,6 +57,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
     const avatar = Cookies.get("avatar");
     const username = Cookies.get("username");
     const [isMe, setIsMe] = useState(username === feed.user.username);
+    const [isFollowed, setIsFollowed] = useState(feed.user.followed);
 
     const { handleChange, handleReset, handleSubmit, values } = useFormik({
       initialValues: {
@@ -104,7 +107,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
             document.body.style.overflow = "auto";
           },
         });
-    
+
         if (result.isConfirmed) {
           document.body.style.overflow = "hidden";
           await Swal.fire({
@@ -127,7 +130,6 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
         });
       },
     });
-    
 
     const { mutate: commentMutate } = useMutation({
       mutationKey: !profile ? ["feeds"] : ["feedsOne"],
@@ -187,6 +189,64 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
       setAnchorEl(null);
     };
 
+    const handleFollow = async (string: string) => {
+      try {
+        if (string === "follow") {
+          setIsFollowed(true);
+          await postData("follow", { username: feed.user.username });
+        } else {
+          setIsFollowed(false);
+          await postData("unFollow", { username: feed.user.username });
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+
+    const handleBlock = async () => {
+      try {
+  
+  
+        document.body.style.overflow = "hidden";
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "You can be able to revert this in settings.",
+          icon: "warning",
+          customClass: {
+            popup: "border-radius-15",
+            confirmButton: "swalButton",
+            cancelButton: "swalButton",
+          },
+          showCancelButton: true,
+          confirmButtonColor: "#1976d2",
+          cancelButtonColor: "#f44336",
+          confirmButtonText: "Delete",
+          backdrop: "rgba(0, 0, 0, 0.5)",
+          didOpen: () => {
+            document.body.style.overflow = "auto";
+          },
+        });
+  
+        if (result.isConfirmed) {
+          document.body.style.overflow = "hidden";
+          await Swal.fire({
+            title: "Blocked!",
+            text: "Your have blocked successfully.",
+            icon: "success",
+            confirmButtonText: "OK!",
+            confirmButtonColor: "#1976d2",
+            didOpen: () => {
+              document.body.style.overflow = "auto";
+            },
+          });
+          // Silme işlemi
+          // await deleteData("feeds", obj);
+        } 
+      } catch (error) {
+        console.log("error", error)
+      }
+    }
     //todo
     //? useEffect
     useEffect(() => {
@@ -197,6 +257,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
       setIsLiked(feed.feed.liked);
       setLikeNumber(feed.feed.likeCount);
       setIsMe(username === feed.user.username);
+      setIsFollowed(feed.user.followed);
       // setCommentShow(false)
     }, [feed, username]);
 
@@ -205,7 +266,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
     // console.log("selectedIndex", selectedIndex)
     // console.log("OPEN", open)
     // console.log("refOOOOO", ref)
-    // console.log("feed", feed);
+    console.log("feed", feed);
     // console.log("first", feed.feed);
     // console.log("isMe", isMe);
     //*
@@ -217,7 +278,14 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
       >
         <Box className="flex justify-between items-center mb-4">
           <Box className="flex gap-2 items-center">
-            <Avatar alt="user avatar" src={feed.user.avatar} />
+            <Avatar
+              onClick={() => {
+                router.push(`/profile/${feed.user.username}`);
+              }}
+              sx={{ cursor: "pointer" }}
+              alt="user avatar"
+              src={feed.user.avatar}
+            />
             <Box className="flex flex-col justify-center">
               <Typography>{feed.user.username}</Typography>
               {Imoment ? (
@@ -229,99 +297,144 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
               )}
             </Box>
           </Box>
-          <button
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-          >
-            <MoreHorizIcon color="primary" />
-          </button>
-          <Menu
-            PaperProps={{
-              style: {
-                borderRadius: "16px",
-                padding: "3px 8px",
-                width: "150px",
-              },
-            }}
-            sx={{ mt: "30px", ml: "20px" }}
-            id="basic-menu"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            // keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            {isMe ? (
-              <Box
-                sx={{ display: "flex", flexDirection: "column", gap: "12px" }}
+          {(!profile || (profile && isMe)) && (
+            <Box>
+              <button
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
               >
-                {/* <MenuItem sx={{ display: "flex", gap: "12px", borderRadius: "16px", color:'gray' }} className="hover:text-gray-900" onClick={handleClose}> <PersonAddIcon/> Follow</MenuItem> */}
-                <MenuItem
-                  sx={{
-                    display: "flex",
-                    gap: "12px",
+                <MoreHorizIcon color="primary" />
+              </button>
+              <Menu
+                PaperProps={{
+                  style: {
                     borderRadius: "16px",
-                    color: "gray",
-                  }}
-                  className="hover:text-gray-900"
-                  onClick={() => {
-                    handleClose();
-                    mutateDelete({
-                      parentId: feed.feed.feedId,
-                      type: "feed",
-                    });
-                  }}
-                >
-                  {" "}
-                  <DeleteIcon /> Delete
-                </MenuItem>
-              </Box>
-            ) : (
-              <Box
-                sx={{ display: "flex", flexDirection: "column", gap: "12px" }}
+                    padding: "3px 8px",
+                    width: "150px",
+                  },
+                }}
+                sx={{ mt: "30px", ml: "20px" }}
+                id="basic-menu"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                // keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
               >
-                <MenuItem
-                  sx={{
-                    display: "flex",
-                    gap: "12px",
-                    borderRadius: "16px",
-                    color: "gray",
-                  }}
-                  className="hover:text-gray-900"
-                  onClick={handleClose}
-                >
-                  {" "}
-                  <PersonAddIcon /> Follow
-                </MenuItem>
-                <MenuItem
-                  sx={{
-                    display: "flex",
-                    gap: "12px",
-                    borderRadius: "16px",
-                    color: "gray",
-                  }}
-                  className="hover:text-gray-900"
-                  onClick={handleClose}
-                >
-                  {" "}
-                  <BlockIcon /> Block
-                </MenuItem>
-              </Box>
-            )}
-          </Menu>
+                {isMe ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "12px",
+                    }}
+                  >
+                    {/* <MenuItem sx={{ display: "flex", gap: "12px", borderRadius: "16px", color:'gray' }} className="hover:text-gray-900" onClick={handleClose}> <PersonAddIcon/> Follow</MenuItem> */}
+                    <MenuItem
+                      sx={{
+                        display: "flex",
+                        gap: "8px",
+                        borderRadius: "16px",
+                        color: "gray",
+                        justifyContent: "start",
+                        alignItems: "center",
+                      }}
+                      className="hover:text-gray-900"
+                      onClick={() => {
+                        handleClose();
+                        mutateDelete({
+                          parentId: feed.feed.feedId,
+                          type: "feed",
+                        });
+                      }}
+                    >
+                      {" "}
+                      <DeleteIcon /> Delete
+                    </MenuItem>
+                  </Box>
+                ) : (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "12px",
+                    }}
+                  >
+                    {isFollowed ? (
+                      <MenuItem
+                        sx={{
+                          display: "flex",
+                          gap: "8px",
+                          borderRadius: "16px",
+                          color: "gray",
+                          justifyContent: "start",
+                          alignItems: "center",
+                        }}
+                        className="hover:text-gray-900"
+                        onClick={() => {
+                          handleClose();
+                          handleFollow("unfollow");
+                        }}
+                      >
+                        {" "}
+                        <PersonAddDisabledIcon /> Unollow
+                      </MenuItem>
+                    ) : (
+                      <MenuItem
+                        sx={{
+                          display: "flex",
+                          gap: "8px",
+                          borderRadius: "16px",
+                          color: "gray",
+                          justifyContent: "start",
+                          alignItems: "center",
+                        }}
+                        className="hover:text-gray-900"
+                        onClick={() => {
+                          handleClose();
+                          handleFollow("follow");
+                        }}
+                      >
+                        {" "}
+                        <PersonAddIcon /> Follow
+                      </MenuItem>
+                    )}
+                    <MenuItem
+                      sx={{
+                        display: "flex",
+                        gap: "8px",
+                        borderRadius: "16px",
+                        color: "gray",
+                        justifyContent: "start",
+                        alignItems: "center",
+                      }}
+                      className="hover:text-gray-900"
+                      onClick={() => {
+                        handleClose();
+                        handleBlock()
+                      }}
+                    >
+                      {" "}
+                      <BlockIcon /> Block
+                    </MenuItem>
+                  </Box>
+                )}
+              </Menu>
+            </Box>
+          )}
         </Box>
 
         <Typography>{feed.feed.text}</Typography>
@@ -468,14 +581,18 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
                     profile={profile}
                     key={i}
                     modal={false}
-                    commentDeleteMutate = {commentDeleteMutate}
+                    commentDeleteMutate={commentDeleteMutate}
                   />
                 ))}
               </Box>
 
               <Box className="flex gap-4 mb-2 mt-6 mx-2">
                 <figure>
-                  <Avatar alt="user avatar" src={avatar} />
+                  <Avatar
+                    alt="user avatar"
+                    //@ts-ignore
+                    src={avatar === "null" ? null : avatar}
+                  />
                 </figure>
 
                 <form className="w-full" onSubmit={handleSubmit}>
@@ -516,7 +633,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
             setLikeNumber={setLikeNumber}
             mutate={mutate}
             commentMutate={commentMutate}
-            commentDeleteMutate = {commentDeleteMutate}
+            commentDeleteMutate={commentDeleteMutate}
             profile={profile}
           />
         </React.Suspense>

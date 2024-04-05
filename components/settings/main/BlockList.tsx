@@ -68,7 +68,7 @@ const BlockList: React.FC<BlockListProps> = () => {
       <hr className="mt-6 " />
 
       {data.length === 0 ? (
-        <Box sx={{ paddingTop: "32px" }}>Blocked person not found</Box>
+        <Box sx={{ paddingY: "32px" }}>- Blocked person not found</Box>
       ) : (
         <Box
           className="scrollBarHidden"

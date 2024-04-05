@@ -20,6 +20,8 @@ import PersonAddDisabledIcon from "@mui/icons-material/PersonAddDisabled";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 interface FeedCommentProps {
   comment: any;
@@ -35,12 +37,14 @@ const FeedComment: React.FC<FeedCommentProps> = ({
   commentDeleteMutate,
 }) => {
   //! States
+  const router = useRouter();
   const [isLiked, setIsLiked] = useState(comment.comment.liked);
   const [likedCount, setLikedCount] = useState(comment.comment.likesCount);
   const [play] = useSound(likeSound);
   const [play2] = useSound(unlikeSound);
   const username = Cookies.get("username");
   const [isMe, setIsMe] = useState(username === comment.user.username);
+
 
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
@@ -92,6 +96,8 @@ const FeedComment: React.FC<FeedCommentProps> = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+
   //todo
   //? useEffect
   useEffect(() => {
@@ -110,7 +116,14 @@ const FeedComment: React.FC<FeedCommentProps> = ({
     <Box className={`flex mt-6 gap-3 ${modal ? "pe-[8px]" : "px-2"}`}>
       {!modal && (
         <figure>
-          <Avatar alt="user avatar" src={comment.user.avatar} />
+          <Avatar
+            onClick={() => {
+              router.push(`/profile/${comment.user.username}`);
+            }}
+            sx={{ cursor: "pointer" }}
+            alt="user avatar"
+            src={comment.user.avatar}
+          />
         </figure>
       )}
 
@@ -120,7 +133,14 @@ const FeedComment: React.FC<FeedCommentProps> = ({
             <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
               {modal && (
                 <figure>
-                  <Avatar alt="user avatar" src={comment.user.avatar} />
+                  <Avatar
+                    onClick={() => {
+                      router.push(`/profile/${comment.user.username}`);
+                    }}
+                    sx={{ cursor: "pointer" }}
+                    alt="user avatar"
+                    src={comment.user.avatar}
+                  />
                 </figure>
               )}
               <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -137,7 +157,9 @@ const FeedComment: React.FC<FeedCommentProps> = ({
               <Typography sx={{ color: "gray", fontSize: "13px" }}>
                 {moment(comment.comment.createAt).fromNow()}
               </Typography>
-              <button
+             {
+              !profile ? (<Box>
+                 <button
                 id="basic-button"
                 aria-controls={open ? "basic-menu" : undefined}
                 aria-haspopup="true"
@@ -184,22 +206,94 @@ const FeedComment: React.FC<FeedCommentProps> = ({
                     <MenuItem
                       sx={{
                         display: "flex",
-                        gap: "12px",
+                        gap: "8px",
                         borderRadius: "16px",
                         color: "gray",
+                        justifyContent:'start',
+                        alignItems:'center'
                       }}
                       className="hover:text-gray-900"
-                      onClick={() => {handleClose(); commentDeleteMutate({
-                        parentId: comment.comment.parentId,
-                        commentId: comment.comment.commentId,
-                        type: "comment"
-                      })}}
+                      onClick={() => {
+                        handleClose();
+                        commentDeleteMutate({
+                          parentId: comment.comment.parentId,
+                          commentId: comment.comment.commentId,
+                          type: "comment",
+                        });
+                      }}
                     >
                       {" "}
                       <DeleteIcon /> Delete
                     </MenuItem>
                   </Box>
                 ) : (
+                  <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "12px",
+                  }}
+                >
+                  {/* <MenuItem sx={{ display: "flex", gap: "12px", borderRadius: "16px", color:'gray' }} className="hover:text-gray-900" onClick={handleClose}> <PersonAddIcon/> Follow</MenuItem> */}
+                  <MenuItem
+                    sx={{
+                      display: "flex",
+                      gap: "8px",
+                      borderRadius: "16px",
+                      color: "gray",
+                      justifyContent:'start',
+                      alignItems:'center',
+                    }}
+                    className="hover:text-gray-900"
+                    onClick={() => {
+                      handleClose();
+                      router.push(`/profile/${comment.user.username}`)
+                     
+                    }}
+                  >
+                    {" "}
+                    <AccountCircleIcon /> Profile
+                  </MenuItem>
+                </Box>
+                )}
+              </Menu>
+              </Box>) :isMe &&  (<Box>
+                <button
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+              >
+                <MoreHorizIcon sx={{ translate: "0px -4px", color: "gray" }} />
+              </button>
+              <Menu
+                PaperProps={{
+                  style: {
+                    borderRadius: "16px",
+                    padding: "3px 8px",
+                    width: "150px",
+                  },
+                }}
+                sx={{ mt: "30px", ml: "15px" }}
+                id="basic-menu"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                // keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+               
                   <Box
                     sx={{
                       display: "flex",
@@ -210,32 +304,30 @@ const FeedComment: React.FC<FeedCommentProps> = ({
                     <MenuItem
                       sx={{
                         display: "flex",
-                        gap: "12px",
+                        gap: "8px",
                         borderRadius: "16px",
                         color: "gray",
+                        justifyContent:'start',
+                        alignItems:'center'
                       }}
                       className="hover:text-gray-900"
-                      onClick={handleClose}
-                    >
-                      {" "}
-                      <PersonAddIcon /> Follow
-                    </MenuItem>
-                    <MenuItem
-                      sx={{
-                        display: "flex",
-                        gap: "12px",
-                        borderRadius: "16px",
-                        color: "gray",
+                      onClick={() => {
+                        handleClose();
+                        commentDeleteMutate({
+                          parentId: comment.comment.parentId,
+                          commentId: comment.comment.commentId,
+                          type: "comment",
+                        });
                       }}
-                      className="hover:text-gray-900"
-                      onClick={handleClose}
                     >
                       {" "}
-                      <BlockIcon /> Block
+                      <DeleteIcon /> Delete
                     </MenuItem>
                   </Box>
-                )}
+                
               </Menu>
+              </Box>)
+             }
             </Box>
           </Box>
           <Typography className="pt-4">{comment.comment.text}</Typography>

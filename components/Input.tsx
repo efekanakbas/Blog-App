@@ -45,17 +45,17 @@ const Input = forwardRef(({
   <TextField
   InputProps={{
     endAdornment: (
-      <SendIcon
-        sx={{
-          position: 'absolute',
-          color: value.trim().length > 0 ? '#9ca3af' : 'lightgray',
-          top: '50%',
-          right: '10px',
-          transform: 'translateY(-50%)',
-          cursor: value.trim().length > 0 ? 'pointer' : 'default'
-        }}
-        onClick={value.trim().length > 0 ? handleSubmit : null} // Gönderme işlemini gerçekleştirecek fonksiyonu buraya ekleyin
-      />
+      handleSubmit && <SendIcon
+      sx={{
+        position: 'absolute',
+        color: value.trim().length > 0 ? '#9ca3af' : 'lightgray',
+        top: '50%',
+        right: '10px',
+        transform: 'translateY(-50%)',
+        cursor: value.trim().length > 0 ? 'pointer' : 'default'
+      }}
+      onClick={value.trim().length > 0 ? handleSubmit : null} // Gönderme işlemini gerçekleştirecek fonksiyonu buraya ekleyin
+    />
     ),
     style: {
       borderRadius: "100px",

@@ -149,7 +149,7 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
   if (status === "error") return <h1>Error</h1>;
 
   return (
-    <Box className="flex flex-col gap-7">
+    <Box sx={{display:'flex', flexDirection:'column', gap:"26px"}}>
       {shareShow && <Share disabled={false} />}
       {
         //@ts-ignore

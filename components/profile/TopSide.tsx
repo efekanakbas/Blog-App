@@ -31,6 +31,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { useRouter } from "next/navigation";
 import { getData, patchData, postData } from "@/utils/CRUD";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import BlockIcon from "@mui/icons-material/Block";
+import Swal from "sweetalert2";
 
 interface TopSideProps {
   isLoading: Boolean;
@@ -159,6 +161,51 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
     }
   };
 
+
+  const handleBlock = async () => {
+    try {
+
+
+      document.body.style.overflow = "hidden";
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You can be able to revert this in settings.",
+        icon: "warning",
+        customClass: {
+          popup: "border-radius-15",
+          confirmButton: "swalButton",
+          cancelButton: "swalButton",
+        },
+        showCancelButton: true,
+        confirmButtonColor: "#1976d2",
+        cancelButtonColor: "#f44336",
+        confirmButtonText: "Delete",
+        backdrop: "rgba(0, 0, 0, 0.5)",
+        didOpen: () => {
+          document.body.style.overflow = "auto";
+        },
+      });
+
+      if (result.isConfirmed) {
+        document.body.style.overflow = "hidden";
+        await Swal.fire({
+          title: "Blocked!",
+          text: "Your have blocked successfully.",
+          icon: "success",
+          confirmButtonText: "OK!",
+          confirmButtonColor: "#1976d2",
+          didOpen: () => {
+            document.body.style.overflow = "auto";
+          },
+        });
+        // Silme işlemi
+        // await deleteData("feeds", obj);
+      } 
+    } catch (error) {
+      console.log("error", error)
+    }
+  }
+
   //todo
   //? useEffect
   useEffect(() => {
@@ -261,6 +308,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
         </Box>
       )}
       <Box sx={{ padding: "26px" }}>
+        <Box sx={{ display: "flex", justifyContent:'space-between', alignItems:'center' }}>
         <Box sx={{ display: "flex", gap: "16px" }}>
           {isLoading || profileLoading ? (
             <Skeleton variant="circular" width={100} height={100} />
@@ -434,6 +482,31 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
             )}
           </Box>
         </Box>
+        {
+          !isMe && <Box>
+          {isLoading || profileLoading ? (
+                  null
+              ) : (
+                <Button
+                  disabled={!!isLoading || !!profileLoading}
+                  variant="outlined"
+                  color="error"
+                  style={{
+                    borderRadius: "100px",
+                    height: "48px",
+                    width: "140px",
+                    display: "flex",
+                    gap: "4px",
+                  }}
+                  onClick={handleBlock}
+                >
+                  <BlockIcon />
+                  Block
+                </Button>
+                )}
+                </Box>
+        }
+        </Box>
 
         <hr className="my-8" />
         <Box
@@ -472,7 +545,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
                 <span className="font-bold text-gray-900">
                   {followingsCount}
                 </span>{" "}
-                Followers{" "}
+                Followings{" "}
               </Typography>
             )}
           </Box>
@@ -480,12 +553,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
           {!isMe ? (
             <Box sx={{ display: "flex", gap: "20px", alignItems: "center" }}>
               {isLoading || profileLoading ? (
-                <Skeleton
-                  variant="rounded"
-                  width={120}
-                  height={48}
-                  sx={{ borderRadius: "100px" }}
-                />
+               null
               ) : (
                 <IButton
                   text={followed ? "Unfollow" : "Follow"}
@@ -497,12 +565,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
               )}
 
               {isLoading || profileLoading ? (
-                <Skeleton
-                  variant="rounded"
-                  width={120}
-                  height={48}
-                  sx={{ borderRadius: "100px" }}
-                />
+                null
               ) : (
                 <IButton
                   text="Message"
@@ -514,12 +577,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
               )}
             </Box>
           ) : isLoading || profileLoading ? (
-            <Skeleton
-              variant="rounded"
-              width={140}
-              height={48}
-              sx={{ borderRadius: "100px" }}
-            />
+            null
           ) : (
             <Button
               disabled={!!isLoading || !!profileLoading}
