@@ -80,6 +80,11 @@ body::-webkit-scrollbar {
 }
 
 
+.swal2-container {
+  z-index: 99999 !important; /* İstediğiniz yüksek değeri kullanabilirsiniz */
+}
+
+
 
 
 

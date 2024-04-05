@@ -2,7 +2,7 @@ import { Dialog, DialogContent } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import LeftModal from "./LeftModal";
 import RightModal from "./RightModal";
-import { UseMutateFunction } from "@tanstack/react-query";
+import { InfiniteData, QueryObserverResult, RefetchOptions, UseMutateFunction } from "@tanstack/react-query";
 
 interface FeedModalProps {
   modalOpen: boolean;
@@ -17,6 +17,9 @@ interface FeedModalProps {
   commentMutate: UseMutateFunction<any, Error, any, unknown>;
   profile: boolean;
   commentDeleteMutate: UseMutateFunction<any, Error, any, unknown>
+  refetch: (options?: RefetchOptions | undefined) => Promise<QueryObserverResult<InfiniteData<any, unknown>, Error>>
+  blockedMutate: UseMutateFunction<void, Error, any, unknown>
+  
 }
 
 const FeedModal: React.FC<FeedModalProps> = ({
@@ -31,7 +34,9 @@ const FeedModal: React.FC<FeedModalProps> = ({
   mutate,
   commentMutate,
   profile,
-  commentDeleteMutate
+  commentDeleteMutate,
+  refetch,
+  blockedMutate
 }) => {
   //! States
 
@@ -86,6 +91,8 @@ const FeedModal: React.FC<FeedModalProps> = ({
           commentMutate={commentMutate}
           commentDeleteMutate = {commentDeleteMutate}
           profile={profile}
+          refetch = {refetch}
+          blockedMutate = {blockedMutate}
         />
       </DialogContent>
     </Dialog>

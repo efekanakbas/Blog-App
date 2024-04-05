@@ -31,7 +31,8 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
     isFetchingNextPage,
     error,
     data,
-    isLoading
+    isLoading,
+    refetch
   } = useInfiniteQuery({
     queryKey: !profile ? ["feeds"] : ["feedsOne"],
     queryFn: ({ pageParam }) => {
@@ -164,9 +165,10 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
                     key={index}
                     feed={feed}
                     profile= {profile}
+                    refetch = {refetch}
                   />
                 ) : (
-                  <Feed key={index} feed={feed} profile= {profile} />
+                  <Feed key={index} feed={feed} profile= {profile} refetch = {refetch}/>
                 );
               })}
             </React.Fragment>

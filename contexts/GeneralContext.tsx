@@ -79,7 +79,7 @@ export const GeneralContextProvider = ({
     messageLoading: messageLoading,
     setMessageLoading: setMessageLoading,
     messagesId: messagesId,
-    setMessagesId: setMessagesId
+    setMessagesId: setMessagesId,
 }
 
 

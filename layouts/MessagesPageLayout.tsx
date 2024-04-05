@@ -50,8 +50,8 @@ const MessagesPageLayout: React.FC<MessagesPageLayoutProps> = () => {
   // console.log("data", data)
   // console.log("screen", screen)
   // console.log("room", room)
-  console.log("messageLoading", messageLoading)
-  console.log("loading", loading)
+  // console.log("messageLoading", messageLoading)
+  // console.log("loading", loading)
   //*
 
   return (

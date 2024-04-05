@@ -9,7 +9,7 @@ interface LeftSideProps {
 
 const LeftSide: React.FC<LeftSideProps> = () => {
   //! States
-      const {settingsTabValue, handleChangeSettings, setSettingsTabValue} = useGeneral()
+      const {settingsTabValue, handleChangeSettings} = useGeneral()
   //!
   //todo Functions
   function a11yProps(index: number) {

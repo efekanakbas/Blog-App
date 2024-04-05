@@ -96,8 +96,8 @@ const LeftSide: React.FC<LeftSideProps> = ({
     if (data) {
       // data içindeki mesajları döngüye alarak boş mesajı bul
       data.forEach((message: any, i: number) => {
-        console.log("username", username);
-        console.log("receiverUsername", message.message.receiver.username);
+        // console.log("username", username);
+        // console.log("receiverUsername", message.message.receiver.username);
         if (
           message.message.text === "" &&
           send &&
@@ -118,11 +118,11 @@ const LeftSide: React.FC<LeftSideProps> = ({
   }, [data, handleClick, userId, username]);
   //?
   //* consoleLogs
-  // console.log("data", data);
+  console.log("data", data);
   // console.log("room", room)
   // console.log("leftMessage", leftMessage)
   // console.log("messagesId", messagesId)
-  console.log("username", username);
+  // console.log("username", username);
   //*
 
   return (
@@ -209,7 +209,15 @@ const LeftSide: React.FC<LeftSideProps> = ({
                 </Box>
               </Box>
             ))
-          : data?.map((message: Message, i: number) => (
+          : data?.filter(
+            (item: any) =>
+              !item.user.userDetails.blockedBy.some(
+                (blockedByUser: any) => blockedByUser.username === Iusername
+              ) &&
+              !item.user.userDetails.blocked.some(
+                (blockedUser: any) => blockedUser.username === Iusername
+              )
+          ).map((message: Message, i: number) => (
               <Box
                 key={i}
                 className={`relative ${

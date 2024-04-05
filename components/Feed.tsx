@@ -26,7 +26,7 @@ const FeedModal = React.lazy(() => import("./feedModal/FeedModal"));
 import moment from "moment";
 import Skeleton from "@mui/material/Skeleton";
 import Cookies from "js-cookie";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { InfiniteData, QueryObserverResult, RefetchOptions, useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteData, postData } from "@/utils/CRUD";
 import FeedComment from "./FeedComment";
 import BlockIcon from "@mui/icons-material/Block";
@@ -36,14 +36,16 @@ import HandshakeIcon from "@mui/icons-material/Handshake";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import { useGeneral } from "@/contexts/GeneralContext";
 
 interface FeedsProps {
   feed: any;
   profile: boolean;
+  refetch: (options?: RefetchOptions | undefined) => Promise<QueryObserverResult<InfiniteData<any, unknown>, Error>>
 }
 
 const Feed: React.FC<FeedsProps> = React.forwardRef(
-  ({ feed, profile }, ref) => {
+  ({ feed, profile, refetch }, ref) => {
     //! States
     const router = useRouter();
     const [isLiked, setIsLiked] = useState(feed.feed.liked);
@@ -58,6 +60,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
     const username = Cookies.get("username");
     const [isMe, setIsMe] = useState(username === feed.user.username);
     const [isFollowed, setIsFollowed] = useState(feed.user.followed);
+    const { setSettingsTabValue } = useGeneral();
 
     const { handleChange, handleReset, handleSubmit, values } = useFormik({
       initialValues: {
@@ -155,6 +158,61 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
       },
     });
 
+    const { mutate: blockedMutate } = useMutation({
+      mutationKey: ["blocked"],
+      mutationFn: async (obj: any) => {
+        try {
+          document.body.style.overflow = "hidden";
+          const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "You can be able to revert this in settings.",
+            icon: "warning",
+            customClass: {
+              popup: "border-radius-15",
+              confirmButton: "swalButton",
+              cancelButton: "swalButton",
+            },
+            showCancelButton: true,
+            confirmButtonColor: "#1976d2",
+            cancelButtonColor: "#f44336",
+            confirmButtonText: "Block",
+            backdrop: "rgba(0, 0, 0, 0.5)",
+            didOpen: () => {
+              document.body.style.overflow = "auto";
+            },
+          });
+
+          if (result.isConfirmed) {
+            document.body.style.overflow = "hidden";
+            await Swal.fire({
+              title: "Blocked!",
+              text: "Your have blocked successfully.",
+              icon: "success",
+              confirmButtonText: "OK!",
+              confirmButtonColor: "#1976d2",
+              didOpen: () => {
+                document.body.style.overflow = "auto";
+              },
+            });
+            // Block işlemi
+            await postData("blocked", obj);
+            setModalOpen(false)
+            // setSettingsTabValue(2);
+            // router.push("/settings");
+          }
+        } catch (error) {
+          console.log("error", error);
+        }
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["blocked"] });
+        queryClient.invalidateQueries({
+          queryKey: !profile ? ["feeds"] : ["feedsOne"],
+        });
+        queryClient.invalidateQueries({ queryKey: ["suggestions"] });
+      },
+    });
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     //!
@@ -194,59 +252,17 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
         if (string === "follow") {
           setIsFollowed(true);
           await postData("follow", { username: feed.user.username });
+          await refetch()
         } else {
           setIsFollowed(false);
           await postData("unFollow", { username: feed.user.username });
+          await refetch()
         }
       } catch (error) {
         console.log("error", error);
       }
     };
 
-
-    const handleBlock = async () => {
-      try {
-  
-  
-        document.body.style.overflow = "hidden";
-        const result = await Swal.fire({
-          title: "Are you sure?",
-          text: "You can be able to revert this in settings.",
-          icon: "warning",
-          customClass: {
-            popup: "border-radius-15",
-            confirmButton: "swalButton",
-            cancelButton: "swalButton",
-          },
-          showCancelButton: true,
-          confirmButtonColor: "#1976d2",
-          cancelButtonColor: "#f44336",
-          confirmButtonText: "Delete",
-          backdrop: "rgba(0, 0, 0, 0.5)",
-          didOpen: () => {
-            document.body.style.overflow = "auto";
-          },
-        });
-  
-        if (result.isConfirmed) {
-          document.body.style.overflow = "hidden";
-          await Swal.fire({
-            title: "Blocked!",
-            text: "Your have blocked successfully.",
-            icon: "success",
-            confirmButtonText: "OK!",
-            confirmButtonColor: "#1976d2",
-            didOpen: () => {
-              document.body.style.overflow = "auto";
-            },
-          });
-          // Silme işlemi
-          // await deleteData("feeds", obj);
-        } 
-      } catch (error) {
-        console.log("error", error)
-      }
-    }
     //todo
     //? useEffect
     useEffect(() => {
@@ -424,7 +440,9 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
                       className="hover:text-gray-900"
                       onClick={() => {
                         handleClose();
-                        handleBlock()
+                        blockedMutate({
+                          username: feed.user.username
+                        });
                       }}
                     >
                       {" "}
@@ -556,7 +574,17 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
             className="flex gap-1 cursor-pointer"
           >
             <ChatBubbleOutlineIcon />
-            {feed.feed.commentsCount}
+            {
+              feed.feed.comments.filter(
+                (item: any) =>
+                  !item.user.userDetails.blockedBy.some(
+                    (blockedByUser: any) => blockedByUser.username === username
+                  ) &&
+                  !item.user.userDetails.blocked.some(
+                    (blockedUser: any) => blockedUser.username === username
+                  )
+              ).length
+            }
           </Box>
         </Box>
 
@@ -575,15 +603,28 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
                 }}
                 className="scrollBarStyled2"
               >
-                {feed.feed.comments.map((comment: any, i: number) => (
-                  <FeedComment
-                    comment={comment}
-                    profile={profile}
-                    key={i}
-                    modal={false}
-                    commentDeleteMutate={commentDeleteMutate}
-                  />
-                ))}
+                {feed.feed.comments
+                  .filter(
+                    (item: any) =>
+                      !item.user.userDetails.blockedBy.some(
+                        (blockedByUser: any) =>
+                          blockedByUser.username === username
+                      ) &&
+                      !item.user.userDetails.blocked.some(
+                        (blockedUser: any) => blockedUser.username === username
+                      )
+                  )
+                  .map((comment: any, i: number) => (
+                    <FeedComment
+                      comment={comment}
+                      profile={profile}
+                      key={i}
+                      modal={false}
+                      commentDeleteMutate={commentDeleteMutate}
+                      refetch = {refetch}
+                      blockedMutate = {blockedMutate}
+                    />
+                  ))}
               </Box>
 
               <Box className="flex gap-4 mb-2 mt-6 mx-2">
@@ -635,6 +676,8 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
             commentMutate={commentMutate}
             commentDeleteMutate={commentDeleteMutate}
             profile={profile}
+            refetch = {refetch}
+            blockedMutate = {blockedMutate}
           />
         </React.Suspense>
       </Box>

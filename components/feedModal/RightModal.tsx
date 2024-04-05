@@ -13,9 +13,10 @@ import unlikeSound from "../../public/audios/unlikeSound.wav";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Input from "../Input";
 import { useFormik } from "formik";
-import { UseMutateFunction } from "@tanstack/react-query";
+import { InfiniteData, QueryObserverResult, RefetchOptions, UseMutateFunction } from "@tanstack/react-query";
 import FeedComment from "../FeedComment";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import Cookies from "js-cookie";
 
 interface RightModalProps {
   feed: any;
@@ -28,7 +29,9 @@ interface RightModalProps {
   mutate: UseMutateFunction<any, Error, any, unknown>;
   commentMutate: UseMutateFunction<any, Error, any, unknown>;
   profile: boolean;
-  commentDeleteMutate: UseMutateFunction<any, Error, any, unknown>
+  commentDeleteMutate: UseMutateFunction<any, Error, any, unknown>;
+  refetch: (options?: RefetchOptions | undefined) => Promise<QueryObserverResult<InfiniteData<any, unknown>, Error>>
+  blockedMutate: UseMutateFunction<void, Error, any, unknown>
 }
 
 const RightModal: React.FC<RightModalProps> = ({
@@ -42,13 +45,16 @@ const RightModal: React.FC<RightModalProps> = ({
   mutate,
   commentMutate,
   profile,
-  commentDeleteMutate
+  commentDeleteMutate,
+  refetch,
+  blockedMutate
 }) => {
   //! States
   const [paddingBottom, setPaddingBottom] = useState("24px");
   const [play] = useSound(likeSound);
   const [play2] = useSound(unlikeSound);
-  const [height, setHeight] = useState(window.innerHeight)
+  const [height, setHeight] = useState(window.innerHeight);
+  const username = Cookies.get("username");
 
   const { values, handleChange, handleReset, handleSubmit } = useFormik({
     initialValues: {
@@ -86,18 +92,18 @@ const RightModal: React.FC<RightModalProps> = ({
   };
   //todo
   //? useEffect
-    
+
   useEffect(() => {
     const handleResize = () => {
       const innerHeight = window.innerHeight;
-      console.log("indnerSize", innerHeight)
+      console.log("indnerSize", innerHeight);
       if (innerHeight >= 840) {
         setPaddingBottom("24px");
       } else if (innerHeight <= 800) {
         setPaddingBottom("54px");
       } else {
         // Dinamik olarak azalan padding hesaplama
-        const dynamicPadding = 24 + ((30 - innerHeight % 100));
+        const dynamicPadding = 24 + (30 - (innerHeight % 100));
         setPaddingBottom(`${dynamicPadding}px`);
       }
     };
@@ -165,29 +171,37 @@ const RightModal: React.FC<RightModalProps> = ({
 
       <Typography sx={{ marginTop: "32px" }}>{feed.feed.text}</Typography>
       <Box className="flex gap-8 mt-6">
-          <Box className="flex gap-1">
-            <figure
-              className="cursor-pointer -translate-y-[2px] "
-              onClick={handlerClick}
-            >
-              {isLiked ? (
-                <FavoriteIcon sx={{ color: "#CE3240" }} onClick={play2} />
-              ) : (
-                <FavoriteBorderIcon sx={{ color: "#CE3240" }} onClick={play} />
-              )}
-            </figure>
-
-            <Typography sx={{ cursor: "pointer", translate: "0 2px" }}>
-              {likeNumber}
-            </Typography>
-          </Box>
-          <Box
-            className="flex gap-1"
+        <Box className="flex gap-1">
+          <figure
+            className="cursor-pointer -translate-y-[2px] "
+            onClick={handlerClick}
           >
-            <ChatBubbleOutlineIcon />
-            {feed.feed.commentsCount}
-          </Box>
+            {isLiked ? (
+              <FavoriteIcon sx={{ color: "#CE3240" }} onClick={play2} />
+            ) : (
+              <FavoriteBorderIcon sx={{ color: "#CE3240" }} onClick={play} />
+            )}
+          </figure>
+
+          <Typography sx={{ cursor: "pointer", translate: "0 2px" }}>
+            {likeNumber}
+          </Typography>
         </Box>
+        <Box className="flex gap-1">
+          <ChatBubbleOutlineIcon />
+          {
+            feed.feed.comments.filter(
+              (item: any) =>
+                !item.user.userDetails.blockedBy.some(
+                  (blockedByUser: any) => blockedByUser.username === username
+                ) &&
+                !item.user.userDetails.blocked.some(
+                  (blockedUser: any) => blockedUser.username === username
+                )
+            ).length
+          }
+        </Box>
+      </Box>
       <Box
         className="scrollBarStyled2"
         sx={{
@@ -196,18 +210,30 @@ const RightModal: React.FC<RightModalProps> = ({
           overflowY: "auto",
           gap: "2px",
           maxHeight: "525px",
-          paddingBottom: paddingBottom
+          paddingBottom: paddingBottom,
         }}
       >
-        {feed.feed.comments.map((comment: any, i: number) => (
-          <FeedComment
-            comment={comment}
-            key={i}
-            profile={profile}
-            modal={true}
-            commentDeleteMutate={commentDeleteMutate}
-          />
-        ))}
+        {feed.feed.comments
+          .filter(
+            (item: any) =>
+              !item.user.userDetails.blockedBy.some(
+                (blockedByUser: any) => blockedByUser.username === username
+              ) &&
+              !item.user.userDetails.blocked.some(
+                (blockedUser: any) => blockedUser.username === username
+              )
+          )
+          .map((comment: any, i: number) => (
+            <FeedComment
+              comment={comment}
+              key={i}
+              profile={profile}
+              modal={true}
+              commentDeleteMutate={commentDeleteMutate}
+              refetch = {refetch}
+              blockedMutate = {blockedMutate}
+            />
+          ))}
       </Box>
       <Box
         sx={{

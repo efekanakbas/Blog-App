@@ -78,17 +78,16 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
     setSend,
     setMessageLoading,
     messageLoading,
-  } = useGeneral();
-
-  const name = firstName + " " + lastName;
-  const Iavatar = Cookies.get("avatar");
-  const Icover = Cookies.get("cover");
-  const {
+    setSettingsTabValue,
     tabValue,
     handleChange: handleChange2,
     setProfilePage,
     setVerticalTabValue,
   } = useGeneral();
+
+  const name = firstName + " " + lastName;
+  const Iavatar = Cookies.get("avatar");
+  const Icover = Cookies.get("cover");
   const [formToggle, setFormToggle] = useState(false);
   const [textToggle, setTextToggle] = useState(false);
   const [inputWidth, setInpıtWidth] = useState(75);
@@ -179,7 +178,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
         showCancelButton: true,
         confirmButtonColor: "#1976d2",
         cancelButtonColor: "#f44336",
-        confirmButtonText: "Delete",
+        confirmButtonText: "Block",
         backdrop: "rgba(0, 0, 0, 0.5)",
         didOpen: () => {
           document.body.style.overflow = "auto";
@@ -198,8 +197,10 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
             document.body.style.overflow = "auto";
           },
         });
-        // Silme işlemi
-        // await deleteData("feeds", obj);
+        // Block işlemi
+        await postData("blocked", {username: username});
+        setSettingsTabValue(2)
+        router.push('/settings')
       } 
     } catch (error) {
       console.log("error", error)

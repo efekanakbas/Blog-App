@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import {
+  InfiniteData,
+  QueryObserverResult,
+  RefetchOptions,
   UseMutateFunction,
   useMutation,
   useQueryClient,
@@ -21,13 +24,14 @@ import HandshakeIcon from "@mui/icons-material/Handshake";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 interface FeedCommentProps {
   comment: any;
   profile: boolean;
   modal: boolean;
   commentDeleteMutate: UseMutateFunction<any, Error, any, unknown>;
+  refetch: (options?: RefetchOptions | undefined) => Promise<QueryObserverResult<InfiniteData<any, unknown>, Error>>
+  blockedMutate: UseMutateFunction<void, Error, any, unknown>
 }
 
 const FeedComment: React.FC<FeedCommentProps> = ({
@@ -35,6 +39,8 @@ const FeedComment: React.FC<FeedCommentProps> = ({
   profile,
   modal,
   commentDeleteMutate,
+  refetch,
+  blockedMutate
 }) => {
   //! States
   const router = useRouter();
@@ -44,7 +50,7 @@ const FeedComment: React.FC<FeedCommentProps> = ({
   const [play2] = useSound(unlikeSound);
   const username = Cookies.get("username");
   const [isMe, setIsMe] = useState(username === comment.user.username);
-
+  const [comIsFollowed, setComIsFollowed] = useState<null | any>(null);
 
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
@@ -97,19 +103,41 @@ const FeedComment: React.FC<FeedCommentProps> = ({
     setAnchorEl(null);
   };
 
-
+  const handleFollow = async (string: string) => {
+    try {
+      if (string === "follow") {
+        setComIsFollowed(true);
+        await postData("follow", {
+          username: comment.user.username,
+        });
+        refetch()
+      } else {
+        setComIsFollowed(false);
+        await postData("unFollow", {
+          username: comment.user.username,
+        });
+        refetch()
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   //todo
   //? useEffect
   useEffect(() => {
     setIsLiked(comment.comment.liked);
     setLikedCount(comment.comment.likesCount);
     setIsMe(username === comment.user.username);
-  }, [comment, username]);
+    if(comment.user.followed) {
+      setComIsFollowed(comment.user.followed);
+    }
+  }, [comment, username, setComIsFollowed]);
   //?
   //* consoleLogs
-  console.log("comment", comment);
+  // console.log("comment", comment);
   //   console.log("isLiked", isLiked);
   // console.log("isMe", isMe);
+  // console.log("com", comIsFollowed);
   //*
 
   return (
@@ -157,9 +185,7 @@ const FeedComment: React.FC<FeedCommentProps> = ({
               <Typography sx={{ color: "gray", fontSize: "13px" }}>
                 {moment(comment.comment.createAt).fromNow()}
               </Typography>
-             {
-              !profile ? (<Box>
-                 <button
+              <button
                 id="basic-button"
                 aria-controls={open ? "basic-menu" : undefined}
                 aria-haspopup="true"
@@ -206,11 +232,9 @@ const FeedComment: React.FC<FeedCommentProps> = ({
                     <MenuItem
                       sx={{
                         display: "flex",
-                        gap: "8px",
+                        gap: "12px",
                         borderRadius: "16px",
                         color: "gray",
-                        justifyContent:'start',
-                        alignItems:'center'
                       }}
                       className="hover:text-gray-900"
                       onClick={() => {
@@ -228,106 +252,65 @@ const FeedComment: React.FC<FeedCommentProps> = ({
                   </Box>
                 ) : (
                   <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "12px",
-                  }}
-                >
-                  {/* <MenuItem sx={{ display: "flex", gap: "12px", borderRadius: "16px", color:'gray' }} className="hover:text-gray-900" onClick={handleClose}> <PersonAddIcon/> Follow</MenuItem> */}
-                  <MenuItem
-                    sx={{
-                      display: "flex",
-                      gap: "8px",
-                      borderRadius: "16px",
-                      color: "gray",
-                      justifyContent:'start',
-                      alignItems:'center',
-                    }}
-                    className="hover:text-gray-900"
-                    onClick={() => {
-                      handleClose();
-                      router.push(`/profile/${comment.user.username}`)
-                     
-                    }}
-                  >
-                    {" "}
-                    <AccountCircleIcon /> Profile
-                  </MenuItem>
-                </Box>
-                )}
-              </Menu>
-              </Box>) :isMe &&  (<Box>
-                <button
-                id="basic-button"
-                aria-controls={open ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-              >
-                <MoreHorizIcon sx={{ translate: "0px -4px", color: "gray" }} />
-              </button>
-              <Menu
-                PaperProps={{
-                  style: {
-                    borderRadius: "16px",
-                    padding: "3px 8px",
-                    width: "150px",
-                  },
-                }}
-                sx={{ mt: "30px", ml: "15px" }}
-                id="basic-menu"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                // keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-               
-                  <Box
                     sx={{
                       display: "flex",
                       flexDirection: "column",
                       gap: "12px",
                     }}
                   >
+                    {comIsFollowed ? (
+                      <MenuItem
+                        sx={{
+                          display: "flex",
+                          gap: "12px",
+                          borderRadius: "16px",
+                          color: "gray",
+                        }}
+                        className="hover:text-gray-900"
+                        onClick={() => {
+                          handleClose();
+                          handleFollow("unfollow");
+                        }}
+                      >
+                        {" "}
+                        <PersonAddDisabledIcon /> Unollow
+                      </MenuItem>
+                    ) : (
+                      <MenuItem
+                        sx={{
+                          display: "flex",
+                          gap: "12px",
+                          borderRadius: "16px",
+                          color: "gray",
+                        }}
+                        className="hover:text-gray-900"
+                        onClick={() => {
+                          handleClose();
+                          handleFollow("follow");
+                        }}
+                      >
+                        {" "}
+                        <PersonAddIcon /> Follow
+                      </MenuItem>
+                    )}
                     <MenuItem
                       sx={{
                         display: "flex",
-                        gap: "8px",
+                        gap: "12px",
                         borderRadius: "16px",
                         color: "gray",
-                        justifyContent:'start',
-                        alignItems:'center'
                       }}
                       className="hover:text-gray-900"
-                      onClick={() => {
-                        handleClose();
-                        commentDeleteMutate({
-                          parentId: comment.comment.parentId,
-                          commentId: comment.comment.commentId,
-                          type: "comment",
-                        });
-                      }}
+                      onClick={() => {handleClose(); blockedMutate({
+                        username: comment.user.username
+                      })}}
                     >
                       {" "}
-                      <DeleteIcon /> Delete
+                      <BlockIcon /> Block
                     </MenuItem>
                   </Box>
-                
+                )}
               </Menu>
-              </Box>)
-             }
             </Box>
           </Box>
           <Typography className="pt-4">{comment.comment.text}</Typography>
