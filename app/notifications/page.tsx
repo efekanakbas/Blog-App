@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Metadata } from "next";
 import NotifPageLayout from '@/layouts/NotifPageLayout';
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
-import axios from "axios";
+
 
 
 
@@ -23,15 +18,7 @@ interface pageProps {
 
 const page: React.FC<pageProps> = async  () => {
   //! States
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["notifications"],
-    queryFn: async () => {
-      const {data} = await axios.get("https://65f8a9eedf151452460fdfd4.mockapi.io/notifications");
-     
-      return data;
-    }
-  });
+
   //!
   //todo Functions
       
@@ -44,9 +31,9 @@ const page: React.FC<pageProps> = async  () => {
   //*
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    
       <NotifPageLayout/>
-      </HydrationBoundary>
+     
   );
 };
 

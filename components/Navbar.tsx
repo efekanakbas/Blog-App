@@ -29,6 +29,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import Search from "./Search";
 import Cookies from "js-cookie";
 import { useGeneral } from "@/contexts/GeneralContext";
+import { useQuery } from "@tanstack/react-query";
+import { getData } from "@/utils/CRUD";
 
 const pages = [
   { icon: HomeIcon, title: "Homepage", link: "/" },
@@ -69,6 +71,16 @@ const Navbar: React.FC<NavbarProps> = () => {
   const username = Cookies.get('username')
   const avatar = Cookies.get('avatar')
   const {useAvatar, setUseAvatar} = useGeneral()
+
+
+  const { error, data, isLoading } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: async () => {
+      return getData('notifications?from=navbar')
+    },
+  });
+
+  const myData = data?.filter((item: any) => item.isShown === false)
   //!
   //todo Functions
 
@@ -95,6 +107,8 @@ useEffect(() => {
   //?
   //* consoleLogs
     // console.log("AVATAAAAAAAAR", avatar)
+    // console.log("data", data)
+    // console.log("myData", myData)
   //*
 
   return (
@@ -248,7 +262,12 @@ useEffect(() => {
             }}
           >
             {pages.map((page, i) => (
-              <Link prefetch={true} href={page.link} key={i}>
+              <Link className="relative" prefetch={true} href={page.link} key={i}>
+                {
+                  (page.title === "Notifications" && myData?.length > 0) && <span className="absolute left-[20px] top-[12px] text-red-600 font-bold bg-red-200 p-1 rounded-full h-[20px] w-[20px] flex justify-center items-center">
+                  {myData.length}
+                </span>
+                }
                 <Button
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "#1976D2", display: "flex", gap: "8px" }}

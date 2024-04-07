@@ -3,16 +3,11 @@ import Card from "../Card";
 import { Avatar, Box, Typography } from "@mui/material";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { getData } from "@/utils/CRUD";
 
-interface Notification {
-  id: string;
-  avatar: string;
-  username: string;
-  text: string;
-}
 
 interface MainProps {
-  data: Notification[];
+  
 }
 
 const Main: React.FC<MainProps> = () => {
@@ -20,11 +15,7 @@ const Main: React.FC<MainProps> = () => {
   const { error, data, isLoading } = useQuery({
     queryKey: ["notifications"],
     queryFn: async () => {
-      const response = await axios.get(
-        "https://65f8a9eedf151452460fdfd4.mockapi.io/notifications"
-      );
-
-      return response.data;
+      return getData('notifications?from=notif')
     },
   });
   //!
@@ -35,14 +26,14 @@ const Main: React.FC<MainProps> = () => {
 
   //?
   //* consoleLogs
-    // console.log("data", data)
+    console.log("data", data)
   //*
 
   return (
     <Box sx={{borderRadius:'15px', backgroundColor:'white', padding:'20px', pb:'0'}}>
       <Typography variant="h6">Notifications</Typography>
       <hr className="mt-4" />
-      {data.length === 0 ? (
+      {data?.length === 0 ? (
         <Box sx={{ paddingTop: "32px" }}>Notifications person not found</Box>
       ) : (
         <Box
@@ -54,15 +45,15 @@ const Main: React.FC<MainProps> = () => {
             overflow: "auto",
             maxHeight: "calc(100vh - 190px)",
             paddingTop: "32px",
-            paddingBottom:'12px'
+            paddingBottom:'32px'
           }}
         >
-          {data.map((item: Notification, i: number) => (
+          {data?.map((item: any, i: number) => (
             <Box sx={{ display: "flex", gap: "12px" }} key={i}>
               <Avatar
                 sx={{ width: "70px", height: "70px" }}
                 alt="user avatar"
-                src={item.avatar}
+                src={item.userFrom.avatar}
               />
               <Box
                 sx={{
@@ -72,8 +63,8 @@ const Main: React.FC<MainProps> = () => {
                   justifyContent: "center",
                 }}
               >
-                <Typography variant="h6">{item.username}</Typography>
-                <Typography>{item.text}</Typography>
+                <Typography sx={{fontWeight:"bold"}} variant="h6">{item.userFrom.username}</Typography>
+                <Typography sx={{color:"gray"}} >{`${item.userFrom.username} has followed you!`}</Typography>
               </Box>
             </Box>
           ))}

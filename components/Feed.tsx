@@ -473,8 +473,8 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
 
         {feed?.feed?.images[0]?.endsWith(".pdf") ? (
           <Box sx={{borderRadius:'10px', border:'1px lightgray solid', height:'50px', marginTop:'16px'}}>
-            <Link target="_blank" className="flex justify-center items-center h-full hover:bg-gray-100 rounded-[10px]" href={feed?.feed?.images[0]}>
-            <AttachFileIcon/>
+            <Link target="_blank" className="flex justify-center items-center h-full hover:bg-gray-100 rounded-[10px] gap-2" href={feed?.feed?.images[0]}>
+            <AttachFileIcon color = "warning"/>
            <Typography sx={{fontWeight:'bold'}}>
             {decodeURIComponent(feed?.feed?.images[0].split('/')[feed?.feed?.images[0].split('/').length -1 ].split("-")[feed?.feed?.images[0].split('/')[feed?.feed?.images[0].split('/').length -1 ].split("-").length - 1])}
            </Typography>

@@ -340,6 +340,7 @@ const ShareModal: React.FC<ModalProps> = ({
           inputClick()
         }, 0);
       }
+       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pos4, pos5])
   //?
   //* consoleLogs
@@ -350,8 +351,8 @@ const ShareModal: React.FC<ModalProps> = ({
   // console.log("local", location)
   // console.log("imagePool", imagesPool);
   // console.log("pdf", pdfFile);
-  console.log("pos4", pos4)
-  console.log("pos5", pos5)
+  // console.log("pos4", pos4)
+  // console.log("pos5", pos5)
   //*
 
   return (
