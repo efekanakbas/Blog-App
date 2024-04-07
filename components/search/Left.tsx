@@ -42,7 +42,6 @@ const Left: React.FC<LeftProps> = () => {
         >
           <Tab
             onClick={() => {setSearchTabValue(0)}}
-            href="#skills"
             style={{
               alignItems: "start",
               backgroundColor: searchTabValue === 0 ? "#f0f3ff" : "",
@@ -59,7 +58,6 @@ const Left: React.FC<LeftProps> = () => {
           />
           <Tab
             onClick={() => {setSearchTabValue(1)}}
-            href="#experience"
             style={{
               alignItems: "start",
               backgroundColor: searchTabValue === 1 ? "#f0f3ff" : "",
@@ -75,9 +73,8 @@ const Left: React.FC<LeftProps> = () => {
             }
             {...a11yProps(1)}
           />
-          <Tab
+          {/* <Tab
             onClick={() => {setSearchTabValue(2)}}
-            href="#education"
             style={{
               alignItems: "start",
               backgroundColor: searchTabValue === 2 ? "#f0f3ff" : "",
@@ -94,7 +91,6 @@ const Left: React.FC<LeftProps> = () => {
           />
           <Tab
             onClick={() => {setSearchTabValue(3)}}
-            href="#language"
             style={{
               alignItems: "start",
               backgroundColor: searchTabValue === 3 ? "#f0f3ff" : "",
@@ -108,7 +104,7 @@ const Left: React.FC<LeftProps> = () => {
               </Box>
             }
             {...a11yProps(3)}
-          />
+          /> */}
         </Tabs>
       </Box>
     </Box>

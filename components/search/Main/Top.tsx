@@ -39,13 +39,13 @@ const Top: React.FC<TopProps> = ({ data }) => {
         <hr className="my-4" />
 
         <Box
-          sx={{ display: "flex", flexDirection: "column", gap: "24px", py: 1 }}
+          sx={{ display: "flex", flexDirection: "column", gap: "24px", pt: 1, paddingBottom:'4px' }}
         >
           {data?.length === 0 ? (
             <Typography>Users not found...</Typography>
           ) : (
             data?.slice(0, 4).map((item: dataProps, i: number) => (
-              <Box sx={{ display: "flex", gap: "12px" }} key={i}>
+              <Box sx={{ display: "flex", gap: "12px", }} key={i}>
                 <Avatar
                   sx={{ width: "60px", height: "60px" }}
                   alt="user avatar"
@@ -59,7 +59,7 @@ const Top: React.FC<TopProps> = ({ data }) => {
                   }}
                 >
                   <Typography>
-                    {item.firstName} + {item.lastName}
+                    {item.firstName}  {item.lastName}
                   </Typography>
 
                   <Typography sx={{ fontSize: "14px", color: "gray" }}>

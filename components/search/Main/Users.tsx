@@ -45,7 +45,7 @@ const Users: React.FC<UsersProps> = ({data}) => {
                 <Avatar sx={{width:'60px', height:'60px'}} alt='user avatar' src={item.avatar} />
                 <Box sx={{display:'flex', flexDirection:'column', justifyContent:'center'}}>
                   <Typography>
-                    {item.firstName} + {item.lastName}
+                    {item.firstName}  {item.lastName}
                   </Typography>
 
                   <Typography sx={{fontSize:'14px', color:'gray'}}>
