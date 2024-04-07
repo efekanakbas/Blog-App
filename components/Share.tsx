@@ -15,20 +15,20 @@ import { postData } from "@/utils/CRUD";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface ShareProps {
-  disabled: boolean
+  disabled: boolean;
 }
 
-const Share: React.FC<ShareProps> = ({disabled}) => {
+const Share: React.FC<ShareProps> = ({ disabled }) => {
   //! States
   const queryClient = useQueryClient();
-  const avatar = Cookies.get('avatar')
+  const avatar = Cookies.get("avatar");
   const { values, handleChange, handleReset, handleSubmit } = useFormik({
     initialValues: {
       shareValue: "",
     },
     onSubmit: (values) => {
       mutate({
-        text: values.shareValue
+        text: values.shareValue,
       });
       handleReset(values);
     },
@@ -38,12 +38,14 @@ const Share: React.FC<ShareProps> = ({disabled}) => {
   const [pos1, setPos1] = useState<boolean>(false);
   const [pos2, setPos2] = useState<boolean>(false);
   const [pos3, setPos3] = useState<boolean>(false);
+  const [pos4, setPos4] = useState<boolean>(false);
+  const [pos5, setPos5] = useState<boolean>(false);
   const [inputShow, setInputShow] = useState<boolean>(false);
 
   const { data, mutate, isPending } = useMutation({
     mutationKey: ["feeds"],
     mutationFn: (feeds: any) => {
-      return postData('feeds', feeds) ;
+      return postData("feeds", feeds);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
@@ -65,8 +67,12 @@ const Share: React.FC<ShareProps> = ({disabled}) => {
     <Card>
       <Box className="flex gap-4">
         <figure>
-           {/*@ts-ignore*/}
-        <Avatar style={{width:'45px', height:'45px'}} alt="User avatar" src={avatar === "null" ? null : avatar} />
+          <Avatar
+            style={{ width: "45px", height: "45px" }}
+            alt="User avatar"
+            //@ts-ignore
+            src={avatar === "null" ? null : avatar}
+          />
         </figure>
         <form className="w-full" onSubmit={handleSubmit}>
           <Input
@@ -84,7 +90,7 @@ const Share: React.FC<ShareProps> = ({disabled}) => {
             handleChange={handleChange}
             placeholder="Share something..."
             helperText=""
-            error= {false}
+            error={false}
             handleBlur={null}
             handleSubmit={handleSubmit}
           />
@@ -97,6 +103,7 @@ const Share: React.FC<ShareProps> = ({disabled}) => {
         <Box
           onClick={() => {
             !disabled && setModalOpen(true);
+            setPos5(true);
           }}
           className="flex gap-2 items-center cursor-pointer"
         >
@@ -108,7 +115,8 @@ const Share: React.FC<ShareProps> = ({disabled}) => {
 
         <Box
           onClick={() => {
-            setModalOpen(true);
+            !disabled && setModalOpen(true);
+            setPos4(true);
           }}
           className="flex gap-1 cursor-pointer"
         >
@@ -161,9 +169,13 @@ const Share: React.FC<ShareProps> = ({disabled}) => {
           pos1={pos1}
           pos2={pos2}
           pos3={pos3}
+          pos4={pos4}
+          pos5={pos5}
           setPos1={setPos1}
           setPos2={setPos2}
           setPos3={setPos3}
+          setPos4={setPos4}
+          setPos5={setPos5}
           inputShow={inputShow}
           setInputShow={setInputShow}
         />

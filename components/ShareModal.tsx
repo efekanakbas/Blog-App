@@ -32,6 +32,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postData } from "@/utils/CRUD";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 interface ModalProps {
   modalOpen: boolean;
@@ -39,10 +40,14 @@ interface ModalProps {
   pos1: boolean;
   pos2: boolean;
   pos3: boolean;
+  pos4: boolean;
+  pos5: boolean;
   inputShow: boolean;
   setPos1: Dispatch<SetStateAction<boolean>>;
   setPos2: Dispatch<SetStateAction<boolean>>;
   setPos3: Dispatch<SetStateAction<boolean>>;
+  setPos4: Dispatch<SetStateAction<boolean>>;
+  setPos5: Dispatch<SetStateAction<boolean>>;
   setInputShow: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -52,15 +57,19 @@ const ShareModal: React.FC<ModalProps> = ({
   pos1,
   pos2,
   pos3,
+  pos4,
+  pos5,
   setPos1,
   setPos2,
   setPos3,
+  setPos4,
+  setPos5,
   inputShow,
   setInputShow,
 }) => {
   //! States
-  const avatar = Cookies.get('avatar')
-  const username = Cookies.get('username')
+  const avatar = Cookies.get("avatar");
+  const username = Cookies.get("username");
   const [imagesPool, setImagesPool] = useState<File[]>([]);
   const [hashtagPool, setHashtagPool] = useState<string[]>([]);
   const [mentionPool, setMentionPool] = useState<string[]>([]);
@@ -68,22 +77,24 @@ const ShareModal: React.FC<ModalProps> = ({
   const myRef = useRef(null);
   const myRef2 = useRef(null);
   const queryClient = useQueryClient();
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState("");
   const formData = new FormData();
+  const [pdfFile, setPdfFile] = useState<any | null>(null);
 
   const { values, handleChange, handleReset, handleSubmit } = useFormik({
     initialValues: {
       inputValue: "",
     },
     onSubmit: (values) => {
-      formData.append('text', value);
-      imagesPool.map((item) => (formData.append('images', item)))
-      hashtagPool.map((item) => (formData.append('hashtags', item)))
-      mentionPool.map((item) => (formData.append('mentions', item)))
-      formData.append('location', location)
+      formData.append("text", value);
+      imagesPool.map((item) => formData.append("images", item));
+      formData.append("pdf", pdfFile)
+      hashtagPool.map((item) => formData.append("hashtags", item));
+      mentionPool.map((item) => formData.append("mentions", item));
+      formData.append("location", location);
       mutate(formData);
-      handleZero()
-      setModalOpen(false)
+      handleZero();
+      setModalOpen(false);
     },
   });
 
@@ -112,7 +123,7 @@ const ShareModal: React.FC<ModalProps> = ({
   const { data, mutate, isPending } = useMutation({
     mutationKey: ["feeds"],
     mutationFn: (feeds: any) => {
-      return postData('feeds', feeds) ;
+      return postData("feeds", feeds);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
@@ -122,29 +133,68 @@ const ShareModal: React.FC<ModalProps> = ({
   //!
   //todo Functions
   const uploadImageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileInput = event.target;
     const files = event.target.files;
     if (files && files.length > 0) {
       // Seçilen dosyayı burada işleyebilirsiniz.
       const selectedImage = files[0];
       setImagesPool([...imagesPool, selectedImage]);
+      fileInput.value = "";
     }
   };
 
-  const inputClick = () => {
-    //@ts-ignore
-    document.getElementById("fileInput").click();
+  const inputClick = async () => {
+    if (pdfFile) {
+      document.body.style.overflow = "hidden";
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "If you upload image, your uploaded attachment will be deleted.",
+        icon: "warning",
+        customClass: {
+          popup: "border-radius-15",
+          confirmButton: "swalButton",
+          cancelButton: "swalButton",
+        },
+        showCancelButton: true,
+        confirmButtonColor: "#1976d2",
+        cancelButtonColor: "#f44336",
+        confirmButtonText: "Accept",
+        backdrop: "rgba(0, 0, 0, 0.5)",
+        didOpen: () => {
+          document.body.style.overflow = "auto";
+        },
+      });
+      //@ts-ignore
+      if (result.isConfirmed) {
+        setPdfFile(null);
+        const fileInput = document.getElementById("fileInput");
+        if (fileInput) {
+          setTimeout(() => {
+            fileInput.click();
+          }, 0);
+        } else {
+          console.error("fileInput is null");
+        }
+      }
+    } else {
+      const fileInput = document.getElementById("fileInput");
+      if (fileInput) {
+        fileInput.click();
+      } else {
+        console.error("fileInput is null");
+      }
+    }
   };
 
   const handleScrollToBottom = () => {
     if (myRef.current) {
-       // DOM güncellemesini bekleyin
-       setTimeout(() => {
-         //@ts-ignore
-         myRef.current.scrollTop = myRef.current.scrollHeight;
-       }, 0);
+      // DOM güncellemesini bekleyin
+      setTimeout(() => {
+        //@ts-ignore
+        myRef.current.scrollTop = myRef.current.scrollHeight;
+      }, 0);
     }
-   };
-   
+  };
 
   const handleScrollToTop = () => {
     if (myRef.current) {
@@ -169,6 +219,8 @@ const ShareModal: React.FC<ModalProps> = ({
       setPos1(false);
       setPos2(false);
       setPos3(false);
+      setPos4(false);
+      setPos5(false);
       handleReset(values);
     }, 300);
   };
@@ -197,36 +249,109 @@ const ShareModal: React.FC<ModalProps> = ({
     } else if (pos3) {
       setLocation(values.inputValue);
     }
-    handleReset(values); 
+    handleReset(values);
     if (!pos3) {
       handleScrollToBottom();
     } else {
       handleScrollToTop();
     }
-  }
+  };
 
   const handleZero = () => {
-      handleReset(values)
-      setValue("")
-      setHashtagPool([])
-      setImagesPool([])
-      setMentionPool([])
-      setInputShow(false)
-      setLocation("")
-  }
+    handleReset(values);
+    setValue("");
+    setHashtagPool([]);
+    setImagesPool([]);
+    setMentionPool([]);
+    setInputShow(false);
+    setLocation("");
+    setPdfFile(null)
+  };
 
-   //@ts-ignore
-   const focus = () => setTimeout((myRef2?.current?.focus()), (0))
+  //@ts-ignore
+  const focus = () => setTimeout(myRef2?.current?.focus(), 0);
+
+  const handleAttachment = async () => {
+    if (imagesPool.length > 0) {
+      document.body.style.overflow = "hidden";
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "If you upload attachment, your uploaded images will be deleted.",
+        icon: "warning",
+        customClass: {
+          popup: "border-radius-15",
+          confirmButton: "swalButton",
+          cancelButton: "swalButton",
+        },
+        showCancelButton: true,
+        confirmButtonColor: "#1976d2",
+        cancelButtonColor: "#f44336",
+        confirmButtonText: "Accept",
+        backdrop: "rgba(0, 0, 0, 0.5)",
+        didOpen: () => {
+          document.body.style.overflow = "auto";
+        },
+      });
+      //@ts-ignore
+      if (result.isConfirmed) {
+        setImagesPool([]);
+        const attachmentInput = document.getElementById("attachmentInput");
+        if (attachmentInput) {
+          setTimeout(() => {
+            attachmentInput.click();
+          }, 0);
+        } else {
+          console.error("attachmentInput is null");
+        }
+      }
+    } else {
+      const attachmentInput = document.getElementById("attachmentInput");
+      if (attachmentInput) {
+        attachmentInput.click();
+      } else {
+        console.error("attachmentInput is null");
+      }
+    }
+  };
+
+  const uploadAttachmentHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    console.log("1");
+    const fileInput = event.target;
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      // Seçilen dosyayı burada işleyebilirsiniz.
+      const selectedImage = files[0];
+      console.log("selectedImage", selectedImage);
+      setPdfFile(selectedImage);
+      fileInput.value = "";
+    }
+  };
   //todo
   //? useEffect
-
+    useEffect(() => {
+      if(pos4) {
+        setTimeout(() => {
+          handleAttachment()
+        }, 0);
+      } else if(pos5) {
+        setTimeout(() => {
+          inputClick()
+        }, 0);
+      }
+    }, [pos4, pos5])
   //?
   //* consoleLogs
-    // console.log("values", values)
-    // console.log("images", imagesPool)
-    // console.log("HAshtag", hashtagPool)
-    // console.log("mention", mentionPool)
-    // console.log("local", location)
+  // console.log("values", values)
+  // console.log("images", imagesPool)
+  // console.log("HAshtag", hashtagPool)
+  // console.log("mention", mentionPool)
+  // console.log("local", location)
+  // console.log("imagePool", imagesPool);
+  // console.log("pdf", pdfFile);
+  console.log("pos4", pos4)
+  console.log("pos5", pos5)
   //*
 
   return (
@@ -264,8 +389,12 @@ const ShareModal: React.FC<ModalProps> = ({
       >
         <Box className="flex mb-8 gap-6 ml-[14px] items-center">
           <figure>
-             {/*@ts-ignore*/}
-        <Avatar style={{width:'70px', height:'70px'}} alt="User avatar" src={avatar === "null" ? null : avatar} />
+            <Avatar
+              style={{ width: "70px", height: "70px" }}
+              alt="User avatar"
+              //@ts-ignore
+              src={avatar === "null" ? null : avatar}
+            />
           </figure>
           <Box className="flex flex-col">
             <Typography sx={{ fontWeight: "bold" }}>{username}</Typography>
@@ -276,7 +405,9 @@ const ShareModal: React.FC<ModalProps> = ({
           <TextField
             name="textValue"
             value={value}
-            onChange={(e) => {setValue(e.target.value)}}
+            onChange={(e) => {
+              setValue(e.target.value);
+            }}
             className="w-full rounded-lg "
             id="standard-multiline-static"
             label="Share something..."
@@ -306,6 +437,31 @@ const ShareModal: React.FC<ModalProps> = ({
                   <AddIcon sx={{ color: "white", fontSize: "120px" }} />
                 </button>
               )}
+            </Box>
+          )}
+          {pdfFile && (
+            <Box
+              sx={{
+                width: "100%",
+                height: "50px",
+                backgroundColor: "#F3F4F6",
+                marginTop: "32px",
+                borderRadius: "8px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "relative",
+              }}
+            >
+              <button
+                onClick={() => {
+                  setPdfFile(null);
+                }}
+                className="absolute right-3 top-3"
+              >
+                <CloseIcon />
+              </button>
+              <Typography className="text-blue-600">{pdfFile.name}</Typography>
             </Box>
           )}
           {hashtagPool.length > 0 && (
@@ -384,13 +540,13 @@ const ShareModal: React.FC<ModalProps> = ({
                 event.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
 
                 if (values.inputValue.length > 0) {
-                  handleInput()
+                  handleInput();
                 }
               }}
             >
               <Input
                 id="shareModalInput"
-                onKeyDownHandler = {undefined}
+                onKeyDownHandler={undefined}
                 disabled={false}
                 sx={null}
                 size="small"
@@ -403,9 +559,9 @@ const ShareModal: React.FC<ModalProps> = ({
                 placeholder="Type..."
                 className="w-full"
                 helperText=""
-                error= {false}
+                error={false}
                 handleBlur={null}
-                ref = {myRef2}
+                ref={myRef2}
                 handleSubmit={handleSubmit}
               />
             </form>
@@ -432,7 +588,14 @@ const ShareModal: React.FC<ModalProps> = ({
             <Typography className="none450v2">Image</Typography>
           </Box>
 
-          <Box className="flex gap-1 cursor-pointer">
+          <Box onClick={handleAttachment} className="flex gap-1 cursor-pointer">
+            <input
+              id="attachmentInput"
+              type="file"
+              accept="application/pdf"
+              style={{ display: "none" }}
+              onChange={uploadAttachmentHandler}
+            />
             <figure className="scale450v2">
               <AttachFileIcon color="warning" />
             </figure>
@@ -441,7 +604,8 @@ const ShareModal: React.FC<ModalProps> = ({
 
           <Box
             onClick={() => {
-              setInputShow(true), setPos1(true), setPos2(false), setPos3(false); focus()
+              setInputShow(true), setPos1(true), setPos2(false), setPos3(false);
+              focus();
             }}
             className="flex gap-1 cursor-pointer"
           >
@@ -453,7 +617,8 @@ const ShareModal: React.FC<ModalProps> = ({
 
           <Box
             onClick={() => {
-              setInputShow(true), setPos1(false), setPos2(true), setPos3(false); focus()
+              setInputShow(true), setPos1(false), setPos2(true), setPos3(false);
+              focus();
             }}
             className="flex gap-1 cursor-pointer"
           >
@@ -465,7 +630,8 @@ const ShareModal: React.FC<ModalProps> = ({
 
           <Box
             onClick={() => {
-              setInputShow(true), setPos1(false), setPos2(false), setPos3(true); focus()
+              setInputShow(true), setPos1(false), setPos2(false), setPos3(true);
+              focus();
             }}
             className="flex gap-1 cursor-pointer"
           >
@@ -489,7 +655,7 @@ const ShareModal: React.FC<ModalProps> = ({
           size="large"
           variant="outlined"
           onClick={handleSubmit}
-          disabled={value.length<1}
+          disabled={value.length < 1}
         >
           Share
         </Button>

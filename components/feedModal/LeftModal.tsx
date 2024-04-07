@@ -19,7 +19,9 @@ const LeftModal: React.FC<LeftModalProps> = ({
 
   const imagesItem = images.map((item, i) => ({
     original: `${item}`,
+    originalAlt: "image",
     thumbnail: "https://picsum.photos/id/1018/250/150/",
+    originalClass: "image-gallery"
   }));
   //!
   //todo Functions
@@ -37,8 +39,7 @@ const LeftModal: React.FC<LeftModalProps> = ({
       className="scrollBarHidden"
       sx={{
         width: { xs: "100%", md: "63%" },
-        overflow: "auto",
-        position: "relative",
+        backgroundColor:'black'
       }}
     >
       <CloseIcon
@@ -62,7 +63,6 @@ const LeftModal: React.FC<LeftModalProps> = ({
         useBrowserFullscreen={false}
         items={imagesItem}
         additionalClass="imageGalery"
-        
       />
     </Box>
   );

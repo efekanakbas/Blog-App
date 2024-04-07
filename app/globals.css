@@ -73,11 +73,7 @@ body::-webkit-scrollbar {
       color-stop(0.86, #aaa)); /* Gri tonu */
 }
 
-.image-gallery {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+
 
 
 .swal2-container {

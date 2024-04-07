@@ -58,6 +58,7 @@ const FeedModal: React.FC<FeedModalProps> = ({
           borderRadius: "15px",
           padding: "0px",
           overflow: "hidden",
+          height:'auto'
         },
       }}
       maxWidth="lg"
@@ -71,8 +72,11 @@ const FeedModal: React.FC<FeedModalProps> = ({
         sx={{
           display: { xs: "block", md: "flex" },
           padding: "0",
-          overflow: { xs: "auto", md: "hidden" },
+          overflow: { xs: "auto", md: "auto" },
+          minHeight:"64.5vh",
+          // maxHeight:"85vh",
         }}
+        className="scrollBarStyled2"
       >
         <LeftModal
           images={feed.feed.images}

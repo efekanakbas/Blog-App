@@ -5,6 +5,7 @@ const nextConfig = {
     domains: ["res.cloudinary.com"], 
  },
   webpack: (config, { isServer }) => {
+    config.resolve.alias.canvas = false;
     config.module.rules.push({
       test: /\.(wav|mp3)$/i,
       use: [

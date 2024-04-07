@@ -26,7 +26,13 @@ const FeedModal = React.lazy(() => import("./feedModal/FeedModal"));
 import moment from "moment";
 import Skeleton from "@mui/material/Skeleton";
 import Cookies from "js-cookie";
-import { InfiniteData, QueryObserverResult, RefetchOptions, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  InfiniteData,
+  QueryObserverResult,
+  RefetchOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { deleteData, postData } from "@/utils/CRUD";
 import FeedComment from "./FeedComment";
 import BlockIcon from "@mui/icons-material/Block";
@@ -36,12 +42,19 @@ import HandshakeIcon from "@mui/icons-material/Handshake";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import { useGeneral } from "@/contexts/GeneralContext";
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import Link from "next/link";
+
+
+
+
 
 interface FeedsProps {
   feed: any;
   profile: boolean;
-  refetch: (options?: RefetchOptions | undefined) => Promise<QueryObserverResult<InfiniteData<any, unknown>, Error>>
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<InfiniteData<any, unknown>, Error>>;
 }
 
 const Feed: React.FC<FeedsProps> = React.forwardRef(
@@ -60,7 +73,6 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
     const username = Cookies.get("username");
     const [isMe, setIsMe] = useState(username === feed.user.username);
     const [isFollowed, setIsFollowed] = useState(feed.user.followed);
-    const { setSettingsTabValue } = useGeneral();
 
     const { handleChange, handleReset, handleSubmit, values } = useFormik({
       initialValues: {
@@ -196,7 +208,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
             });
             // Block işlemi
             await postData("blocked", obj);
-            setModalOpen(false)
+            setModalOpen(false);
             // setSettingsTabValue(2);
             // router.push("/settings");
           }
@@ -252,16 +264,18 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
         if (string === "follow") {
           setIsFollowed(true);
           await postData("follow", { username: feed.user.username });
-          await refetch()
+          await refetch();
         } else {
           setIsFollowed(false);
           await postData("unFollow", { username: feed.user.username });
-          await refetch()
+          await refetch();
         }
       } catch (error) {
         console.log("error", error);
       }
     };
+
+   
 
     //todo
     //? useEffect
@@ -282,7 +296,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
     // console.log("selectedIndex", selectedIndex)
     // console.log("OPEN", open)
     // console.log("refOOOOO", ref)
-    console.log("feed", feed);
+    // console.log("feed", feed);
     // console.log("first", feed.feed);
     // console.log("isMe", isMe);
     //*
@@ -441,7 +455,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
                       onClick={() => {
                         handleClose();
                         blockedMutate({
-                          username: feed.user.username
+                          username: feed.user.username,
                         });
                       }}
                     >
@@ -457,13 +471,21 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
 
         <Typography>{feed.feed.text}</Typography>
 
-        {
-          //@ts-ignore
+        {feed?.feed?.images[0]?.endsWith(".pdf") ? (
+          <Box sx={{borderRadius:'10px', border:'1px lightgray solid', height:'50px', marginTop:'16px'}}>
+            <Link target="_blank" className="flex justify-center items-center h-full hover:bg-gray-100 rounded-[10px]" href={feed?.feed?.images[0]}>
+            <AttachFileIcon/>
+           <Typography sx={{fontWeight:'bold'}}>
+            {decodeURIComponent(feed?.feed?.images[0].split('/')[feed?.feed?.images[0].split('/').length -1 ].split("-")[feed?.feed?.images[0].split('/')[feed?.feed?.images[0].split('/').length -1 ].split("-").length - 1])}
+           </Typography>
+            </Link>
+          </Box>
+        ) : (
           feed.feed.images?.length > 0 && (
             <Box
               style={{
                 display: "grid",
-                //@ts-ignore
+
                 gridTemplateColumns:
                   feed.feed.images.length === 4
                     ? "repeat(2, 1fr)"
@@ -472,8 +494,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
                 marginTop: "16px",
               }}
             >
-              {/*@ts-ignore*/}
-              {feed.feed.images.map((item, i, arr) => (
+              {feed.feed.images.map((item: any, i: number, arr: any) => (
                 <figure
                   key={i}
                   className={`relative w-full ${
@@ -517,7 +538,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
               ))}
             </Box>
           )
-        }
+        )}
 
         {feed?.feed?.hashtags?.length > 0 ||
         feed?.feed?.mentions?.length > 0 ? (
@@ -621,8 +642,8 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
                       key={i}
                       modal={false}
                       commentDeleteMutate={commentDeleteMutate}
-                      refetch = {refetch}
-                      blockedMutate = {blockedMutate}
+                      refetch={refetch}
+                      blockedMutate={blockedMutate}
                     />
                   ))}
               </Box>
@@ -676,8 +697,8 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
             commentMutate={commentMutate}
             commentDeleteMutate={commentDeleteMutate}
             profile={profile}
-            refetch = {refetch}
-            blockedMutate = {blockedMutate}
+            refetch={refetch}
+            blockedMutate={blockedMutate}
           />
         </React.Suspense>
       </Box>
