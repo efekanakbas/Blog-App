@@ -1,12 +1,14 @@
 import Card from '@/components/Card';
 import { Box, InputLabel, Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from "formik";
 import validationSchema from "../../../schemas/settingsPasswordSchema";
 import Input from '@/components/Input';
 import Button from '@/components/Button';
 import { patchData } from '@/utils/CRUD';
 import toast from 'react-hot-toast';
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 interface PasswordProps {
   // Define props here
@@ -39,6 +41,10 @@ const Password: React.FC<PasswordProps> = () => {
   });
 
   const auth = !!errors.current || !!errors.new || !!errors.confirm || values.current.length === 0 || values.new.length === 0 || values.confirm.length === 0
+
+  const [toggle1, setToggle1] = useState(false);
+  const [toggle2, setToggle2] = useState(false);
+  const [toggle3, setToggle3] = useState(false);
   //!
   //todo Functions
       const handlePatch = async (obj: any) => {
@@ -91,7 +97,19 @@ const Password: React.FC<PasswordProps> = () => {
         }}
       >
       
-        <Box>
+      <Box sx={{ position: "relative" }}>
+          <figure
+            onClick={() => {
+              setToggle1(!toggle1);
+            }}
+            className="absolute right-[51.5%] top-[40px] z-50 text-gray-500 cursor-pointer"
+          >
+            {!toggle1 ? (
+              <VisibilityIcon sx={{ width: "30px", height: "30px" }} />
+            ) : (
+              <VisibilityOffIcon sx={{ width: "30px", height: "30px" }} />
+            )}
+          </figure>
           <InputLabel
             sx={{ marginBottom: "8px", color: "black" }}
             htmlFor="currentInput"
@@ -108,7 +126,7 @@ const Password: React.FC<PasswordProps> = () => {
             value={values.current}
             paddingLeft={false}
             className=""
-            type="password"
+            type= {!toggle1 ? "password" : "text"}
             autoFocus={false}
             name="current"
             placeholder="Password"
@@ -119,7 +137,19 @@ const Password: React.FC<PasswordProps> = () => {
           />
         </Box>
 
-        <Box>
+        <Box sx={{ position: "relative" }}>
+          <figure
+            onClick={() => {
+              setToggle2(!toggle2);
+            }}
+            className="absolute right-[51.5%] top-[40px] z-50 text-gray-500 cursor-pointer"
+          >
+            {!toggle2 ? (
+              <VisibilityIcon sx={{ width: "30px", height: "30px" }} />
+            ) : (
+              <VisibilityOffIcon sx={{ width: "30px", height: "30px" }} />
+            )}
+          </figure>
           <InputLabel
             sx={{ marginBottom: "8px", color: "black" }}
             htmlFor="newInput"
@@ -136,7 +166,7 @@ const Password: React.FC<PasswordProps> = () => {
             value={values.new}
             paddingLeft={false}
             className=""
-            type="email"
+            type= {!toggle2 ? "password" : "text"}
             autoFocus={false}
             name="new"
             placeholder="Password"
@@ -147,7 +177,19 @@ const Password: React.FC<PasswordProps> = () => {
           />
         </Box>
 
-        <Box>
+        <Box sx={{ position: "relative" }}>
+          <figure
+            onClick={() => {
+              setToggle3(!toggle3);
+            }}
+            className="absolute right-[51.5%] top-[40px] z-50 text-gray-500 cursor-pointer"
+          >
+            {!toggle3 ? (
+              <VisibilityIcon sx={{ width: "30px", height: "30px" }} />
+            ) : (
+              <VisibilityOffIcon sx={{ width: "30px", height: "30px" }} />
+            )}
+          </figure>
           <InputLabel
             sx={{ marginBottom: "8px", color: "black" }}
             htmlFor="confirmInput"
@@ -164,7 +206,7 @@ const Password: React.FC<PasswordProps> = () => {
             value={values.confirm}
             paddingLeft={false}
             className=""
-            type="email"
+            type= {!toggle3 ? "password" : "text"}
             autoFocus={false}
             name="confirm"
             placeholder="Confirm"

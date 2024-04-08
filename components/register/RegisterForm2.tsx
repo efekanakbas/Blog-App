@@ -7,23 +7,30 @@ import Input from "../Input";
 import Link from "next/link";
 import validationSchema from "../../schemas/register2Schema";
 import { useAuth } from "@/contexts/AuthContext";
-import WestIcon from '@mui/icons-material/West';
-import dynamic from 'next/dynamic'
+import WestIcon from "@mui/icons-material/West";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { postData } from "@/utils/CRUD";
-
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 interface RegisterFormProps {
-  setToggle: React.Dispatch<React.SetStateAction<boolean>>
-  firstName: String
-  lastName: String
-  email: String
-  username: String
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
+  firstName: String;
+  lastName: String;
+  email: String;
+  username: String;
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, firstName, lastName, email, username}) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({
+  setToggle,
+  firstName,
+  lastName,
+  email,
+  username,
+}) => {
   //! States
-  const router = useRouter()
+  const router = useRouter();
   const {
     values,
     handleChange,
@@ -35,7 +42,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, firstName, lastNa
   } = useFormik({
     initialValues: {
       password: "",
-      confirm: ""
+      confirm: "",
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -45,50 +52,63 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, firstName, lastNa
         email: email,
         username: username,
         password: values.password,
-        confirm: values.confirm
+        confirm: values.confirm,
       });
       // handleReset(values);
     },
   });
-  const auth = !!errors.password || !!errors.confirm  || values.password.length === 0 || values.confirm.length === 0 
-  
+  const auth =
+    !!errors.password ||
+    !!errors.confirm ||
+    values.password.length === 0 ||
+    values.confirm.length === 0;
 
-  const {signin} = useAuth()
+  const [toggle1, setToggle1] = useState(false);
+  const [toggle2, setToggle2] = useState(false);
   //!
   //todo Functions
   const registerHandler = async (obj: any) => {
     try {
-     await postData('register', obj)
-     router.push('/confirm')
-     handleReset(values);
+      await postData("register", obj);
+      router.push("/confirm");
+      handleReset(values);
     } catch (error) {
-       console.log("error", error)
-       //@ts-ignore
-       toast.error(error.response.data.message)
+      console.log("error", error);
+      //@ts-ignore
+      toast.error(error.response.data.message);
     }
- }
+  };
   //todo
   //? useEffect
 
   //?
   //* consoleLogs
-  
+
   //*
 
   return (
-    <Box sx={{ height: "100%", padding: "95px 150px", position:'relative' }}>
-      <button title="Back to register page" onClick={() => {setToggle(false)}} className="absolute left-[4em] top-[7em]">
-        <WestIcon color="primary"/>
+    <Box sx={{ height: "100%", padding: "95px 150px", position: "relative" }}>
+      <button
+        title="Back to register page"
+        onClick={() => {
+          setToggle(false);
+        }}
+        className="absolute left-[4em] top-[7em]"
+      >
+        <WestIcon color="primary" />
       </button>
-      <Box sx={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-      <figure className="bg-blue-100 inline-flex p-2 rounded-xl">
-        <AcUnitIcon sx={{ width: "40px", height: "40px" }} color="primary" />
-      </figure>
-      <Typography sx={{color:'gray'}} >
-      2/3
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <figure className="bg-blue-100 inline-flex p-2 rounded-xl">
+          <AcUnitIcon sx={{ width: "40px", height: "40px" }} color="primary" />
+        </figure>
+        <Typography sx={{ color: "gray" }}>2/3</Typography>
       </Box>
-      
 
       <Box
         sx={{
@@ -109,7 +129,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, firstName, lastNa
           handleSubmit();
         }}
       >
-        <Box>
+        <Box sx={{ position: "relative" }}>
+          <figure
+            onClick={() => {
+              setToggle1(!toggle1);
+            }}
+            className="absolute right-4 top-[40px] z-50 text-gray-500 cursor-pointer"
+          >
+            {!toggle1 ? (
+              <VisibilityIcon sx={{ width: "30px", height: "30px" }} />
+            ) : (
+              <VisibilityOffIcon sx={{ width: "30px", height: "30px" }} />
+            )}
+          </figure>
           <InputLabel
             sx={{ marginBottom: "8px", color: "black" }}
             htmlFor="passwordInput"
@@ -126,7 +158,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, firstName, lastNa
             value={values.password}
             paddingLeft={false}
             className=""
-            type="password"
+            type= {!toggle1 ? "password" : "text"}
             autoFocus={false}
             name="password"
             placeholder="Password"
@@ -137,7 +169,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, firstName, lastNa
           />
         </Box>
 
-        <Box>
+        <Box sx={{ position: "relative" }}>
+          <figure
+            onClick={() => {
+              setToggle2(!toggle2);
+            }}
+            className="absolute right-4 top-[40px] z-50 text-gray-500 cursor-pointer"
+          >
+            {!toggle2 ? (
+              <VisibilityIcon sx={{ width: "30px", height: "30px" }} />
+            ) : (
+              <VisibilityOffIcon sx={{ width: "30px", height: "30px" }} />
+            )}
+          </figure>
           <InputLabel
             sx={{ marginBottom: "8px", color: "black" }}
             htmlFor="confirmInput"
@@ -154,7 +198,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, firstName, lastNa
             value={values.confirm}
             paddingLeft={false}
             className=""
-            type="password"
+            type= {!toggle2 ? "password" : "text"}
             autoFocus={false}
             name="confirm"
             placeholder="Username"
@@ -165,12 +209,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, firstName, lastNa
           />
         </Box>
 
-
         <Button
           type="submit"
           disabled={auth}
           style={{
-            backgroundColor: auth  ? "" : "#1976D2",
+            backgroundColor: auth ? "" : "#1976D2",
             padding: "13px 0",
             borderRadius: "100px",
           }}

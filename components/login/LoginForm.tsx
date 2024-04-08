@@ -11,6 +11,8 @@ import { postData } from "@/utils/CRUD";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 interface LoginFormProps {
   // Define props here
@@ -50,6 +52,8 @@ const LoginForm: React.FC<LoginFormProps> = () => {
     !!errors.password ||
     values.email.length === 0 ||
     values.password.length === 0;
+  
+    const [toggle, setToggle] = useState(false)
   //!
   //todo Functions
   const loginHandler = async (obj: any) => {
@@ -148,7 +152,10 @@ const LoginForm: React.FC<LoginFormProps> = () => {
           />
         </Box>
 
-        <Box>
+        <Box sx={{position:'relative'}}>
+        <figure onClick={() => {setToggle(!toggle)}} className="absolute right-4 top-[40px] z-50 text-gray-500 cursor-pointer">
+            {!toggle ? <VisibilityIcon sx={{width:"30px", height:'30px'}}/> : <VisibilityOffIcon sx={{width:"30px", height:'30px'}}/>}
+          </figure>
           <InputLabel
             sx={{ marginBottom: "8px", color: "black" }}
             htmlFor="passwordInput"
@@ -165,7 +172,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
             value={values.password}
             paddingLeft={false}
             className=""
-            type="password"
+            type= {!toggle ? "password" : "text"}
             autoFocus={false}
             name="password"
             placeholder="Password"
@@ -176,7 +183,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
           />
         </Box>
 
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
@@ -197,11 +204,12 @@ const LoginForm: React.FC<LoginFormProps> = () => {
               Forgot?
             </Link>
           </Box>
-        </Box>
+        </Box> */}
         <Button
           type="submit"
           disabled={auth}
           style={{
+            marginTop: "24px",
             backgroundColor: auth ? "" : "#1976D2",
             padding: "13px 0",
             borderRadius: "100px",
