@@ -158,7 +158,7 @@ useEffect(() => {
                   borderRadius: "15px",
                 },
               }}
-              id="menu-appbar"
+              // id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: "bottom",
@@ -290,7 +290,7 @@ useEffect(() => {
                 },
               }}
               sx={{ mt: "45px" }}
-              id="menu-appbar"
+              // id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: "top",

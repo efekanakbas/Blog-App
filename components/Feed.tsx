@@ -330,9 +330,10 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
           {(!profile || (profile && isMe)) && (
             <Box>
               <button
-                id="feedButton"
+                // id="feedButton"
                 type="button"
                 name="feed-button"
+                aria-label="Menu Button"
                 aria-controls={open ? "basic-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
