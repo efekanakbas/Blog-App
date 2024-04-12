@@ -30,6 +30,9 @@ const MessagesPageLayout: React.FC<MessagesPageLayoutProps> = () => {
   const [receiverId, setReceiverId] = useState<String | null>(null);
   const [leftMessage, setLeftMessage] = useState("");
   const [loading, setLoading] = useState(true)
+  const [selectedMessageIndex, setSelectedMessageIndex] = useState<
+    number | null
+  >(null);
   //!
   //todo Functions
 
@@ -58,28 +61,36 @@ const MessagesPageLayout: React.FC<MessagesPageLayoutProps> = () => {
     <Box
       className="flex flex-1 rounded-lg gap-0"
       sx={{
-        margin: "95px 0 28px 0",
+        margin: {xs: "84px 0 28px 0", md: "95px 0 28px 0"},
         padding: { xs: "0", md: "0 50px", lg: "0 50px", xl: "0 214px" },
-        height: "calc(100vh - 123px)",
+        height: {xs: "calc(100vh - 113px)", md:"calc(100vh - 123px)"},
       }}
     >
       <LeftSide
+        screen={screen}
         setScreen={setScreen}
         room={room}
         setRoom={setRoom}
         socket={socket}
         setReceiverId={setReceiverId}
         leftMessage={leftMessage}
+        selectedMessageIndex = {selectedMessageIndex}
+        setSelectedMessageIndex = {setSelectedMessageIndex}
       />
-      {loading ? <SkeletonChatInput/> : screen ? (
+      {loading ? <SkeletonChatInput screen = {screen} /> : screen ? (
         <Main
+          screen = {screen}
+          setScreen={setScreen}
+          setRoom = {setRoom}
+          setReceiverId = {setReceiverId}
           room={room}
           socket={socket}
           receiverId={receiverId}
           setLeftMessage={setLeftMessage}
+          setSelectedMessageIndex = {setSelectedMessageIndex}
         />
       ) : (
-        <BlankMain />
+        <BlankMain screen = {screen} />
       )}
     </Box>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Popper from "@mui/material/Popper";
+import Popover from "@mui/material/Popover";
 import { Box, Fade, InputAdornment, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import SearchIcon from "@mui/icons-material/Search";
@@ -15,11 +15,11 @@ interface dataProps {
   name: string;
 }
 
-interface SearchProps {
+interface SearchMiniProps {
   data: dataProps[];
 }
 
-const Search: React.FC<SearchProps> = () => {
+const SearchMini: React.FC<SearchMiniProps> = () => {
   //! States
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -48,7 +48,7 @@ const Search: React.FC<SearchProps> = () => {
     queryFn: async () => {
       return await getData(`search?params=${debouncedValueText}`);
     },
-    enabled: debouncedValue
+    enabled: debouncedValue,
   });
 
   const [isTextFieldDisabled, setIsTextFieldDisabled] = useState(true);
@@ -61,6 +61,14 @@ const Search: React.FC<SearchProps> = () => {
   //todo Functions
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleZero = () => {
+    setDebouncedValue(false);
+    handleReset(values);
+    setTimeout(() => {
+      setMyData([]);
+    }, 500);
   };
 
   //todo
@@ -110,76 +118,63 @@ const Search: React.FC<SearchProps> = () => {
   //*
 
   return (
-    <Box sx={{ display: { xs: "none", md: "flex" } }}>
+    <Box sx={{ display: { xs: "flex", md: "none" } }}>
       <form id={id} style={{ position: "relative" }} onSubmit={handleSubmit}>
         <figure
           style={{
             position: "absolute",
             color: "gray",
-            top: "9px",
-            left: "10px",
+            top: "10px",
+            left: "18px",
           }}
         >
           <SearchIcon
-            sx={{ display: { xs: "none", md: "block" } }}
+            sx={{ display: { xs: "block", md: "none" } }}
             style={{ fontSize: "22px" }}
           />
         </figure>
         <TextField
-          autoComplete="off"
-          disabled={isTextFieldDisabled}
-          placeholder="Search"
-          name="searchValue"
-          type="text"
-          value={values.searchValue}
-          onChange={(event) => {
-            handleChange(event);
-            if (event.target.value.length > 0) {
-              handleClick(event as any);
-            }
-          }}
-          size="small"
-          id="outlinedInput"
-          variant="outlined"
           InputProps={{
-            startAdornment: (
-              <InputAdornment
-                position="start"
-                style={{ marginLeft: "15px" }}
-              ></InputAdornment>
-            ),
             style: {
               borderRadius: "25px",
               outline: "none",
+              paddingLeft: "18px",
             },
           }}
+          placeholder="Search"
+          sx={{
+            display: { xs: "flex", md: "none" },
+            width: "150px",
+            transform: "translateX(10px)",
+            mb: "5px",
+          }}
+          name="searchValue"
+          type="text"
+          value={values.searchValue}
+          onChange={handleChange}
+          size="small"
+          id="outlined-basic"
+          variant="outlined"
         />
       </form>
-      <Popper
-        style={{ zIndex: 10000 }}
+      <Popover
+        style={{ zIndex: 10000, marginTop:"28px" }}
         id={id}
         open={open}
+        onClose={handleZero}
         anchorEl={anchorEl}
-        transition
       >
-        {({ TransitionProps }) => (
-          <Fade {...TransitionProps} timeout={350}>
+     
             <Box
-              onMouseLeave={() => {
-                setDebouncedValue(false);
-                handleReset(values);
-                setTimeout(() => {
-                  setMyData([]);
-                }, 500);
-              }}
+              
               sx={{
-                marginTop: "15.4px",
+                // marginTop: "124px",
                 backgroundColor: "white",
                 boxShadow:
                   "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
-                width: "20rem",
-                transform: "translateX(-18px)",
-                borderRadius: "0 0 15px 15px",
+                width: "12.8rem",
+                // transform: "translateX(16px)",
+                borderRadius: "15px",
                 display: "flex",
               }}
             >
@@ -190,8 +185,8 @@ const Search: React.FC<SearchProps> = () => {
                 handleReset={handleReset}
                 values={values}
                 debouncedValueText={debouncedValueText}
-                mini = {false}
-                handleZero={() => {}}
+                mini={true}
+                handleZero = {handleZero}
               />
 
               {/* <SearchBox
@@ -212,11 +207,10 @@ const Search: React.FC<SearchProps> = () => {
                 debouncedValueText={debouncedValueText}
               /> */}
             </Box>
-          </Fade>
-        )}
-      </Popper>
+         
+      </Popover>
     </Box>
   );
 };
 
-export default Search;
+export default SearchMini;

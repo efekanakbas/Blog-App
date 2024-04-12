@@ -3,9 +3,10 @@ import React from "react";
 
 interface SearchSkeletonProps {
   key: number;
+  mini: boolean
 }
 
-const SearchSkeleton: React.FC<SearchSkeletonProps> = () => {
+const SearchSkeleton: React.FC<SearchSkeletonProps> = ({mini}) => {
   //! States
 
   //!
@@ -36,9 +37,9 @@ const SearchSkeleton: React.FC<SearchSkeletonProps> = () => {
           justifyContent: "center",
         }}
       >
-        <Skeleton variant="text" sx={{ fontSize: "1rem", width: "150px" }} />
+        <Skeleton variant="text" sx={{ fontSize: "1rem", width: mini ? "80px" : "150px" }} />
 
-        <Skeleton variant="text" sx={{ fontSize: "14px", width: "150px" }} />
+        <Skeleton variant="text" sx={{ fontSize: "14px", width: mini ? "80px" : "150px" }} />
       </Box>
     </Box>
   );

@@ -186,7 +186,9 @@ const FeedComment: React.FC<FeedCommentProps> = ({
                 {moment(comment.comment.createAt).fromNow()}
               </Typography>
               <button
-                id="basic-button"
+                id="commentButton"
+                type="button"
+                name="comment-button"
                 aria-controls={open ? "basic-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}

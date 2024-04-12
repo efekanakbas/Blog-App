@@ -86,7 +86,7 @@ const LeftSide: React.FC<LeftSideProps> = () => {
             }
             {...a11yProps(2)}
           />
-          <Tab
+          {/* <Tab
             style={{
               alignItems: "start",
               backgroundColor: settingsTabValue === 3 ? "#f0f3ff" : "",
@@ -101,7 +101,7 @@ const LeftSide: React.FC<LeftSideProps> = () => {
               </Box>
             }
             {...a11yProps(3)}
-          />
+          /> */}
         </Tabs>
       </Box>
     </Card>

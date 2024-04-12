@@ -60,7 +60,7 @@ const Email: React.FC<EmailProps> = () => {
   //*
 
   return (
-    <Card>
+    <Box sx={{backgroundColor:"white", padding:"20px", borderRadius:"15px", marginBottom:"28px"}}>
         <Box sx={{display:'flex', flexDirection:'column', gap:'8px'}} >
         <Typography variant='h6' >
       Update Email Address
@@ -156,7 +156,7 @@ const Email: React.FC<EmailProps> = () => {
        
         
       </form>
-    </Card>
+    </Box>
   );
 };
 

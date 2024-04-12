@@ -133,7 +133,7 @@ const ProfilePageLayout: React.FC<ProfilePageLayoutProps> = ({ children }) => {
     return (
       <Box
         sx={{
-          margin: "95px 0 28px 0",
+          margin: {xs: "84px 0 28px 0", md: "95px 0 28px 0"},
           height: "100%",
           width: "100%",
           display: "flex",
@@ -165,7 +165,7 @@ const ProfilePageLayout: React.FC<ProfilePageLayoutProps> = ({ children }) => {
         alignItems: { xs: "center", md: "start" },
         padding: { xs: "0", md: "0 50px", lg: "0 50px", xl: "0 214px" },
         gap: "25px",
-        margin: "95px 0 28px 0",
+        margin: {xs: "80px 0 28px 0", md: "95px 0 28px 0"},
       }}
     >
       <Box

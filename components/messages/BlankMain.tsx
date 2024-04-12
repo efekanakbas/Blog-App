@@ -3,10 +3,10 @@ import React from 'react';
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 
 interface BlankMainProps {
-  // Define props here
+  screen: boolean
 }
 
-const BlankMain: React.FC<BlankMainProps> = () => {
+const BlankMain: React.FC<BlankMainProps> = ({screen}) => {
   //! States
       
   //!
@@ -22,11 +22,12 @@ const BlankMain: React.FC<BlankMainProps> = () => {
 
   return (
     <Box
- className="w-[73%] h-full bg-white"
- sx={{ borderRadius: "0 20px 20px 0" }}
+ className="h-full bg-white"
+ sx={{ borderRadius: "0 20px 20px 0", display: {xs: screen ? "block" : "none" , md: "block"},
+ width: {xs: screen ? "100%" : 0 , md: "73%" }}}
 >
  <Box sx={{height:'80px', display:'flex', alignItems:'center', flexShrink:'0', borderBottom:'rgb(229 231 235) 1px solid', padding:'16px'}} >
-    <input type="text" className='outline-0 w-full' placeholder='To: Type a name or multiple names' />
+    {/* <input type="text" className='outline-0 w-full' placeholder='To: Type a name or multiple names' /> */}
  </Box>
  <Box
     sx={{ height: "calc(100% - 80px)", display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column' }}

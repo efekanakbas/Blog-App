@@ -4,26 +4,32 @@ import Input from "@/components/Input";
 
 
 
-const SkeletonChatInput = () => {
+const SkeletonChatInput = ({screen}: {screen: boolean}) => {
   return (
     <Box
       sx={{
-        borderRadius: "0 20px 20px 0",
-        width: "73%",
+        borderRadius: {xs:"20px", md: "0 20px 20px 0"},
+        display: {xs: screen ? "block" : "none" , md: "block"},
+        width: {xs: screen ? "90%" : 0 , md: "73%" },
         height: "100%",
         padding: "16px",
         pt: "0",
         backgroundColor: "white",
         position: "relative",
+        marginX:"auto",
+        // paddingRight:"200px",
+        overflow:"hidden"
+        
       }}
+      
     >
-      <Box
+      {/* <Box
         sx={{
-          backgroundColor: "white",
+          backgroundColor: "red",
           position: "absolute",
           bottom: "16px",
-          left: "32px",
-          width: "94%",
+         
+          width: "98.5%",
           height: "80px",
           marginBottom: "16px",
           borderRadius: "1rem",
@@ -48,7 +54,7 @@ const SkeletonChatInput = () => {
           handleBlur={null}
           handleSubmit={undefined}
         />
-      </Box>
+      </Box> */}
       <Box
         sx={{
           height: "80px",

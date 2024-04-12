@@ -31,6 +31,7 @@ import Cookies from "js-cookie";
 import { useGeneral } from "@/contexts/GeneralContext";
 import { useQuery } from "@tanstack/react-query";
 import { getData } from "@/utils/CRUD";
+import SearchMini from "./SearchMini";
 
 const pages = [
   { icon: HomeIcon, title: "Homepage", link: "/" },
@@ -184,30 +185,8 @@ useEffect(() => {
                   borderRadius: "15px",
                 }}
               >
-                <form onSubmit={handleSubmit}>
-                  <TextField
-                    InputProps={{
-                      style: {
-                        borderRadius: "25px",
-                        outline: "none",
-                      },
-                    }}
-                    placeholder="Search"
-                    sx={{
-                      display: { xs: "flex", md: "none" },
-                      width: "150px",
-                      transform: "translateX(10px)",
-                      mb: "5px",
-                    }}
-                    name="searchValue"
-                    type="text"
-                    value={values.searchValue}
-                    onChange={handleChange}
-                    size="small"
-                    id="outlined-basic"
-                    variant="outlined"
-                  />
-                </form>
+                 {/*@ts-ignore*/}
+               <SearchMini/>
                 {pages.map((page, i) => (
                   <Link prefetch={true} href={page.link} key={i}>
                     <MenuItem

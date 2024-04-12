@@ -74,7 +74,7 @@ const Password: React.FC<PasswordProps> = () => {
   //*
 
   return (
-    <Card>
+    <Box sx={{backgroundColor:"white", padding:"20px", borderRadius:"15px", marginBottom:"28px"}}>
         <Box sx={{display:'flex', flexDirection:'column', gap:'8px'}} >
         <Typography variant='h6' >
         Change a New Password
@@ -229,7 +229,7 @@ const Password: React.FC<PasswordProps> = () => {
        
         
       </form>
-    </Card>
+    </Box>
   );
 };
 

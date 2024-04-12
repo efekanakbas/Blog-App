@@ -3,6 +3,7 @@ import React from "react";
 import SearchSkeleton from "./SearchSkeleton";
 import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from "next/navigation";
+import CloseIcon from '@mui/icons-material/Close';
 
 interface SearchBoxProps {
   data: Data[];
@@ -13,6 +14,8 @@ interface SearchBoxProps {
     searchValue: string;
   };
   debouncedValueText: string;
+  mini: boolean;
+  handleZero: () => void
 }
 
 const SearchBox: React.FC<SearchBoxProps> = ({
@@ -21,7 +24,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({
   setDebouncedValue,
   handleReset,
   values,
-  debouncedValueText
+  debouncedValueText,
+  mini,
+  handleZero
 }) => {
   //! States
   const myArray = [1, 2, 3, 4];
@@ -41,20 +46,30 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     <Box sx={{ width: "calc(100%)" }}>
       <Box
         sx={{
-          borderRight: "1px solid white",
+          // borderRight: "1px solid white",
           bgcolor: "#eeeff3",
           width: "100%",
           height: "60px",
           p: 2,
           px: 3,
+          borderRadius: mini ? "15px 15px 0 0" : 0,
+          display:"flex",
+          justifyContent:"space-between"
         }}
       >
         <Typography variant="h6">Users</Typography>
+        {
+          mini && (
+            <button onClick={handleZero} className="translate-x-2">
+          <CloseIcon/>
+        </button>
+          )
+        }
       </Box>
 
       <Box
         sx={{
-          borderRight: "1px solid #eeeff3",
+          // borderRight: "1px solid #eeeff3",
           p: 2,
           px: 3,
           display: "flex",
@@ -64,7 +79,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
         }}
       >
         {isLoading
-          ? myArray.map((_, index) => <SearchSkeleton key={index} />)
+          ? myArray.map((_, index) => <SearchSkeleton mini = {mini} key={index} />)
           : data?.slice(0, 4).map((item: any, i: number) => (
               <Box
                 key={i}
@@ -104,7 +119,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
       <Box
         sx={{
-          borderRight: "1px solid #eeeff3",
+          // borderRight: "1px solid #eeeff3",
           borderTop: "1px solid #eeeff3",
           p: 2,
           px: 3,

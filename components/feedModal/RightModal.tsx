@@ -128,6 +128,7 @@ const RightModal: React.FC<RightModalProps> = ({
         flexDirection: "column",
         borderLeft: "1px #eeeeee solid",
         position: "relative",
+        paddingBottom:'60px'
       }}
     >
       <Box

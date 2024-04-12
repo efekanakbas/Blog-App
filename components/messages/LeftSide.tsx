@@ -9,21 +9,27 @@ import { useUserDetail } from "@/contexts/UserDetailContext";
 import { useGeneral } from "@/contexts/GeneralContext";
 
 interface LeftSideProps {
+  screen: boolean;
   setScreen: React.Dispatch<React.SetStateAction<boolean>>;
   setRoom: React.Dispatch<React.SetStateAction<String | null>>;
   socket: any;
   room: null | String;
   setReceiverId: React.Dispatch<React.SetStateAction<String | null>>;
   leftMessage: String;
+  selectedMessageIndex: number | null;
+  setSelectedMessageIndex: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const LeftSide: React.FC<LeftSideProps> = ({
+  screen,
   setScreen,
   setRoom,
   socket,
   room,
   setReceiverId,
   leftMessage,
+  selectedMessageIndex,
+  setSelectedMessageIndex,
 }) => {
   //! States
   const Iarray = [1, 2, 3, 4];
@@ -37,6 +43,7 @@ const LeftSide: React.FC<LeftSideProps> = ({
   const { userId, username } = useUserDetail();
   const Iusername = Cookies.get("username");
   const IuserId = Cookies.get("userId");
+  const Iavatar = Cookies.get("avatar");
   const {
     error,
     data,
@@ -50,9 +57,6 @@ const LeftSide: React.FC<LeftSideProps> = ({
       return getData("messages");
     },
   });
-  const [selectedMessageIndex, setSelectedMessageIndex] = useState<
-    number | null
-  >(null);
   //!
   //todo Functions
   const handleClick = useCallback(
@@ -121,22 +125,24 @@ const LeftSide: React.FC<LeftSideProps> = ({
   console.log("data", data);
   // console.log("room", room)
   // console.log("leftMessage", leftMessage)
-  // console.log("messagesId", messagesId)
+  console.log("messagesId", messagesId);
   // console.log("username", username);
   //*
 
   return (
     <Box
       sx={{
-        "@media (max-width: 1000px)": {
-          width: "50% !important",
-        },
+        display: { xs: screen ? "none" : "flex", md: "flex" },
+        width: { xs: screen ? "0" : "90%", md: "27%" },
+        flexDirection: "column",
         height: "100%",
         bgcolor: "white",
         borderBottomLeftRadius: "16px",
         borderTopLeftRadius: "16px",
+        borderTopRightRadius: { xs: "16px", md: 0 },
+        borderBottomRightRadius: { xs: "16px", md: 0 },
       }}
-      className="w-[27%]  border-r border-gray-200 flex flex-col shrink-0 overflow-hidden"
+      className="border-r border-gray-200 shrink-0 overflow-hidden mx-auto"
     >
       <Box
         className="border-b flex-shrink-0 border-gray-200"
@@ -153,7 +159,7 @@ const LeftSide: React.FC<LeftSideProps> = ({
       >
         Messages
       </Box>
-      <Box
+      {/* <Box
         className="flex-shrink-0 relative border-b border-gray-200"
         sx={{
           height: "80px",
@@ -167,7 +173,7 @@ const LeftSide: React.FC<LeftSideProps> = ({
       >
         <SearchIcon className="text-gray-400" />
         <Typography className="text-gray-400">Search Message</Typography>
-      </Box>
+      </Box> */}
       <Box
         className="flex flex-col flex-shrink-0 overflow-x-hidden overflow-y-auto scrollBarHidden"
         sx={{ maxHeight: "calc(100vh - 283px)" }}
@@ -209,89 +215,98 @@ const LeftSide: React.FC<LeftSideProps> = ({
                 </Box>
               </Box>
             ))
-          : data?.filter(
-            (item: any) =>
-              !item.user.userDetails.blockedBy.some(
-                (blockedByUser: any) => blockedByUser.username === Iusername
-              ) &&
-              !item.user.userDetails.blocked.some(
-                (blockedUser: any) => blockedUser.username === Iusername
+          : data
+              ?.filter(
+                (item: any) =>
+                  !item.user.userDetails.blockedBy.some(
+                    (blockedByUser: any) => blockedByUser.username === Iusername
+                  ) &&
+                  !item.user.userDetails.blocked.some(
+                    (blockedUser: any) => blockedUser.username === Iusername
+                  )
               )
-          ).map((message: Message, i: number) => (
-              <Box
-                key={i}
-                className={`relative ${
-                  selectedMessageIndex === i
-                    ? ""
-                    : "cursor-pointer hover:bg-gray-100"
-                } ${selectedMessageIndex === i ? "bg-gray-200" : ""}`}
-                sx={{
-                  borderBottom: "1px solid #eeeeee",
-                  height: "100px",
-                  padding: "20px",
-                  backgroundColor: "white",
-                  display: "flex",
-                  flexShrink: "0",
-                  justifyContent: "start",
-                  alignItems: "center",
-                  gap: "12px",
-                }}
-                onClick={() => {
-                  messagesId !== message.message.receiver.userId &&
-                    handleClick(message, i);
-                }}
-              >
-                <figure>
-                  <Avatar
-                    sx={{ width: "55px", height: "55px" }}
-                    alt="user avatar"
-                    src={message.message.receiver?.avatar ?? null}
-                  />
-                </figure>
-                <Box className="flex flex-col w-full gap-1">
-                  <Box className="flex items-center justify-between">
+              .map((message: Message, i: number) => (
+                <Box
+                  key={i}
+                  className={`relative ${
+                    selectedMessageIndex === i
+                      ? ""
+                      : "cursor-pointer hover:bg-gray-100"
+                  } ${selectedMessageIndex === i ? "bg-gray-200" : ""}`}
+                  sx={{
+                    borderBottom: "1px solid #eeeeee",
+                    height: "100px",
+                    padding: "20px",
+                    backgroundColor: "white",
+                    display: "flex",
+                    flexShrink: "0",
+                    justifyContent: "start",
+                    alignItems: "center",
+                    gap: "12px",
+                  }}
+                  onClick={() => {
+                    console.log("deneme")
+                    messagesId !== message.message.receiver.userId &&
+                      handleClick(message, i);
+                  }}
+                >
+                  <figure>
+                    <Avatar
+                      sx={{ width: "55px", height: "55px" }}
+                      alt="user avatar"
+
+                      src={
+                        ((message.message.receiver?.avatar !== Iavatar) &&
+                          message.message.receiver?.avatar) ||
+                        ((message?.user?.avatar !== Iavatar) &&
+                          message?.user?.avatar) || undefined
+                      }
+                    />
+                  </figure>
+                  <Box className="flex flex-col w-full gap-1">
+                    <Box className="flex items-center justify-between">
+                      <Typography>
+                        {message.user.username === Iusername
+                          ? message.message.receiver.username
+                          : message.user.username}
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: "12px" }}
+                        className=" text-gray-400"
+                      >
+                        {moment(message.message.createAt).format("DD MMM")}
+                      </Typography>
+                    </Box>
                     <Typography>
-                      {message.user.username === Iusername
-                        ? message.message.receiver.username
-                        : message.user.username}
-                    </Typography>
-                    <Typography
-                      sx={{ fontSize: "12px" }}
-                      className=" text-gray-400"
-                    >
-                      {moment(message.message.createAt).format("DD MMM")}
-                    </Typography>
-                  </Box>
-                  <Typography>
-                    {!leftMessage ? (
-                      message?.message?.text === "" ? (
+                      {!leftMessage ? (
+                        message?.message?.text === "" ? (
+                          <span className="text-bold">Say hello now! 👋</span>
+                        ) : message.message.text.length > 75 ? (
+                          message.message.text.slice(0, 75) + "..."
+                        ) : (
+                          message.message.text
+                        )
+                      ) : //@ts-ignore
+                      leftMessage.roomId === message.roomId ? (
+                        //@ts-ignore
+                        leftMessage.message.text.length > 75 ? (
+                          //@ts-ignore
+                          leftMessage.message.text.slice(0, 75) + "..."
+                        ) : (
+                          //@ts-ignore
+                          leftMessage.message.text
+                        )
+                      ) : message?.message?.text === "" ? (
                         <span className="text-bold">Say hello now! 👋</span>
                       ) : message.message.text.length > 75 ? (
                         message.message.text.slice(0, 75) + "..."
                       ) : (
                         message.message.text
-                      )
-                    ) : //@ts-ignore
-                    leftMessage.roomId === message.roomId ? (
-                      //@ts-ignore
-                      leftMessage.message.text.length > 75 ? (
-                        //@ts-ignore
-                        leftMessage.message.text.slice(0, 75) + "..."
-                      ) : (
-                        //@ts-ignore
-                        leftMessage.message.text
-                      )
-                    ) :  message?.message?.text === "" ? (
-                      <span className="text-bold">Say hello now! 👋</span>
-                    ) : message.message.text.length > 75 ? (
-                      message.message.text.slice(0, 75) + "..."
-                    ) : (
-                      message.message.text
-                    )}
-                  </Typography>
+                      )}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-            ))}
+              ))}
       </Box>
     </Box>
   );
