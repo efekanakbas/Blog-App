@@ -232,12 +232,12 @@ const LeftSide: React.FC<LeftSideProps> = ({
                     selectedMessageIndex === i
                       ? ""
                       : "cursor-pointer hover:bg-gray-100"
-                  } ${selectedMessageIndex === i ? "bg-gray-200" : ""}`}
+                  } `}
                   sx={{
                     borderBottom: "1px solid #eeeeee",
                     height: "100px",
                     padding: "20px",
-                    backgroundColor: "white",
+                    backgroundColor: selectedMessageIndex === i ? "rgb(229 231 235)" : "white",
                     display: "flex",
                     flexShrink: "0",
                     justifyContent: "start",
