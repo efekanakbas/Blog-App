@@ -244,8 +244,10 @@ const Main: React.FC<MainProps> = ({
                         //@ts-ignore
                         array[i + 1]?.message.isMy !== item.message.isMy &&
                         "3px",
+                        // maxWidth: "40ch",
+                        overflowWrap: "break-word"
                     }}
-                    className={`flex p-4 mx-1 rounded-2xl flex-col max-w-[75%] ${
+                    className={`flex p-4 mx-1 rounded-2xl flex-col max-w-[75%] longText ${
                       item.message.isMy
                         ? "bg-blue-600 text-white flex-row-reverse "
                         : "bg-white "

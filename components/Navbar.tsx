@@ -138,7 +138,7 @@ useEffect(() => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            BLOG
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -226,7 +226,7 @@ useEffect(() => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            BLOG
           </Typography>
           {/*@ts-ignore*/}
          <Search/>

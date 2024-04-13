@@ -33,6 +33,11 @@ import { getData, patchData, postData } from "@/utils/CRUD";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import BlockIcon from "@mui/icons-material/Block";
 import Swal from "sweetalert2";
+import MenuIcon from "@mui/icons-material/Menu";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 interface TopSideProps {
   isLoading: Boolean;
@@ -112,6 +117,9 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
   const { isMe } = useGeneral();
   const [followed, setFollowed] = useState(isFollowed);
   const [count, setCount] = useState(followersCount);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
   //!
   //todo Functions
   function a11yProps(index: number) {
@@ -160,11 +168,8 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
     }
   };
 
-
   const handleBlock = async () => {
     try {
-
-
       document.body.style.overflow = "hidden";
       const result = await Swal.fire({
         title: "Are you sure?",
@@ -198,14 +203,21 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
           },
         });
         // Block işlemi
-        await postData("blocked", {username: username});
-        setSettingsTabValue(2)
-        router.push('/settings')
-      } 
+        await postData("blocked", { username: username });
+        setSettingsTabValue(2);
+        router.push("/settings");
+      }
     } catch (error) {
-      console.log("error", error)
+      console.log("error", error);
     }
-  }
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   //todo
   //? useEffect
@@ -309,194 +321,198 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
         </Box>
       )}
       <Box sx={{ padding: "26px" }}>
-        <Box sx={{ display: "flex", justifyContent:'space-between', alignItems:'center' }}>
-        <Box sx={{ display: "flex", gap: "16px" }}>
-          {isLoading || profileLoading ? (
-            <Skeleton variant="circular" width={100} height={100} />
-          ) : (
-            <figure className="relative inline-flex">
-              {isMe && (
-                <button
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Box sx={{ display: "flex", gap: "16px" }}>
+            {isLoading || profileLoading ? (
+              <Skeleton variant="circular" width={100} height={100} />
+            ) : (
+              <figure className="relative inline-flex">
+                {isMe && (
+                  <button
+                    onClick={() => {
+                      setCropOpen(true);
+                      setSizeType("avatar");
+                    }}
+                    className="absolute bottom-0 right-0 z-10 p-1 bg-white rounded-full shadow-xl"
+                  >
+                    <PhotoCameraIcon />
+                  </button>
+                )}
+                <Avatar
+                  alt="user avatar"
                   onClick={() => {
-                    setCropOpen(true);
-                    setSizeType("avatar");
+                    if (isMe ? Iavatar !== "null" : avatar !== null) {
+                      setModalOpen(true);
+                      setSizeToggle("avatar");
+                    }
                   }}
-                  className="absolute bottom-0 right-0 z-10 p-1 bg-white rounded-full shadow-xl"
-                >
-                  <PhotoCameraIcon />
-                </button>
-              )}
-              <Avatar
-                alt="user avatar"
-                onClick={() => {
-                  if (isMe ? Iavatar !== "null" : avatar !== null) {
-                    setModalOpen(true);
-                    setSizeToggle("avatar");
-                  }
-                }}
-                sx={{
-                  width: "100px",
-                  height: "100px",
-                  cursor: isMe
-                    ? Iavatar === "null"
+                  sx={{
+                    width: "100px",
+                    height: "100px",
+                    cursor: isMe
+                      ? Iavatar === "null"
+                        ? "default"
+                        : "pointer"
+                      : avatar === null
                       ? "default"
-                      : "pointer"
-                    : avatar === null
-                    ? "default"
-                    : "pointer",
-                }}
-                //@ts-ignore
-                src={
-                  isMe
-                    ? Iavatar === "null"
+                      : "pointer",
+                  }}
+                  //@ts-ignore
+                  src={
+                    isMe
+                      ? Iavatar === "null"
+                        ? null
+                        : Iavatar
+                      : avatar === null
                       ? null
-                      : Iavatar
-                    : avatar === null
-                    ? null
-                    : avatar
-                }
-              />
-            </figure>
-          )}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              gap: "12px",
-            }}
-          >
-            {isLoading || profileLoading ? (
-              <Skeleton
-                variant="text"
-                sx={{ fontSize: "20px", width: "8rem" }}
-              />
-            ) : (
-              <Typography sx={{ fontWeight: "bold", fontSize: "20px" }}>
-                {name}
-              </Typography>
+                      : avatar
+                  }
+                />
+              </figure>
             )}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: "12px",
+              }}
+            >
+              {isLoading || profileLoading ? (
+                <Skeleton
+                  variant="text"
+                  sx={{ fontSize: "20px", width: "8rem" }}
+                />
+              ) : (
+                <Typography sx={{ fontWeight: "bold", fontSize: "20px" }}>
+                  {name}
+                </Typography>
+              )}
 
-            {isLoading || profileLoading ? (
-              <Skeleton
-                variant="text"
-                sx={{ fontSize: "14px", width: "6rem" }}
-              />
-            ) : (
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: "12px",
-                  height: "20px",
-                  alignItems: "center",
-                }}
-              >
-                {!formToggle ? (
-                  !textToggle ? (
-                    isMe ? (
-                      !intro ? (
-                        <Typography
-                          onClick={() => {
-                            setFormToggle(true);
-                          }}
-                          sx={{
-                            color: "#0071d8",
-                            fontWeight: "bold",
-                            textDecoration: "underline 2px",
-                            textUnderlineOffset: "3px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Add Intro
-                        </Typography>
-                      ) : (
-                        <Box sx={{ display: "flex", gap: "16px" }}>
-                          <Typography>{intro}</Typography>
-                          <Button
-                            type="button"
+              {isLoading || profileLoading ? (
+                <Skeleton
+                  variant="text"
+                  sx={{ fontSize: "14px", width: "6rem" }}
+                />
+              ) : (
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: "12px",
+                    height: "20px",
+                    alignItems: "center",
+                  }}
+                >
+                  {!formToggle ? (
+                    !textToggle ? (
+                      isMe ? (
+                        !intro ? (
+                          <Typography
                             onClick={() => {
-                              setFormToggle(false);
                               setFormToggle(true);
                             }}
                             sx={{
-                              margin: "0",
-                              padding: "0",
-                              marginLeft: "16px",
+                              color: "#0071d8",
+                              fontWeight: "bold",
+                              textDecoration: "underline 2px",
+                              textUnderlineOffset: "3px",
+                              cursor: "pointer",
                             }}
                           >
-                            Edit
-                          </Button>
-                        </Box>
+                            Add Intro
+                          </Typography>
+                        ) : (
+                          <Box sx={{ display: "flex", gap: "16px" }}>
+                            <Typography>{intro}</Typography>
+                            <Button
+                              type="button"
+                              onClick={() => {
+                                setFormToggle(false);
+                                setFormToggle(true);
+                              }}
+                              sx={{
+                                margin: "0",
+                                padding: "0",
+                                marginLeft: "16px",
+                              }}
+                            >
+                              Edit
+                            </Button>
+                          </Box>
+                        )
+                      ) : !intro ? (
+                        <Typography sx={{ color: "gray" }}>
+                          There is no intro
+                        </Typography>
+                      ) : (
+                        <Typography>{intro}</Typography>
                       )
-                    ) : !intro ? (
-                      <Typography sx={{ color: "gray" }}>
-                        There is no intro
-                      </Typography>
                     ) : (
-                      <Typography>{intro}</Typography>
+                      <Box sx={{ display: "flex" }}>
+                        <Typography
+                          sx={{
+                            minWidth: "75px",
+                          }}
+                        >
+                          {formik.values.inputValue}
+                        </Typography>
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            setFormToggle(false);
+                            setFormToggle(true);
+                          }}
+                          sx={{ margin: "0", padding: "0", marginLeft: "16px" }}
+                        >
+                          Edit
+                        </Button>
+                      </Box>
                     )
                   ) : (
-                    <Box sx={{ display: "flex" }}>
-                      <Typography
-                        sx={{
-                          minWidth: "75px",
-                        }}
-                      >
-                        {formik.values.inputValue}
-                      </Typography>
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          setFormToggle(false);
-                          setFormToggle(true);
-                        }}
-                        sx={{ margin: "0", padding: "0", marginLeft: "16px" }}
-                      >
-                        Edit
-                      </Button>
-                    </Box>
-                  )
-                ) : (
-                  <form onSubmit={formik.handleSubmit}>
-                    <input
-                      type="text"
-                      autoComplete="off"
-                      maxLength={27}
-                      name="inputValue"
-                      className="min-w-[75px] m-0 p-0 outline-0"
-                      value={formik.values.inputValue}
-                      onChange={formik.handleChange}
-                      style={{ width: inputWidth }}
-                      placeholder="Write..."
-                    />
-                    {debouncedValue && (
-                      <Button
-                        type="submit"
-                        sx={{ margin: "0", padding: "0", marginLeft: "10px" }}
-                      >
-                        Save
-                      </Button>
-                    )}
-                  </form>
-                )}
-              </Box>
-            )}
+                    <form onSubmit={formik.handleSubmit}>
+                      <input
+                        type="text"
+                        autoComplete="off"
+                        maxLength={27}
+                        name="inputValue"
+                        className="min-w-[75px] m-0 p-0 outline-0"
+                        value={formik.values.inputValue}
+                        onChange={formik.handleChange}
+                        style={{ width: inputWidth }}
+                        placeholder="Write..."
+                      />
+                      {debouncedValue && (
+                        <Button
+                          type="submit"
+                          sx={{ margin: "0", padding: "0", marginLeft: "10px" }}
+                        >
+                          Save
+                        </Button>
+                      )}
+                    </form>
+                  )}
+                </Box>
+              )}
+            </Box>
           </Box>
-        </Box>
-        {
-          !isMe && <Box>
-          {isLoading || profileLoading ? (
-                  null
-              ) : (
+          {!isMe && (
+            <Box>
+              {isLoading || profileLoading ? null : (
                 <Button
                   disabled={!!isLoading || !!profileLoading}
                   variant="outlined"
                   color="error"
-                  style={{
+                  sx={{
                     borderRadius: "100px",
                     height: "48px",
                     width: "140px",
-                    display: "flex",
+                    display: { xs: "none", md: "flex" },
                     gap: "4px",
                   }}
                   onClick={handleBlock}
@@ -504,9 +520,9 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
                   <BlockIcon />
                   Block
                 </Button>
-                )}
-                </Box>
-        }
+              )}
+            </Box>
+          )}
         </Box>
 
         <hr className="my-8" />
@@ -515,6 +531,7 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
             display: "flex",
             justifyContent: "space-between",
             height: "40px",
+            alignItems: "center",
           }}
         >
           <Box
@@ -551,11 +568,63 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
             )}
           </Box>
 
+          {
+            !isMe && (<Box sx={{ display: { xs: "flex", md: "none" }, translate:"-5px" }}>
+            <IconButton
+              aria-label="more"
+              id="long-button"
+              aria-controls={open ? "long-menu" : undefined}
+              aria-expanded={open ? "true" : undefined}
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
+              <MenuIcon/>
+            </IconButton>
+            <Menu
+              id="long-menu"
+              MenuListProps={{
+                "aria-labelledby": "long-button",
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              PaperProps={{
+                style: {
+                  maxHeight: 48 * 4.5,
+                  width: "10ch",
+                  translate:"-10px",
+                  borderRadius:"15px"
+                },
+              }}
+            >
+                <MenuItem
+                 
+                  selected={false}
+                  onClick={() => {handleClose() ; handlerFollow() }}
+                >
+                  {followed ? "Unfollow" : "Follow"}
+                </MenuItem>
+
+                <MenuItem
+              
+                  selected={false}
+                  onClick={() => {handleClose() ; handlerMessage() }}
+                >
+                  Message
+                </MenuItem>
+            </Menu>
+          </Box>)
+          }
+
           {!isMe ? (
-            <Box sx={{ display: "flex", gap: "20px", alignItems: "center" }}>
-              {isLoading || profileLoading ? (
-               null
-              ) : (
+            <Box
+              sx={{
+                display: { xs: "none", md: "flex" },
+                gap: "20px",
+                alignItems: "center",
+              }}
+            >
+              {isLoading || profileLoading ? null : (
                 <IButton
                   text={followed ? "Unfollow" : "Follow"}
                   type={followed ? "contained" : "outlined"}
@@ -563,11 +632,31 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
                   disabled={!!isLoading || !!profileLoading}
                   handleClick={handlerFollow}
                 />
+                //   <Button
+                //   disabled={(!!isLoading || !!profileLoading)}
+                //   variant={!followed ? "contained" : "outlined"}
+                //   style={{
+                //     backgroundColor:
+                //      followed? ((!!isLoading || !!profileLoading) ? "lightgray" : "#1976D2") : "",
+                //     color: followed ? "white" : "",
+                //     borderRadius: "100px",
+                //     height: "48px",
+                //     width: "120px",
+                //   }}
+                //   sx={{
+                //     borderRadius: "100px",
+                //     height: "48px",
+                //     width: "140px",
+                //     display: {xs: "none", md:"flex"},
+                //     gap: "4px",
+                //   }}
+                //   onClick={handlerFollow}
+                // >
+                //   {followed ? "Unfollow" : "Follow"}
+                // </Button>
               )}
 
-              {isLoading || profileLoading ? (
-                null
-              ) : (
+              {isLoading || profileLoading ? null : (
                 <IButton
                   text="Message"
                   type="outlined"
@@ -575,11 +664,29 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
                   disabled={!!isLoading || !!profileLoading}
                   handleClick={handlerMessage}
                 />
+                //   <Button
+                //   disabled={(!!isLoading || !!profileLoading)}
+                //   variant="outlined"
+                //   style={{
+                //     // color: "white",
+                //     borderRadius: "100px",
+                //     height: "48px",
+                //     width: "120px",
+                //   }}
+                //   sx={{
+                //     borderRadius: "100px",
+                //     height: "48px",
+                //     width: "140px",
+                //     display: {xs: "none", md:"flex"},
+                //     gap: "4px",
+                //   }}
+                //   onClick={handlerMessage}
+                // >
+                //   Message
+                // </Button>
               )}
             </Box>
-          ) : isLoading || profileLoading ? (
-            null
-          ) : (
+          ) : isLoading || profileLoading ? null : (
             <Button
               disabled={!!isLoading || !!profileLoading}
               variant="outlined"

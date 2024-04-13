@@ -17,6 +17,21 @@ body{
   height: 29px; 
 } */
 
+  /* 900 pixel ve altında */
+  @media (max-width: 900px) {
+    .longText {
+      max-width: 40ch;
+    }
+  }
+
+  /* 900 pixel üstünde */
+  @media (min-width: 901px) {
+    .longText {
+      max-width: 80ch;
+    }
+  }
+
+
 
 #outlinedInput:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 30px #E8F0FE  inset !important;

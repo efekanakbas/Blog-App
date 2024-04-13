@@ -277,7 +277,7 @@ const LeftSide: React.FC<LeftSideProps> = ({
                         {moment(message.message.createAt).format("DD MMM")}
                       </Typography>
                     </Box>
-                    <Typography>
+                    <Typography className="longText">
                       {!leftMessage ? (
                         message?.message?.text === "" ? (
                           <span className="text-bold">Say hello now! 👋</span>
