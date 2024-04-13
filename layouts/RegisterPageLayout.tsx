@@ -29,7 +29,7 @@ const RegisterPageLayout: React.FC<RegisterPageLayoutProps> = () => {
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
-      <Box sx={{ width: "43%" }}>
+      <Box sx={{width:{xs:"100%", md: "43%"}}}>
         {!toggle ? (
           <RegisterForm1
             setFirstName={setFirstName}
@@ -48,7 +48,7 @@ const RegisterPageLayout: React.FC<RegisterPageLayoutProps> = () => {
           />
         )}
       </Box>
-      <Box sx={{ width: "57%", backgroundColor: "white" }}>
+      <Box sx={{ width: {xs: 0, md: '57%'}, backgroundColor: "white" }}>
         <SlickSlider />
       </Box>
     </Box>

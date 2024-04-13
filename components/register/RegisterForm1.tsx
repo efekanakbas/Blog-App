@@ -56,7 +56,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setToggle, setFirstName, set
   //*
 
   return (
-    <Box sx={{ height: "100%", padding: "95px 150px" }}>
+    <Box sx={{ height: "100%", padding: {xs: "60px", md: "95px 150px" }, display:"flex", flexDirection:"column", justifyContent:"center"}}>
       <Box sx={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
       <figure className="bg-blue-100 inline-flex p-2 rounded-xl">
         <AcUnitIcon sx={{ width: "40px", height: "40px" }} color="primary" />

@@ -23,10 +23,10 @@ const LoginPageLayout: React.FC<LoginPageLayoutProps> = () => {
 
   return (
     <Box sx={{display:'flex', height:'100vh'}}>
-       <Box  sx={{width:'43%'}} >
+       <Box  sx={{width:{xs:"100%", md: "43%"}}} >
             <LoginForm/>
        </Box>
-       <Box  sx={{width:'57%', backgroundColor:'white'}} >
+       <Box  sx={{width: {xs: 0, md: '57%'}, backgroundColor:'white'}} >
        
        <SlickSlider/>
        </Box>

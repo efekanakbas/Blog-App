@@ -94,10 +94,10 @@ const LoginForm: React.FC<LoginFormProps> = () => {
   //*
 
   return (
-    <Box sx={{ height: "100%", padding: "95px 150px" }}>
-      <figure className="bg-blue-100 inline-flex p-2 rounded-xl">
-        <AcUnitIcon sx={{ width: "40px", height: "40px" }} color="primary" />
-      </figure>
+    <Box sx={{ height: "100%", padding: {xs: "60px", md: "95px 150px"}, display:"flex", flexDirection:"column", justifyContent:"center" }}>
+      <span className="bg-blue-100 p-2 rounded-xl w-[56px]">
+        <AcUnitIcon sx={{ width: "40px", height: "40px", backgroundColor:"rgb(219 234 254)" ,borderRadius:"12px" }} color="primary" />
+      </span>
 
       <Box
         sx={{

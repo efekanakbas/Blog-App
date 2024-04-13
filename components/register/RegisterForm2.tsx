@@ -87,13 +87,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   //*
 
   return (
-    <Box sx={{ height: "100%", padding: "95px 150px", position: "relative" }}>
+    <Box sx={{ height: "100%", padding: {xs: "60px", md: "95px 150px"}, position: "relative", display:"flex", flexDirection:"column", justifyContent:"center" }}>
       <button
+
         title="Back to register page"
         onClick={() => {
           setToggle(false);
         }}
-        className="absolute left-[4em] top-[7em]"
+        className="absolute left-[4em] top-[8.6em]"
       >
         <WestIcon color="primary" />
       </button>
