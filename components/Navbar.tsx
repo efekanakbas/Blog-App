@@ -115,7 +115,7 @@ useEffect(() => {
   return (
     <AppBar sx={{ bgcolor: "white" }} position="fixed">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar  disableGutters>
           <AcUnitIcon
             sx={{
               display: { xs: "none", md: "flex" },
@@ -203,10 +203,10 @@ useEffect(() => {
               </Box>
             </Menu>
           </Box>
-          <AcUnitIcon
+          {/* <AcUnitIcon
             sx={{
               display: { xs: "flex", md: "none" },
-              mr: 1,
+              // mr: "100px",
               color: "#1976D2",
             }}
           />
@@ -224,10 +224,11 @@ useEffect(() => {
               letterSpacing: ".3rem",
               color: "#1976D2",
               textDecoration: "none",
+              
             }}
           >
             BLOG
-          </Typography>
+          </Typography> */}
           {/*@ts-ignore*/}
          <Search/>
           <Box

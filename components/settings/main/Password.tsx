@@ -102,7 +102,7 @@ const Password: React.FC<PasswordProps> = () => {
             onClick={() => {
               setToggle1(!toggle1);
             }}
-            className="absolute right-[51.5%] top-[40px] z-50 text-gray-500 cursor-pointer"
+            className="absolute md:right-[51.5%] right-[4.5%] top-[40px] z-50 text-gray-500 cursor-pointer"
           >
             {!toggle1 ? (
               <VisibilityIcon sx={{ width: "30px", height: "30px" }} />
@@ -120,7 +120,7 @@ const Password: React.FC<PasswordProps> = () => {
             id="currentInput"
             onKeyDownHandler={undefined}
             disabled={false}
-            sx={{ width: "50%" }}
+            sx={{ width: {xs: "100%" , md: "50%"}}}
             size="medium"
             handleChange={handleChange}
             value={values.current}
@@ -142,7 +142,7 @@ const Password: React.FC<PasswordProps> = () => {
             onClick={() => {
               setToggle2(!toggle2);
             }}
-            className="absolute right-[51.5%] top-[40px] z-50 text-gray-500 cursor-pointer"
+            className="absolute md:right-[51.5%] right-[4.5%] top-[40px] z-50 text-gray-500 cursor-pointer"
           >
             {!toggle2 ? (
               <VisibilityIcon sx={{ width: "30px", height: "30px" }} />
@@ -160,7 +160,7 @@ const Password: React.FC<PasswordProps> = () => {
             id="newInput"
             onKeyDownHandler={undefined}
             disabled={false}
-            sx={{ width: "50%" }}
+            sx={{ width: {xs: "100%" , md: "50%"}}}
             size="medium"
             handleChange={handleChange}
             value={values.new}
@@ -182,7 +182,7 @@ const Password: React.FC<PasswordProps> = () => {
             onClick={() => {
               setToggle3(!toggle3);
             }}
-            className="absolute right-[51.5%] top-[40px] z-50 text-gray-500 cursor-pointer"
+            className="absolute md:right-[51.5%] right-[4.5%] top-[40px] z-50 text-gray-500 cursor-pointer"
           >
             {!toggle3 ? (
               <VisibilityIcon sx={{ width: "30px", height: "30px" }} />
@@ -200,7 +200,7 @@ const Password: React.FC<PasswordProps> = () => {
             id="confirmInput"
             onKeyDownHandler={undefined}
             disabled={false}
-            sx={{ width: "50%" }}
+            sx={{ width: {xs: "100%" , md: "50%"}}}
             size="medium"
             handleChange={handleChange}
             value={values.confirm}

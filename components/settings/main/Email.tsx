@@ -97,7 +97,7 @@ const Email: React.FC<EmailProps> = () => {
             id="emailInput"
             onKeyDownHandler={undefined}
             disabled={false}
-            sx={{ width: "50%" }}
+            sx={{ width: {xs: "100%" , md: "50%"}}}
             size="medium"
             handleChange={handleChange}
             value={values.email}
@@ -125,7 +125,7 @@ const Email: React.FC<EmailProps> = () => {
             id="confirmInput"
             onKeyDownHandler={undefined}
             disabled={false}
-            sx={{ width: "50%" }}
+            sx={{ width: {xs: "100%" , md: "50%"}}}
             size="medium"
             handleChange={handleChange}
             value={values.confirm}

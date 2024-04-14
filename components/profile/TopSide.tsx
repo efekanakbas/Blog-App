@@ -568,53 +568,59 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
             )}
           </Box>
 
-          {
-            !isMe && (<Box sx={{ display: { xs: "flex", md: "none" }, translate:"-5px" }}>
-            <IconButton
-              aria-label="more"
-              id="long-button"
-              aria-controls={open ? "long-menu" : undefined}
-              aria-expanded={open ? "true" : undefined}
-              aria-haspopup="true"
-              onClick={handleClick}
+          {!isMe && (
+            <Box
+              sx={{ display: { xs: "flex", md: "none" }, translate: "-5px" }}
             >
-              <MenuIcon/>
-            </IconButton>
-            <Menu
-              id="long-menu"
-              MenuListProps={{
-                "aria-labelledby": "long-button",
-              }}
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              PaperProps={{
-                style: {
-                  maxHeight: 48 * 4.5,
-                  width: "10ch",
-                  translate:"-10px",
-                  borderRadius:"15px"
-                },
-              }}
-            >
+              <IconButton
+                aria-label="more"
+                id="long-button"
+                aria-controls={open ? "long-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleClick}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="long-menu"
+                MenuListProps={{
+                  "aria-labelledby": "long-button",
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    maxHeight: 48 * 4.5,
+                    width: "10ch",
+                    translate: "-10px",
+                    borderRadius: "15px",
+                  },
+                }}
+              >
                 <MenuItem
-                 
                   selected={false}
-                  onClick={() => {handleClose() ; handlerFollow() }}
+                  onClick={() => {
+                    handleClose();
+                    handlerFollow();
+                  }}
                 >
                   {followed ? "Unfollow" : "Follow"}
                 </MenuItem>
 
                 <MenuItem
-              
                   selected={false}
-                  onClick={() => {handleClose() ; handlerMessage() }}
+                  onClick={() => {
+                    handleClose();
+                    handlerMessage();
+                  }}
                 >
                   Message
                 </MenuItem>
-            </Menu>
-          </Box>)
-          }
+              </Menu>
+            </Box>
+          )}
 
           {!isMe ? (
             <Box
@@ -687,21 +693,25 @@ const TopSide: React.FC<TopSideProps> = ({ isLoading }) => {
               )}
             </Box>
           ) : isLoading || profileLoading ? null : (
-            <Button
-              disabled={!!isLoading || !!profileLoading}
-              variant="outlined"
-              style={{
-                borderRadius: "100px",
-                height: "48px",
-                width: "140px",
-                display: "flex",
-                gap: "4px",
-              }}
-              onClick={handlerSettingsClick}
-            >
-              <SettingsIcon />
-              Settings
-            </Button>
+            <Box>
+              <Button
+                disabled={!!isLoading || !!profileLoading}
+                variant="outlined"
+                sx={{
+                  borderRadius: "100px",
+                  height: "48px",
+                  width: "140px",
+                  display: { xs: "none", md: "flex" },
+                  gap: "4px",
+                }}
+                onClick={handlerSettingsClick}
+              >
+                <SettingsIcon />
+                Settings
+              </Button>
+
+              <SettingsIcon color="primary" sx={{display: { xs: "flex", md: "none" }, width:"40px", height:"40px"}} />
+            </Box>
           )}
         </Box>
 
