@@ -52,9 +52,9 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
 
   const login = () => {
     router.push('/')
-    setTimeout(() => {
-      toast.success('Welcome!')
-    }, 500);
+    // setTimeout(() => {
+    //   toast.success('Welcome!')
+    // }, 500);
     
   };
 
