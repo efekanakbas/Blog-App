@@ -144,6 +144,68 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
             </Box>
           </Box>
         </Box>
+        <Box
+          sx={{
+            width: "100%",
+            height: "685.64px",
+            borderRadius: "15px",
+            backgroundColor: "white",
+            padding: "20px",
+          }}
+        >
+          <Box className="flex justify-between items-center mb-4">
+            <Box className="flex gap-2 items-center">
+              <Skeleton variant="circular" width={40} height={40} />
+
+              <Box className="flex flex-col justify-center">
+                <Skeleton
+                  variant="text"
+                  sx={{ fontSize: "1rem", width: "8rem" }}
+                />
+                <Skeleton
+                  variant="text"
+                  sx={{ fontSize: "1rem", width: "6rem" }}
+                />
+              </Box>
+            </Box>
+            <MoreHorizIcon sx={{ color: "lightgray" }} />
+          </Box>
+
+          <Skeleton variant="text" sx={{ fontSize: "1rem", width: "100%" }} />
+          {/* <Skeleton variant="text" sx={{ fontSize: "1rem", width: "80%" }} /> */}
+
+          <Box
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "12px",
+              marginTop: "16px",
+            }}
+          >
+            {skeletonItems.map((_, i) => (
+              <figure key={i} className="relative w-full h-[240px]">
+                <Skeleton
+                  variant="rounded"
+                  sx={{ width: "100%", height: "100%", borderRadius: "15px" }}
+                />
+              </figure>
+            ))}
+          </Box>
+
+          <Box className="flex gap-8 my-6">
+            <Box className="flex gap-1">
+              <figure className="cursor-pointer -translate-y-[2px] ">
+                <FavoriteBorderIcon sx={{ color: "lightgray" }} />
+              </figure>
+            </Box>
+            <Box className="flex gap-1 cursor-pointer">
+              <ChatBubbleOutlineIcon
+                sx={{ color: "lightgray", marginLeft: "13px" }}
+              />
+            </Box>
+          </Box>
+        </Box>
+        
       </Box>
     );
 

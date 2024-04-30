@@ -1,5 +1,5 @@
-import HomePageLayout from "../layouts/HomePageLayout";
-import Feeds from "../components/Feeds";
+import HomePageLayout from "../../layouts/HomePageLayout";
+import Feeds from "../../components/Feeds";
 import type { Metadata } from "next";
 import {
   dehydrate,

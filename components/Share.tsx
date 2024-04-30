@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "./Card";
 import { useFormik } from "formik";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Skeleton, Typography } from "@mui/material";
 import Input from "./Input";
 import ImageIcon from "@mui/icons-material/Image";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
@@ -51,13 +51,15 @@ const Share: React.FC<ShareProps> = ({ disabled }) => {
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
     },
   });
-
+  const [loaded, setLoaded] = useState(false);
   //!
   //todo Functions
 
   //todo
   //? useEffect
-
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
   //?
   //* consoleLogs
 
@@ -67,12 +69,14 @@ const Share: React.FC<ShareProps> = ({ disabled }) => {
     <Card>
       <Box className="flex gap-4">
         <figure>
-          <Avatar
-            style={{ width: "45px", height: "45px" }}
-            alt="User avatar"
-            //@ts-ignore
-            src={avatar === "null" ? null : avatar}
-          />
+          {loaded ? (
+            <Avatar
+              style={{ width: "45px", height: "45px" }}
+              alt="User avatar"
+              //@ts-ignore
+              src={avatar === "null" ? null : avatar}
+            />
+          ) : <Skeleton variant="circular" width={45} height={45} />}
         </figure>
         <form className="w-full" onSubmit={handleSubmit}>
           <Input

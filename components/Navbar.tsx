@@ -17,7 +17,7 @@ import Zoom from "@mui/material/Zoom";
 import HomeIcon from "@mui/icons-material/Home";
 import ChatIcon from "@mui/icons-material/Chat";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import {  TextField } from "@mui/material";
+import { Skeleton, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import Link from "next/link";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -44,9 +44,7 @@ const settings = [
   { title: "Logout", icon: LogoutIcon },
 ];
 
-interface NavbarProps {
-
-}
+interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = () => {
   //! States
@@ -69,19 +67,18 @@ const Navbar: React.FC<NavbarProps> = () => {
 
   const router = useRouter();
   const { logout } = useAuth();
-  const username = Cookies.get('username')
-  const avatar = Cookies.get('avatar')
-  const {useAvatar, setUseAvatar} = useGeneral()
-
+  const username = Cookies.get("username");
+  const avatar = Cookies.get("avatar");
+  const { useAvatar, setUseAvatar } = useGeneral();
 
   const { error, data, isLoading } = useQuery({
     queryKey: ["notifications"],
     queryFn: async () => {
-      return getData('notifications?from=navbar')
+      return getData("notifications?from=navbar");
     },
   });
 
-  const myData = data?.filter((item: any) => item.isShown === false)
+  const myData = data?.filter((item: any) => item.isShown === false);
   //!
   //todo Functions
 
@@ -102,20 +99,20 @@ const Navbar: React.FC<NavbarProps> = () => {
 
   //todo
   //? useEffect
-useEffect(() => {
-  setUseAvatar(avatar)
-}, [avatar, setUseAvatar])
+  useEffect(() => {
+    setUseAvatar(avatar);
+  }, [avatar, setUseAvatar]);
   //?
   //* consoleLogs
-    // console.log("AVATAAAAAAAAR", avatar)
-    // console.log("data", data)
-    // console.log("myData", myData)
+  // console.log("AVATAAAAAAAAR", avatar)
+  // console.log("data", data)
+  // console.log("myData", myData)
   //*
 
   return (
     <AppBar sx={{ bgcolor: "white" }} position="fixed">
       <Container maxWidth="xl">
-        <Toolbar  disableGutters>
+        <Toolbar disableGutters>
           <AcUnitIcon
             sx={{
               display: { xs: "none", md: "flex" },
@@ -185,8 +182,8 @@ useEffect(() => {
                   borderRadius: "15px",
                 }}
               >
-                 {/*@ts-ignore*/}
-               <SearchMini/>
+                {/*@ts-ignore*/}
+                <SearchMini />
                 {pages.map((page, i) => (
                   <Link prefetch={true} href={page.link} key={i}>
                     <MenuItem
@@ -230,7 +227,7 @@ useEffect(() => {
             BLOG
           </Typography> */}
           {/*@ts-ignore*/}
-         <Search/>
+          <Search />
           <Box
             sx={{
               flexGrow: 1,
@@ -242,12 +239,17 @@ useEffect(() => {
             }}
           >
             {pages.map((page, i) => (
-              <Link className="relative" prefetch={true} href={page.link} key={i}>
-                {
-                  (page.title === "Notifications" && myData?.length > 0) && <span className="absolute left-[20px] top-[12px] text-red-600 font-bold bg-red-200 p-1 rounded-full h-[20px] w-[20px] flex justify-center items-center">
-                  {myData.length}
-                </span>
-                }
+              <Link
+                className="relative"
+                prefetch={true}
+                href={page.link}
+                key={i}
+              >
+                {page.title === "Notifications" && myData?.length > 0 && (
+                  <span className="absolute left-[20px] top-[12px] text-red-600 font-bold bg-red-200 p-1 rounded-full h-[20px] w-[20px] flex justify-center items-center">
+                    {myData.length}
+                  </span>
+                )}
                 <Button
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "#1976D2", display: "flex", gap: "8px" }}
@@ -273,8 +275,24 @@ useEffect(() => {
                   }}
                 >
                   {/*@ts-ignore*/}
-                  <Avatar alt="User avatar" src={useAvatar === "null" ? null : useAvatar} />
-                  <Typography color="black">{username}</Typography>
+
+                  {isLoading ? (
+                    <Box sx={{display:"flex", alignItems:"center", gap:"12px"}}><Skeleton variant="circular" width={40} height={40} /> <Skeleton variant="text" sx={{ fontSize: '1rem', width:"6ch" }} /></Box>
+                  ) : (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                      }}
+                    >
+                      <Avatar
+                        alt="User avatar"
+                        src={useAvatar === "null" ? null : useAvatar}
+                      />{" "}
+                      <Typography color="black">{username}</Typography>
+                    </Box>
+                  )}
                   <figure>
                     <KeyboardArrowDownIcon sx={{ color: "black" }} />
                   </figure>
@@ -317,7 +335,7 @@ useEffect(() => {
                       setting.title === "Profile" &&
                         router.push(`/profile/${username}`);
                       setting.title === "Logout" && logout();
-                      setting.title === 'Settings' && router.push("/settings");
+                      setting.title === "Settings" && router.push("/settings");
                     }}
                   >
                     <setting.icon sx={{ color: "gray" }} />

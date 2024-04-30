@@ -5,7 +5,6 @@ import { Toaster } from "react-hot-toast";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeneralContextProvider } from "@/contexts/GeneralContext";
 import { AuthProvider } from "@/contexts/AuthContext";
-import ClientProvider from "@/providers/ClientProvider";
 import { UserDetailProvider } from "@/contexts/UserDetailContext";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,7 +24,7 @@ export default function RootLayout({
               <SpeedInsights />
               <Toaster position="top-right" reverseOrder={false} />
               <main>
-                <ClientProvider>{children}</ClientProvider>
+                {children}
               </main>
               </UserDetailProvider>
             </AuthProvider>
