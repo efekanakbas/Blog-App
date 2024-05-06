@@ -12,17 +12,19 @@ import { getData } from "../utils/CRUD";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { useParams } from 'next/navigation'
+import { useParams } from "next/navigation";
 import { useGeneral } from "@/contexts/GeneralContext";
+
+import { VList, WindowVirtualizer } from "virtua";
 
 interface Feeds {
   shareShow: boolean;
-  profile: boolean
+  profile: boolean;
 }
 
 const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
   //! States
-  const params = useParams().username
+  const params = useParams().username;
   const {
     status,
     fetchNextPage,
@@ -32,11 +34,13 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
     error,
     data,
     isLoading,
-    refetch
+    refetch,
   } = useInfiniteQuery({
     queryKey: !profile ? ["feeds"] : ["feedsOne"],
     queryFn: ({ pageParam }) => {
-      return !profile ? getData(`feeds?page=${pageParam}&limit=10`) : getData(`feeds/${params}?page=${pageParam}&limit=10`);
+      return !profile
+        ? getData(`feeds?page=${pageParam}&limit=10`)
+        : getData(`feeds/${params}?page=${pageParam}&limit=10`);
     },
     staleTime: 0,
     initialPageParam: 1,
@@ -51,7 +55,9 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
 
   const { ref, inView } = useInView();
   const skeletonItems = Array(4).fill(null);
-  const {profileLoading} = useGeneral()
+  const { profileLoading } = useGeneral();
+
+  const allData = data ? data.pages.flatMap((d) => d) : [];
   //!
   //todo Functions
 
@@ -64,7 +70,7 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
   }, [inView, fetchNextPage, hasNextPage]);
 
   useEffect(() => {
-    if(!profile) {
+    if (!profile) {
       scroll.scrollToTop();
     }
   }, [profile]);
@@ -77,9 +83,11 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
   // console.log("profile", profile)
   // console.log("params", params)
   // console.log("profileLoading", profileLoading)
+
+  console.log("allData", allData);
   //*
 
-  if (status === "pending" || profile ? (isLoading || profileLoading)  : null)
+  if (status === "pending" || profile ? isLoading || profileLoading : null)
     return (
       <Box sx={{ display: "flex", flexDirection: "column", gap: "28px" }}>
         {!profile && <Share disabled={true} />}
@@ -205,39 +213,46 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
             </Box>
           </Box>
         </Box>
-        
       </Box>
     );
 
   if (status === "error") return <h1>Error</h1>;
 
   return (
-    <Box sx={{display:'flex', flexDirection:'column', gap:"26px"}}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {shareShow && <Share disabled={false} />}
       {
-        //@ts-ignore
-        data.pages.map((page, i) => {
-          return (
-            <React.Fragment key={i}>
-              {page.map((feed: any, index: number) => {
-                return page.length >= 3 && page.length - 3 === index ? (
-                  <Feed
-                    //@ts-ignore
-                    ref={ref}
-                    key={index}
-                    feed={feed}
-                    profile= {profile}
-                    refetch = {refetch}
-                  />
-                ) : (
-                  <Feed key={index} feed={feed} profile= {profile} refetch = {refetch}/>
-                );
-              })}
-            </React.Fragment>
-          );
-        })
+        <WindowVirtualizer>
+          {allData.map((feed: any, index: number) => {
+            return allData.length >= 3 && allData.length - 3 === index ? (
+              // return page.length >= 3 && page.length - 3 === index ? (
+              <Feed
+                //@ts-ignore
+                ref={ref}
+                key={index}
+                feed={feed}
+                profile={profile}
+                refetch={refetch}
+              />
+            ) : (
+              <Feed
+                key={index}
+                feed={feed}
+                profile={profile}
+                refetch={refetch}
+              />
+            );
+          })}
+        </WindowVirtualizer>
       }
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <Box
+        sx={{ display: "flex", justifyContent: "center", marginTop: "26px" }}
+      >
         {isFetchingNextPage ? (
           <h3>Loading...</h3>
         ) : (

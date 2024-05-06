@@ -42,12 +42,8 @@ import HandshakeIcon from "@mui/icons-material/Handshake";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 import Link from "next/link";
-
-
-
-
 
 interface FeedsProps {
   feed: any;
@@ -275,8 +271,6 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
       }
     };
 
-   
-
     //todo
     //? useEffect
     useEffect(() => {
@@ -303,7 +297,13 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
 
     return (
       <Box
-        sx={{ borderRadius: "15px", padding: "20px", backgroundColor: "white" }}
+        sx={{
+          borderRadius: "15px",
+          padding: "20px",
+          backgroundColor: "white",
+          marginTop: "26px",
+          transform: profile ? "translateY(-26px)" : "",
+        }}
         ref={ref ? ref : null}
       >
         <Box className="flex justify-between items-center mb-4">
@@ -475,12 +475,32 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
         <Typography>{feed.feed.text}</Typography>
 
         {feed?.feed?.images[0]?.endsWith(".pdf") ? (
-          <Box sx={{borderRadius:'10px', border:'1px lightgray solid', height:'50px', marginTop:'16px'}}>
-            <Link target="_blank" className="flex justify-center items-center h-full hover:bg-gray-100 rounded-[10px] gap-2" href={feed?.feed?.images[0]}>
-            <AttachFileIcon color = "warning"/>
-           <Typography sx={{fontWeight:'bold'}}>
-            {decodeURIComponent(feed?.feed?.images[0].split('/')[feed?.feed?.images[0].split('/').length -1 ].split("-")[feed?.feed?.images[0].split('/')[feed?.feed?.images[0].split('/').length -1 ].split("-").length - 1])}
-           </Typography>
+          <Box
+            sx={{
+              borderRadius: "10px",
+              border: "1px lightgray solid",
+              height: "50px",
+              marginTop: "16px",
+            }}
+          >
+            <Link
+              target="_blank"
+              className="flex justify-center items-center h-full hover:bg-gray-100 rounded-[10px] gap-2"
+              href={feed?.feed?.images[0]}
+            >
+              <AttachFileIcon color="warning" />
+              <Typography sx={{ fontWeight: "bold" }}>
+                {decodeURIComponent(
+                  feed?.feed?.images[0]
+                    .split("/")
+                    [feed?.feed?.images[0].split("/").length - 1].split("-")[
+                    feed?.feed?.images[0]
+                      .split("/")
+                      [feed?.feed?.images[0].split("/").length - 1].split("-")
+                      .length - 1
+                  ]
+                )}
+              </Typography>
             </Link>
           </Box>
         ) : (
