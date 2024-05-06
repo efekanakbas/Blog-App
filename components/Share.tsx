@@ -76,7 +76,9 @@ const Share: React.FC<ShareProps> = ({ disabled }) => {
               //@ts-ignore
               src={avatar === "null" ? null : avatar}
             />
-          ) : <Skeleton variant="circular" width={45} height={45} />}
+          ) : (
+            <Skeleton variant="circular" width={45} height={45} />
+          )}
         </figure>
         <form className="w-full" onSubmit={handleSubmit}>
           <Input

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 interface NotFoundProps {
   // Define props here
@@ -6,21 +6,21 @@ interface NotFoundProps {
 
 const NotFound: React.FC<NotFoundProps> = () => {
   //! States
-      
+
   //!
   //todo Functions
-      
+
   //todo
   //? useEffect
-      
+
   //?
   //* consoleLogs
-      
+
   //*
 
   return (
-    <div className='mt-20'>
-      not-found
+    <div className="flex justify-center items-center h-screen">
+      page not-found
     </div>
   );
 };

@@ -15,7 +15,8 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useParams } from "next/navigation";
 import { useGeneral } from "@/contexts/GeneralContext";
 
-import { VList, WindowVirtualizer } from "virtua";
+import { WindowVirtualizer } from "virtua";
+import { motion } from "framer-motion";
 
 interface Feeds {
   shareShow: boolean;
@@ -58,6 +59,19 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
   const { profileLoading } = useGeneral();
 
   const allData = data ? data.pages.flatMap((d) => d) : [];
+
+  const container = {
+    hidden: { opacity: 1, scale: 0 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
   //!
   //todo Functions
 
@@ -226,30 +240,32 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
       }}
     >
       {shareShow && <Share disabled={false} />}
-      {
-        <WindowVirtualizer>
-          {allData.map((feed: any, index: number) => {
-            return allData.length >= 3 && allData.length - 3 === index ? (
-              // return page.length >= 3 && page.length - 3 === index ? (
-              <Feed
-                //@ts-ignore
-                ref={ref}
-                key={index}
-                feed={feed}
-                profile={profile}
-                refetch={refetch}
-              />
-            ) : (
-              <Feed
-                key={index}
-                feed={feed}
-                profile={profile}
-                refetch={refetch}
-              />
-            );
-          })}
-        </WindowVirtualizer>
-      }
+      <motion.div initial="hidden" animate="visible" variants={container}>
+        {
+          <WindowVirtualizer>
+            {allData.map((feed: any, index: number) => {
+              return allData.length >= 3 && allData.length - 3 === index ? (
+                // return page.length >= 3 && page.length - 3 === index ? (
+                <Feed
+                  //@ts-ignore
+                  ref={ref}
+                  key={index}
+                  feed={feed}
+                  profile={profile}
+                  refetch={refetch}
+                />
+              ) : (
+                <Feed
+                  key={index}
+                  feed={feed}
+                  profile={profile}
+                  refetch={refetch}
+                />
+              );
+            })}
+          </WindowVirtualizer>
+        }
+      </motion.div>
       <Box
         sx={{ display: "flex", justifyContent: "center", marginTop: "26px" }}
       >

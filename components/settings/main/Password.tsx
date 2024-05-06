@@ -1,14 +1,15 @@
-import Card from '@/components/Card';
-import { Box, InputLabel, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import Card from "@/components/Card";
+import { Box, InputLabel, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import validationSchema from "../../../schemas/settingsPasswordSchema";
-import Input from '@/components/Input';
-import Button from '@/components/Button';
-import { patchData } from '@/utils/CRUD';
-import toast from 'react-hot-toast';
+import Input from "@/components/Input";
+import Button from "@/components/Button";
+import { patchData } from "@/utils/CRUD";
+import toast from "react-hot-toast";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { motion } from "framer-motion";
 
 interface PasswordProps {
   // Define props here
@@ -35,56 +36,69 @@ const Password: React.FC<PasswordProps> = () => {
       handlePatch({
         current: values.current,
         newP: values.new,
-        confirm: values.confirm
-      })
+        confirm: values.confirm,
+      });
     },
   });
 
-  const auth = !!errors.current || !!errors.new || !!errors.confirm || values.current.length === 0 || values.new.length === 0 || values.confirm.length === 0
+  const auth =
+    !!errors.current ||
+    !!errors.new ||
+    !!errors.confirm ||
+    values.current.length === 0 ||
+    values.new.length === 0 ||
+    values.confirm.length === 0;
 
   const [toggle1, setToggle1] = useState(false);
   const [toggle2, setToggle2] = useState(false);
   const [toggle3, setToggle3] = useState(false);
   //!
   //todo Functions
-      const handlePatch = async (obj: any) => {
-        try {
-          await patchData('password', obj)
-          handleReset(values);
-          toast.success('You have successfully changed your password!')
-        } catch (error) {
-          //@ts-ignore
-          if(error.message.endsWith(400)) {
-            toast.error("Passwords do not match")
-            //@ts-ignore
-          } else if(error.message.endsWith(401)) {
-            toast.error("Wrong password")
-            //@ts-ignore
-          } else if(error.message.endsWith(402)) {
-            toast.error("Password must be 8 characters or longer")
-          }
-        }
+  const handlePatch = async (obj: any) => {
+    try {
+      await patchData("password", obj);
+      handleReset(values);
+      toast.success("You have successfully changed your password!");
+    } catch (error) {
+      //@ts-ignore
+      if (error.message.endsWith(400)) {
+        toast.error("Passwords do not match");
+        //@ts-ignore
+      } else if (error.message.endsWith(401)) {
+        toast.error("Wrong password");
+        //@ts-ignore
+      } else if (error.message.endsWith(402)) {
+        toast.error("Password must be 8 characters or longer");
       }
+    }
+  };
   //todo
   //? useEffect
-      
+
   //?
   //* consoleLogs
-      
+
   //*
 
   return (
-    <Box sx={{backgroundColor:"white", padding:"20px", borderRadius:"15px", marginBottom:"28px"}}>
-        <Box sx={{display:'flex', flexDirection:'column', gap:'8px'}} >
-        <Typography variant='h6' >
-        Change a New Password
-      </Typography>
-      <Typography sx={{color:'gray'}} >
-      Create a new password that is at least 8 charecters long.
-      </Typography>
-        </Box>
-        <hr className='my-6' />
-        <form
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      style={{
+        backgroundColor: "white",
+        padding: "20px",
+        borderRadius: "15px",
+        marginBottom: "28px",
+      }}
+    >
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <Typography variant="h6">Change a New Password</Typography>
+        <Typography sx={{ color: "gray" }}>
+          Create a new password that is at least 8 charecters long.
+        </Typography>
+      </Box>
+      <hr className="my-6" />
+      <form
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
@@ -96,8 +110,7 @@ const Password: React.FC<PasswordProps> = () => {
           handleSubmit();
         }}
       >
-      
-      <Box sx={{ position: "relative" }}>
+        <Box sx={{ position: "relative" }}>
           <figure
             onClick={() => {
               setToggle1(!toggle1);
@@ -120,13 +133,13 @@ const Password: React.FC<PasswordProps> = () => {
             id="currentInput"
             onKeyDownHandler={undefined}
             disabled={false}
-            sx={{ width: {xs: "100%" , md: "50%"}}}
+            sx={{ width: { xs: "100%", md: "50%" } }}
             size="medium"
             handleChange={handleChange}
             value={values.current}
             paddingLeft={false}
             className=""
-            type= {!toggle1 ? "password" : "text"}
+            type={!toggle1 ? "password" : "text"}
             autoFocus={false}
             name="current"
             placeholder="Password"
@@ -160,13 +173,13 @@ const Password: React.FC<PasswordProps> = () => {
             id="newInput"
             onKeyDownHandler={undefined}
             disabled={false}
-            sx={{ width: {xs: "100%" , md: "50%"}}}
+            sx={{ width: { xs: "100%", md: "50%" } }}
             size="medium"
             handleChange={handleChange}
             value={values.new}
             paddingLeft={false}
             className=""
-            type= {!toggle2 ? "password" : "text"}
+            type={!toggle2 ? "password" : "text"}
             autoFocus={false}
             name="new"
             placeholder="Password"
@@ -200,13 +213,13 @@ const Password: React.FC<PasswordProps> = () => {
             id="confirmInput"
             onKeyDownHandler={undefined}
             disabled={false}
-            sx={{ width: {xs: "100%" , md: "50%"}}}
+            sx={{ width: { xs: "100%", md: "50%" } }}
             size="medium"
             handleChange={handleChange}
             value={values.confirm}
             paddingLeft={false}
             className=""
-            type= {!toggle3 ? "password" : "text"}
+            type={!toggle3 ? "password" : "text"}
             autoFocus={false}
             name="confirm"
             placeholder="Confirm"
@@ -216,20 +229,18 @@ const Password: React.FC<PasswordProps> = () => {
             handleSubmit={undefined}
           />
         </Box>
-        <hr className='mt-2' />
-        <Box sx={{display:'flex', justifyContent:'end'}}>
-        <Button
-        disabled={auth}
-        type='contained'
-        text='Save'
-        buttonType='submit'
-        handleClick={undefined}
-        />
+        <hr className="mt-2" />
+        <Box sx={{ display: "flex", justifyContent: "end" }}>
+          <Button
+            disabled={auth}
+            type="contained"
+            text="Save"
+            buttonType="submit"
+            handleClick={undefined}
+          />
         </Box>
-       
-        
       </form>
-    </Box>
+    </motion.div>
   );
 };
 

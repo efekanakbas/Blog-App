@@ -44,6 +44,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 interface FeedsProps {
   feed: any;
@@ -223,6 +224,22 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
+    const itemHome = {
+      hidden: { y: 20, opacity: 0 },
+      visible: {
+        y: 0,
+        opacity: 1,
+      },
+    };
+
+    const itemProfile = {
+      hidden: { y: -6, opacity: 0 },
+      visible: {
+        y: -26,
+        opacity: 1,
+      },
+    };
     //!
     //todo Functions
     const likeHandler = () => {
@@ -296,14 +313,15 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
     //*
 
     return (
-      <Box
-        sx={{
+      <motion.div
+        variants={profile ? itemProfile : itemHome}
+        style={{
           borderRadius: "15px",
           padding: "20px",
           backgroundColor: "white",
           marginTop: "26px",
-          transform: profile ? "translateY(-26px)" : "",
         }}
+        //@ts-ignore
         ref={ref ? ref : null}
       >
         <Box className="flex justify-between items-center mb-4">
@@ -724,7 +742,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
             blockedMutate={blockedMutate}
           />
         </React.Suspense>
-      </Box>
+      </motion.div>
     );
   }
 );

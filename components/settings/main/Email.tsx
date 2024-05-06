@@ -1,13 +1,14 @@
-import Card from '@/components/Card';
-import { Box, InputLabel, Typography } from '@mui/material';
-import React from 'react';
+import Card from "@/components/Card";
+import { Box, InputLabel, Typography } from "@mui/material";
+import React from "react";
 import { useFormik } from "formik";
 import validationSchema from "../../../schemas/settingsEmailSchema";
-import Input from '@/components/Input';
-import Button from '@/components/Button';
-import Cookies from 'js-cookie';
-import { patchData } from '@/utils/CRUD';
-import toast from 'react-hot-toast';
+import Input from "@/components/Input";
+import Button from "@/components/Button";
+import Cookies from "js-cookie";
+import { patchData } from "@/utils/CRUD";
+import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 interface EmailProps {
   // Define props here
@@ -15,7 +16,7 @@ interface EmailProps {
 
 const Email: React.FC<EmailProps> = () => {
   //! States
-  const Iemail = Cookies.get('email')
+  const Iemail = Cookies.get("email");
   const {
     values,
     handleChange,
@@ -31,49 +32,59 @@ const Email: React.FC<EmailProps> = () => {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log("deneme")
+      console.log("deneme");
       handlePatch({
-        email: values.email
-      })
+        email: values.email,
+      });
     },
   });
 
-  const auth = !!errors.email || !!errors.confirm || values.email.length === 0 || values.confirm.length === 0 
+  const auth =
+    !!errors.email ||
+    !!errors.confirm ||
+    values.email.length === 0 ||
+    values.confirm.length === 0;
   //!
   //todo Functions
-      const handlePatch = async(obj: any) => {
-        try {
-          await patchData('email', obj)
-        Cookies.set('email', values.email)
-        handleReset(values);
-        toast.success('You have successfully changed your email!')
-        } catch (error) {
-          console.log("error:", error)
-        }
-      }
+  const handlePatch = async (obj: any) => {
+    try {
+      await patchData("email", obj);
+      Cookies.set("email", values.email);
+      handleReset(values);
+      toast.success("You have successfully changed your email!");
+    } catch (error) {
+      console.log("error:", error);
+    }
+  };
   //todo
   //? useEffect
-      
+
   //?
   //* consoleLogs
-      
+
   //*
 
   return (
-    <Box sx={{backgroundColor:"white", padding:"20px", borderRadius:"15px", marginBottom:"28px"}}>
-        <Box sx={{display:'flex', flexDirection:'column', gap:'8px'}} >
-        <Typography variant='h6' >
-      Update Email Address
-      </Typography>
-      <Typography>
-      Your current email address is: {Iemail}
-      </Typography>
-      <Typography sx={{color:'gray'}} >
-      Updating your email will be effective immediatly. You will have to confirm your new address mail.
-      </Typography>
-        </Box>
-        <hr className='my-6' />
-        <form
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      style={{
+        backgroundColor: "white",
+        padding: "20px",
+        borderRadius: "15px",
+        marginBottom: "28px",
+      }}
+    >
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <Typography variant="h6">Update Email Address</Typography>
+        <Typography>Your current email address is: {Iemail}</Typography>
+        <Typography sx={{ color: "gray" }}>
+          Updating your email will be effective immediatly. You will have to
+          confirm your new address mail.
+        </Typography>
+      </Box>
+      <hr className="my-6" />
+      <form
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
@@ -85,7 +96,6 @@ const Email: React.FC<EmailProps> = () => {
           handleSubmit();
         }}
       >
-      
         <Box>
           <InputLabel
             sx={{ marginBottom: "8px", color: "black" }}
@@ -97,7 +107,7 @@ const Email: React.FC<EmailProps> = () => {
             id="emailInput"
             onKeyDownHandler={undefined}
             disabled={false}
-            sx={{ width: {xs: "100%" , md: "50%"}}}
+            sx={{ width: { xs: "100%", md: "50%" } }}
             size="medium"
             handleChange={handleChange}
             value={values.email}
@@ -125,7 +135,7 @@ const Email: React.FC<EmailProps> = () => {
             id="confirmInput"
             onKeyDownHandler={undefined}
             disabled={false}
-            sx={{ width: {xs: "100%" , md: "50%"}}}
+            sx={{ width: { xs: "100%", md: "50%" } }}
             size="medium"
             handleChange={handleChange}
             value={values.confirm}
@@ -142,21 +152,19 @@ const Email: React.FC<EmailProps> = () => {
           />
         </Box>
 
-        <hr className='mt-2' />
+        <hr className="mt-2" />
 
-        <Box sx={{display:'flex', justifyContent:'end'}}>
-        <Button
-        disabled ={auth}
-        type='contained'
-        text='Save'
-        buttonType='submit'
-        handleClick={undefined}
-        />
+        <Box sx={{ display: "flex", justifyContent: "end" }}>
+          <Button
+            disabled={auth}
+            type="contained"
+            text="Save"
+            buttonType="submit"
+            handleClick={undefined}
+          />
         </Box>
-       
-        
       </form>
-    </Box>
+    </motion.div>
   );
 };
 

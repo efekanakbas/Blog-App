@@ -5,6 +5,7 @@ import validationSchema from "../../../schemas/settingsEmailSchema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getData, postData } from "@/utils/CRUD";
 import HandshakeIcon from "@mui/icons-material/Handshake";
+import { motion } from "framer-motion";
 
 interface BlockedList {
   id: string;
@@ -69,12 +70,14 @@ const BlockList: React.FC<BlockListProps> = () => {
   //*
 
   return (
-    <Box
-      sx={{
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      style={{
         borderRadius: "15px",
         backgroundColor: "white",
         padding: "20px",
-        pb: "0",
+        paddingBottom: 0,
       }}
     >
       <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -152,7 +155,7 @@ const BlockList: React.FC<BlockListProps> = () => {
           ))}
         </Box>
       )}
-    </Box>
+    </motion.div>
   );
 };
 
