@@ -144,7 +144,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
             type="email"
             autoFocus={false}
             name="email"
-            placeholder="Email"
+            placeholder="You can login with: deneme@gmail.com "
             helperText={touched.email && errors.email && errors.email}
             error={!!touched.email && !!errors.email}
             handleBlur={handleBlur}
@@ -175,7 +175,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
             type= {!toggle ? "password" : "text"}
             autoFocus={false}
             name="password"
-            placeholder="Password"
+            placeholder="You can login with: 123456789 "
             helperText={touched.password && errors.password && errors.password}
             error={!!touched.password && !!errors.password}
             handleBlur={handleBlur}
