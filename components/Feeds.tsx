@@ -249,14 +249,14 @@ const Feeds: React.FC<Feeds> = ({ shareShow, profile }) => {
                 <Feed
                   //@ts-ignore
                   ref={ref}
-                  key={index}
+                  key={feed.feed.feedId}
                   feed={feed}
                   profile={profile}
                   refetch={refetch}
                 />
               ) : (
                 <Feed
-                  key={index}
+                  key={feed.feed.feedId}
                   feed={feed}
                   profile={profile}
                   refetch={refetch}
