@@ -70,6 +70,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
     const username = Cookies.get("username");
     const [isMe, setIsMe] = useState(username === feed.user.username);
     const [isFollowed, setIsFollowed] = useState(feed.user.followed);
+    const [progress, setProgress] = useState(false)
 
     const { handleChange, handleReset, handleSubmit, values } = useFormik({
       initialValues: {
@@ -132,14 +133,16 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
               document.body.style.overflow = "auto";
             },
           });
+          setProgress(true)
           // Silme işlemi
           await deleteData("feeds", obj);
         }
       },
-      onSuccess: () => {
-        queryClient.invalidateQueries({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
           queryKey: !profile ? ["feeds"] : ["feedsOne"],
         });
+        setProgress(false)
       },
     });
 
@@ -404,6 +407,7 @@ const Feed: React.FC<FeedsProps> = React.forwardRef(
                         alignItems: "center",
                       }}
                       className="hover:text-gray-900"
+                      disabled = {progress}
                       onClick={() => {
                         handleClose();
                         mutateDelete({
