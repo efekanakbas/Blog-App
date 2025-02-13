@@ -33,7 +33,7 @@ const Experience: React.FC<ExperienceProps> = ({setExpEdit}) => {
       </Typography>
 
       {
-        isMe && experiences.length > 0 && <Button
+        isMe && experiences?.length > 0 && <Button
         onClick={() => {
           setProfilePage(2);
           setVerticalTabValue(1);
